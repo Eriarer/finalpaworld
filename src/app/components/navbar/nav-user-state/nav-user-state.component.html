@@ -1,0 +1,45 @@
+<ul class="navbar-nav justify-content-end pe-3">
+  <div class="d-flex flex-row gap-4 gap-lg-0">
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active"
+        >Login</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/registro']" routerLinkActive="active"
+        >Registro</a
+      >
+    </li>
+  </div>
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Administrador
+    </a>
+    <ul class="dropdown-menu mb-2">
+      <li>
+        <a
+          class="dropdown-item"
+          [routerLink]="['/consultas']"
+          routerLinkActive="active"
+          >Consultas</a
+        >
+      </li>
+      <li>
+        <hr class="dropdown-divider" />
+      </li>
+      <li>
+        <a
+          class="dropdown-item"
+          [routerLink]="['/graficas']"
+          routerLinkActive="active"
+          >Graficas</a
+        >
+      </li>
+    </ul>
+  </li>
+</ul>

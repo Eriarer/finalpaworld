@@ -1,0 +1,12 @@
+.nav-item{
+  align-content: center;
+}
+.nav-color{
+  background-color: #e3f2fd
+}
+
+.nav-link.active, .nav-link:active {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}

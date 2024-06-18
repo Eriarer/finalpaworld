@@ -1,0 +1,57 @@
+<nav class="navbar sticky-top navbar-expand-lg nav-color">
+  <div class="container-fluid">
+    <!-- LOGO -->
+    <a class="navbar-brand" href="#"> {{ appName }}</a>
+    <!-- Toggle -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Off canvas: Poner en el contenido los hipervinculos -->
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="offcanvasNavbar"
+      aria-labelledby="offcanvasNavbarLabel"
+    >
+      <!-- HEADER -->
+      <div class="offcanvas-header nav-color">
+        <!-- LOGO -->
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">{{ appName }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <!-- Content: agregar etiquetas li para los elementos -->
+      <div class="offcanvas-body">
+        <!-- Links Normales -->
+        <ul class="navbar-nav justify-content-end flex-grow-1 text-nowrap">
+          @for(navLink of navLinks; track navLinks){
+          <li class="nav-item">
+            <!-- eliminar los espaicos -->
+            <a
+              class="nav-link"
+              [routerLink]="['/' + navLink.toLowerCase().replace(' ', '')]"
+              routerLinkActive="active"
+              [innerHTML]="navLink"
+            ></a>
+          </li>
+          }
+        </ul>
+        <!-- Manejar usuario -->
+        <app-nav-user-state></app-nav-user-state>
+        <app-nav-serach></app-nav-serach>
+      </div>
+    </div>
+  </div>
+</nav>
+<ng-content></ng-content>
