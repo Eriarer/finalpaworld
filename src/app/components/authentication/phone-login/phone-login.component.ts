@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-phone-login',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './phone-login.component.html',
-  styleUrl: './phone-login.component.css'
+  styleUrl: './phone-login.component.css',
 })
-export class PhoneLoginComponent {
-
-}
+export class PhoneLoginComponent {}

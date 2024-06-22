@@ -1,0 +1,17 @@
+<div class="form">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="example@email.com"
+    />
+    <input type="password" formControlName="password" placeholder="password" />
+    <button type="submit" [disabled]="!loginForm.valid">Login</button>
+  </form>
+  <p>
+    PhoneNumber Login?
+    <button routerLink="/login/phone">
+      <i class="fa-solid fa-comment-sms"></i>
+    </button>
+  </p>
+</div>

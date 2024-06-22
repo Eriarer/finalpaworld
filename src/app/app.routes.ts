@@ -4,13 +4,13 @@ import { CitasComponent } from './components/citas/citas.component';
 import { MascotasComponent } from './components/mascotas/mascotas.component';
 import { AgendarComponent } from './components/agendar/agendar.component';
 import { GraficasComponent } from './components/admin/graficas/graficas.component';
-import { LoginComponent } from './components/login/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/authentication/login/login.component';
+import { RegisterComponent } from './components/authentication/register/register.component';
 import { ContactoComponent } from './components/contacto/contacto.component';
 import { AcercaDeComponent } from './components/acerca-de/acerca-de.component';
 import { ConsultasComponent } from './components/admin/consultas/consultas.component';
-import { EmailLoginComponent } from './components/login/email-login/email-login.component';
-import { PhoneLoginComponent } from './components/login/phone-login/phone-login.component';
+import { EmailLoginComponent } from './components/authentication/email-login/email-login.component';
+import { PhoneLoginComponent } from './components/authentication/phone-login/phone-login.component';
 import { AdminComponent } from './components/admin/admin/admin.component';
 
 export const routes: Routes = [
