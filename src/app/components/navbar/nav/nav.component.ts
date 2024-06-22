@@ -14,10 +14,10 @@ export class NavComponent {
   appName = 'PaWorld';
   navLinks: String[] = [
     'Inicio',
-    'Mascotas',
+    'Mascota',
     'Acerca De',
     'Contacto',
-    'Agendar',
+    'Agenda',
     'Citas',
   ];
 }
