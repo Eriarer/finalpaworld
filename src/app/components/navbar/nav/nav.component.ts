@@ -18,6 +18,6 @@ export class NavComponent {
     'Acerca De',
     'Contacto',
     'Agenda',
-    'Citas',
+    'Cita Futura',
   ];
 }

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { InicioComponent } from './components/inicio/inicio.component';
-import { CitasComponent } from './components/citas/citas.component';
+import { CitafuturaComponent } from './components/citafutura/citafutura.component';
 import { MascotaComponent } from './components/mascota/mascota.component';
 import { AgendaComponent } from './components/agenda/agenda.component';
 import { GraficasComponent } from './components/admin/graficas/graficas.component';
@@ -36,7 +36,7 @@ export const routes: Routes = [
     component: AgendaComponent,
     title: 'PW Agenda',
   },
-  { path: 'citas', component: CitasComponent, title: 'PW Citas' },
+  { path: 'citafutura', component: CitafuturaComponent, title: 'PW citafutura' },
   { path: 'login', component: LoginComponent, title: 'PW Login' },
   {
     path: 'login',
