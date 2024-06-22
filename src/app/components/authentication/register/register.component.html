@@ -1,1 +1,56 @@
-<p>register works!</p>
+<div class="form">
+  <form
+    class="d-flex flex-column gap-2"
+    [formGroup]="registerForm"
+    (ngSubmit)="onSubmitRegister()"
+  >
+    <div class="d-flex gap-3">
+      <input
+        class="w-50"
+        type="text"
+        formControlName="name"
+        placeholder="nombre"
+      />
+      <input
+        class="w-50"
+        type="text"
+        formControlName="nickname"
+        placeholder="John Doe"
+      />
+    </div>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="example@email.com"
+    />
+    <div class="d-flex gap-0">
+      <div class="d-flex w-25">
+        <div class="w-25 text-center">+</div>
+        <input
+          class="w-75"
+          type="number"
+          formControlName="phoneExtension"
+          placeholder="52"
+        />
+      </div>
+      <input
+        class="w-75"
+        type="number"
+        formControlName="phoneNumber"
+        placeholder="1234567890"
+      />
+    </div>
+    <input type="password" formControlName="password" placeholder="password" />
+    <input
+      type="password"
+      formControlName="confirmPassword"
+      placeholder="confirm password"
+    />
+    <!-- Contraseñas no coinciden -->
+    @if( registerForm.get('password')!.invalid &&
+    !registerForm.get('password')!.pristine ) {
+    <div class="alert alert-danger" (click)="showErrors()">Error</div>
+    }
+    <button type="submit" [disabled]="!registerForm.valid">Login</button>
+  </form>
+</div>
