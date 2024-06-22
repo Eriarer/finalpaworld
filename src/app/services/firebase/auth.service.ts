@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  constructor(private firebaseAuth: Auth) {}
 
-  constructor() { }
+  signUp(
+    name: string,
+    nickname: string,
+    email: string,
+    phoneNumber: string,
+    password: string
+  ) {}
 }
