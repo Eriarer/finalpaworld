@@ -28,7 +28,6 @@ export class NavUserStateComponent {
   }
 
   handleResize = () => {
-    console.log(window.innerWidth);
     if (window.innerWidth >= this.bs_lg) {
       this.dropstart = true;
     } else {
@@ -43,7 +42,6 @@ export class NavUserStateComponent {
   isAdmin() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        console.log(event.url);
         if (event.url.includes('admin')) {
           this.adminRoute = true;
         } else {
