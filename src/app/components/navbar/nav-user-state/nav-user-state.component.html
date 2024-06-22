@@ -1,45 +1,62 @@
 <ul class="navbar-nav justify-content-end pe-3">
   <div class="d-flex flex-row gap-4 gap-lg-0">
+    <!-- Login -->
     <li class="nav-item">
       <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active"
-        >Login</a
-      >
+        ><i class="fa-solid fa-right-to-bracket"></i
+      ></a>
     </li>
+    <!-- Logout -->
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/inicio']"
+        ><i class="fa-solid fa-right-from-bracket"></i
+      ></a>
+    </li>
+    <!-- Sing Up -->
     <li class="nav-item">
       <a class="nav-link" [routerLink]="['/registro']" routerLinkActive="active"
-        >Registro</a
-      >
+        ><i class="fa-solid fa-user-plus"></i
+      ></a>
     </li>
   </div>
+  <!-- Admin -->
   <li class="nav-item dropdown">
-    <a
-      class="nav-link dropdown-toggle"
-      role="button"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
+    <div
+      class="btn-group"
+      [class.dropstart]="dropstart"
+      [class.dropend]="!dropstart"
     >
-      Administrador
-    </a>
-    <ul class="dropdown-menu mb-2">
-      <li>
-        <a
-          class="dropdown-item"
-          [routerLink]="['/consultas']"
-          routerLinkActive="active"
-          >Consultas</a
-        >
-      </li>
-      <li>
-        <hr class="dropdown-divider" />
-      </li>
-      <li>
-        <a
-          class="dropdown-item"
-          [routerLink]="['/graficas']"
-          routerLinkActive="active"
-          >Graficas</a
-        >
-      </li>
-    </ul>
+      <a
+        class="nav-link dropdown-toggle"
+        role="button"
+        data-bs-trigger="hover focus"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        [class.active]="adminRoute"
+      >
+        <i class="fa-solid fa-user-tie"></i>
+      </a>
+      <ul class="dropdown-menu mb-2">
+        <li>
+          <a
+            class="dropdown-item"
+            [routerLink]="['admin/consultas']"
+            routerLinkActive="active"
+            >Consultas</a
+          >
+        </li>
+        <li>
+          <hr class="dropdown-divider" />
+        </li>
+        <li>
+          <a
+            class="dropdown-item"
+            [routerLink]="['admin/graficas']"
+            routerLinkActive="active"
+            >Graficas</a
+          >
+        </li>
+      </ul>
+    </div>
   </li>
 </ul>

@@ -1,4 +1,4 @@
-<nav class="navbar sticky-top navbar-expand-lg nav-color">
+<nav class="navbar sticky-top navbar-expand-lg nav-color mb-3">
   <div class="container-fluid">
     <!-- LOGO -->
     <a class="navbar-brand" href="#"> {{ appName }}</a>
@@ -48,10 +48,12 @@
           }
         </ul>
         <!-- Manejar usuario -->
-        <app-nav-user-state></app-nav-user-state>
         <app-nav-serach></app-nav-serach>
+        <app-nav-user-state></app-nav-user-state>
       </div>
     </div>
   </div>
 </nav>
-<ng-content></ng-content>
+<div class="d-flex flex-column flex-grow-1 container">
+  <ng-content></ng-content>
+</div>
