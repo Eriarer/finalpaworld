@@ -1,7 +1,19 @@
 <nav class="navbar sticky-top navbar-expand-lg nav-color mb-3">
   <div class="container-fluid">
     <!-- LOGO -->
-    <a class="navbar-brand" href="#"> {{ appName }}</a>
+    <a class="navbar-brand" href="#">
+      <div class="d-flex align-items-center justify-content-center">
+        <img
+          src="assets/img/favIcon.webp"
+          alt="Logo"
+          width="30"
+          height="30"
+          class="d-inline-block align-text-top"
+        />
+        <p class="m-0 ms-2">
+          {{ appName }}</p>
+      </div>
+    </a>
     <!-- Toggle -->
     <button
       class="navbar-toggler"
@@ -23,7 +35,19 @@
       <!-- HEADER -->
       <div class="offcanvas-header nav-color">
         <!-- LOGO -->
-        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">{{ appName }}</h5>
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+          <div class="d-flex align-items-center justify-content-center">
+            <img
+              src="assets/img/favIcon.webp"
+              alt="Logo"
+              width="30"
+              height="30"
+              class="d-inline-block align-text-top"
+            />
+            <p class="m-0 ms-2">
+              {{ appName }}</p>
+          </div>
+          </h5>
         <button
           type="button"
           class="btn-close"
