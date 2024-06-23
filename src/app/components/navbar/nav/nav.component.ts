@@ -14,7 +14,7 @@ export class NavComponent {
   appName = 'PaWorld';
   navLinks: String[] = [
     'Inicio',
-    'Mascota',
+    'Mascotas',
     'Acerca De',
     'Contacto',
     'Agenda',
