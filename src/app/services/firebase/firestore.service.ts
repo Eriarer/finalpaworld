@@ -32,16 +32,15 @@ export class FirestoreService {
     this.addCitasDefault();
   }
 
-  ngOninit() {
-    console.log('ngOninit');
-    this.addCitasDefault();
-  }
+  // ngOninit() {
+  //   console.log('ngOninit');
+  //   this.addCitasDefault();
+  // }
 
   newCita(): Cita {
     return {
       // id: this.citas.length + 1,
-      fecha: new Date(),
-      formatoFecha: '', // Add the 'formatoFecha' property here
+      fecha: '',
       hora: { hours: 0, minutes: 0 },
       adoptante: {
         nombre: '',
@@ -54,7 +53,7 @@ export class FirestoreService {
         color: '',
         tipo: '',
         raza: '',
-        fechaIngreso: new Date(),
+        fechaIngreso: '',
         descripcion: '',
         imagen: '',
         sexo: '',

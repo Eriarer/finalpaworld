@@ -270,7 +270,11 @@ export class AgendaComponent {
     } else {
       //Todo es correcto
       this.dataCita = this.firestoreService.newCita();
-      this.dataCita.fecha = this.selectedDate;
+      this.dataCita.fecha = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
+      console.log(
+        'Fecha ingresada en proceso de guardar:',
+        this.dataCita.fecha
+      );
       this.dataCita.hora = {
         hours: Number(this.selectedHour.split(':')[0]),
         minutes: Number(this.selectedHour.split(':')[1]),
@@ -298,27 +302,17 @@ export class AgendaComponent {
     console.log('Actualizando horas disponibles');
     let citas = await this.firestoreService.getAllCitas();
     console.log('Citas:', citas);
+    let selectedDate2 = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
+    console.log(
+      'Fecha seleccionada detectada en actualizaHoraDisp:',
+      selectedDate2
+    );
+    console.log('fecha seleccionada:' + selectedDate2);
     citas.forEach((cita) => {
       console.log('Cita actual:', cita);
-      //convirtiendo a formato Date
-      let selectedDate2 = this.selectedDate
-        ? new Date(this.selectedDate)
-        : null;
-      let fechaCita = new Date(cita.fecha);
-      console.log(
-        'Fecha cita:' +
-          fechaCita.getDate() +
-          '/' +
-          fechaCita.getMonth() +
-          '/' +
-          fechaCita.getFullYear()
-      );
-      if (
-        selectedDate2 &&
-        selectedDate2.getDate() == fechaCita.getDate() &&
-        selectedDate2.getMonth() == fechaCita.getMonth() &&
-        selectedDate2.getFullYear() == fechaCita.getFullYear()
-      ) {
+      //convirtiendo a string la fecha seleccionada
+
+      if (selectedDate2 && cita.fecha === selectedDate2) {
         let horaCita = cita.hora.hours.toString();
         let minCita = cita.hora.minutes.toString();
         if (minCita === '0') {

@@ -4,8 +4,7 @@ import { Mascota } from './mascota';
 
 export interface Cita {
   // id: number;
-  fecha: Date;
-  formatoFecha: string;
+  fecha: string;
   hora: Time;
   adoptante: Adoptante;
   mascota: Mascota;
