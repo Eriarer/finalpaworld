@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cita } from '../../interfaces/cita';
-import { take } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Time } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FirestoreService } from '../firebase/firestore.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -420,7 +416,7 @@ export class CitasService {
   //   }
   //   // this.citas.push(cita);
   //   // localStorage.setItem('citas', JSON.stringify(this.citas));
-  //   const response = this.firestoreService.addCita(cita);
+  //   const response = this.CitasFbService.addCita(cita);
   //   console.log('Cita agregada:', response);
   // }
 }

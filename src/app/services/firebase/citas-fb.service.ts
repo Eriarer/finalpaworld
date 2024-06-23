@@ -1,23 +1,20 @@
 import { Injectable } from '@angular/core';
+
 import {
   Firestore,
   collection,
   addDoc,
   collectionData,
-  doc,
-  deleteDoc,
 } from '@angular/fire/firestore';
-import { Database, ref, set, get, child } from '@angular/fire/database';
 
 import { Observable, firstValueFrom } from 'rxjs';
-import { take } from 'rxjs';
 import { Cita } from '../../interfaces/cita';
 import { CitasService } from '../citas-inicio/citas.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FirestoreService {
+export class CitasFbService {
   citas: Cita[] = [];
   citasRef = collection(this.firestore, 'citas');
   citasFB!: Observable<Cita[]>;
@@ -31,11 +28,6 @@ export class FirestoreService {
     console.log('constructro firestore service');
     this.addCitasDefault();
   }
-
-  // ngOninit() {
-  //   console.log('ngOninit');
-  //   this.addCitasDefault();
-  // }
 
   newCita(): Cita {
     return {

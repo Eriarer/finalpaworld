@@ -34,7 +34,7 @@ import 'moment/locale/fr';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FirestoreService } from '../../services/firebase/firestore.service';
+import { CitasFbService } from '../../services/firebase/citas-fb.service';
 
 // Define custom date format for fr locale
 export const FR_DATE_FORMATS = {
@@ -143,7 +143,7 @@ export class AgendaComponent {
   constructor(
     public mascotasService: MascotasService,
     public activatedRoute: ActivatedRoute,
-    public firestoreService: FirestoreService
+    public CitasFbService: CitasFbService
   ) {
     // conseguir el ID de la url /agenda/:id
     this.activatedRoute.params.subscribe((params) => {
@@ -269,9 +269,9 @@ export class AgendaComponent {
       });
     } else {
       //Todo es correcto
-      this.dataCita = this.firestoreService.newCita();
+      this.dataCita = this.CitasFbService.newCita();
       this.dataCita.fecha = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
-      
+
       this.dataCita.hora = {
         hours: Number(this.selectedHour.split(':')[0]),
         minutes: Number(this.selectedHour.split(':')[1]),
@@ -280,7 +280,7 @@ export class AgendaComponent {
       this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
       this.dataCita.mascota = this.mascota;
       // this.citasService.addCita(this.dataCita);
-      const response = this.firestoreService.addCita(this.dataCita);
+      const response = this.CitasFbService.addCita(this.dataCita);
 
       Swal.fire({
         title: 'Cita agendada',
@@ -293,9 +293,9 @@ export class AgendaComponent {
 
   //Obtener citas de firebase,
   async actualizaHorasDisp() {
-    let citas = await this.firestoreService.getAllCitas();
+    let citas = await this.CitasFbService.getAllCitas();
     let selectedDate2 = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
-    
+
     citas.forEach((cita) => {
       //convirtiendo a string la fecha seleccionada
 
