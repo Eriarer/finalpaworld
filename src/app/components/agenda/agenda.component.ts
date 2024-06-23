@@ -271,10 +271,7 @@ export class AgendaComponent {
       //Todo es correcto
       this.dataCita = this.firestoreService.newCita();
       this.dataCita.fecha = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
-      console.log(
-        'Fecha ingresada en proceso de guardar:',
-        this.dataCita.fecha
-      );
+      
       this.dataCita.hora = {
         hours: Number(this.selectedHour.split(':')[0]),
         minutes: Number(this.selectedHour.split(':')[1]),
@@ -283,11 +280,8 @@ export class AgendaComponent {
       this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
       this.dataCita.mascota = this.mascota;
       // this.citasService.addCita(this.dataCita);
-      console.log('Cita agregada:', this.dataCita);
       const response = this.firestoreService.addCita(this.dataCita);
-      console.log('Cita definitivamente agregada:', this.dataCita);
 
-      console.log('Cita agregada:', response);
       Swal.fire({
         title: 'Cita agendada',
         text: 'La cita ha sido agendada correctamente',
@@ -299,17 +293,10 @@ export class AgendaComponent {
 
   //Obtener citas de firebase,
   async actualizaHorasDisp() {
-    console.log('Actualizando horas disponibles');
     let citas = await this.firestoreService.getAllCitas();
-    console.log('Citas:', citas);
     let selectedDate2 = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
-    console.log(
-      'Fecha seleccionada detectada en actualizaHoraDisp:',
-      selectedDate2
-    );
-    console.log('fecha seleccionada:' + selectedDate2);
+    
     citas.forEach((cita) => {
-      console.log('Cita actual:', cita);
       //convirtiendo a string la fecha seleccionada
 
       if (selectedDate2 && cita.fecha === selectedDate2) {
@@ -320,7 +307,6 @@ export class AgendaComponent {
         }
         let horaCita2 = horaCita + ':' + minCita;
         this.horasOcupadas.push(horaCita2);
-        console.log('Hora ocupada:', horaCita2);
         if (this.selectedHour == horaCita2) {
           this.selectedHour = '';
         }

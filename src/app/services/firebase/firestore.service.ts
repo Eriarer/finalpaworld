@@ -43,6 +43,7 @@ export class FirestoreService {
       fecha: '',
       hora: { hours: 0, minutes: 0 },
       adoptante: {
+        id: '',
         nombre: '',
         telefono: '',
         correo: '',
@@ -74,7 +75,6 @@ export class FirestoreService {
     await addDoc(collection(this.firestore, 'citas'), cita);
 
     //ejecutando getAllCitas para probarlo
-    console.log('All citas:' + this.getAllCitas());
   }
 
   async getAllCitas(): Promise<Cita[]> {
