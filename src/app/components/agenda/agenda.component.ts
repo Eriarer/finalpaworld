@@ -31,10 +31,10 @@ import {
 } from '@angular/material/core';
 import { MatDatepickerIntl } from '@angular/material/datepicker';
 import 'moment/locale/fr';
-import { CitasService } from '../../services/localstorage/citas.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FirestoreService } from '../../services/firebase/firestore.service';
 
 // Define custom date format for fr locale
 export const FR_DATE_FORMATS = {
@@ -142,8 +142,8 @@ export class AgendaComponent {
 
   constructor(
     public mascotasService: MascotasService,
-    public citasService: CitasService,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    public firestoreService: FirestoreService
   ) {
     // conseguir el ID de la url /agenda/:id
     this.activatedRoute.params.subscribe((params) => {
@@ -162,10 +162,10 @@ export class AgendaComponent {
       fechaActual.getMonth(),
       fechaActual.getDate() + 1
     );
-    //La fecha máxima es la fecha actual +1 mes
+    //La fecha máxima es la fecha actual +2 meses
     this.maxDate = new Date(
       fechaActual.getFullYear(),
-      fechaActual.getMonth() + 1,
+      fechaActual.getMonth() + 2,
       fechaActual.getDate()
     );
 
@@ -237,7 +237,6 @@ export class AgendaComponent {
 
   onDateChange(event: MatDatepickerInputEvent<Date>) {
     this.selectedDate = event.value;
-    console.log('Ya hay horas ocupadas' + this.horasOcupadas);
     this.horasOcupadas = [];
     this.actualizaHorasDisp();
   }
@@ -270,7 +269,7 @@ export class AgendaComponent {
       });
     } else {
       //Todo es correcto
-      this.dataCita = this.citasService.newCita();
+      this.dataCita = this.firestoreService.newCita();
       this.dataCita.fecha = this.selectedDate;
       this.dataCita.hora = {
         hours: Number(this.selectedHour.split(':')[0]),
@@ -279,7 +278,12 @@ export class AgendaComponent {
       this.dataCita.adoptante.nombre = this.nombreAdop.value ?? '';
       this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
       this.dataCita.mascota = this.mascota;
-      this.citasService.addCita(this.dataCita);
+      // this.citasService.addCita(this.dataCita);
+      console.log('Cita agregada:', this.dataCita);
+      const response = this.firestoreService.addCita(this.dataCita);
+      console.log('Cita definitivamente agregada:', this.dataCita);
+
+      console.log('Cita agregada:', response);
       Swal.fire({
         title: 'Cita agendada',
         text: 'La cita ha sido agendada correctamente',
@@ -289,16 +293,26 @@ export class AgendaComponent {
     }
   }
 
-  //Obtener citas del localstorage,
-  actualizaHorasDisp() {
-    let citas = this.citasService.getCitas();
+  //Obtener citas de firebase,
+  async actualizaHorasDisp() {
+    console.log('Actualizando horas disponibles');
+    let citas = await this.firestoreService.getAllCitas();
+    console.log('Citas:', citas);
     citas.forEach((cita) => {
+      console.log('Cita actual:', cita);
       //convirtiendo a formato Date
       let selectedDate2 = this.selectedDate
         ? new Date(this.selectedDate)
         : null;
       let fechaCita = new Date(cita.fecha);
-
+      console.log(
+        'Fecha cita:' +
+          fechaCita.getDate() +
+          '/' +
+          fechaCita.getMonth() +
+          '/' +
+          fechaCita.getFullYear()
+      );
       if (
         selectedDate2 &&
         selectedDate2.getDate() == fechaCita.getDate() &&
@@ -312,6 +326,7 @@ export class AgendaComponent {
         }
         let horaCita2 = horaCita + ':' + minCita;
         this.horasOcupadas.push(horaCita2);
+        console.log('Hora ocupada:', horaCita2);
         if (this.selectedHour == horaCita2) {
           this.selectedHour = '';
         }
