@@ -16,9 +16,9 @@ import { AdminComponent } from './components/admin/admin/admin.component';
 export const routes: Routes = [
   { path: 'inicio', component: InicioComponent, title: 'PW Inicio' },
   {
-    path: 'mascota',
+    path: 'mascotas',
     component: MascotaComponent,
-    title: 'PW mascota',
+    title: 'PW mascotas',
   },
   {
     path: 'acercade',
@@ -36,7 +36,7 @@ export const routes: Routes = [
     component: AgendaComponent,
     title: 'PW Agenda',
   },
-  { path: 'citafutura', component: CitafuturaComponent, title: 'PW citafutura' },
+  { path: 'citas', component: CitafuturaComponent, title: 'PW citas' },
   { path: 'login', component: LoginComponent, title: 'PW Login' },
   {
     path: 'login',

@@ -5,6 +5,8 @@ import {
   collection,
   addDoc,
   collectionData,
+  query,
+  orderBy,
 } from '@angular/fire/firestore';
 
 import { Observable, firstValueFrom } from 'rxjs';
@@ -70,14 +72,29 @@ export class CitasFbService {
   }
 
   async getAllCitas(): Promise<Cita[]> {
-    this.citasFB = collectionData(this.citasRef, {
+    // Obtener los datos de Firestore sin ordenarlos
+    const q = query(this.citasRef);
+
+    this.citasFB = collectionData(q, {
       idField: 'id',
     }) as Observable<Cita[]>;
 
     const data = await firstValueFrom(this.citasFB);
-    this.citas = data;
+
+    // Convertir y ordenar las fechas
+    this.citas = data.sort((a, b) => {
+      const dateA = this.convertToComparableDate(a.fecha);
+      const dateB = this.convertToComparableDate(b.fecha);
+      return dateA - dateB;
+    });
 
     return this.citas;
+  }
+
+  private convertToComparableDate(dateString: string): number {
+    const [day, month, year] = dateString.split('/').map(Number);
+    // Convertir la fecha a un formato comparable: aaaammdd
+    return new Date(year + 2000, month - 1, day).getTime();
   }
 
   async addCitasDefault() {

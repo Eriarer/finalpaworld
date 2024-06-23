@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Cita } from '../../interfaces/cita';
+import { CitasFbService } from '../../services/firebase/citas-fb.service';
 
 @Component({
   selector: 'app-citafutura',
@@ -11,8 +12,22 @@ import { Cita } from '../../interfaces/cita';
 export class CitafuturaComponent {
   citas: Cita[] = [];
 
-  constructor() {
+  constructor(private CitasFbService: CitasFbService) {
     this.cargacitasFuturas();
+  }
+
+  ngOnInit() {
+    console.log('CitasFbService', this.CitasFbService);
+    this.imprimirCitas().then(() => {
+      console.log('Citas impresas');
+    });
+  }
+
+  async imprimirCitas() {
+    console.log('Imprimiendo citas desde firebase');
+    let array = await this.CitasFbService.getAllCitas();
+    this.citas = array;
+    console.log(array);
   }
 
   cargacitasFuturas(): void {

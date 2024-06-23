@@ -295,9 +295,11 @@ export class AgendaComponent {
   async actualizaHorasDisp() {
     let citas = await this.CitasFbService.getAllCitas();
     let selectedDate2 = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
-
+    console.log('entrando a actualizar Horas disponibles');
     citas.forEach((cita) => {
       //convirtiendo a string la fecha seleccionada
+      //mostrando cita en consola
+      console.log(cita);
 
       if (selectedDate2 && cita.fecha === selectedDate2) {
         let horaCita = cita.hora.hours.toString();

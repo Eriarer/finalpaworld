@@ -1,10 +1,14 @@
 <div id="container">
   @if (citas.length > 0) {
-    <div class="btncitas">
-      <button (click)="btnCargarFuturas()" class="cambiarCitas">Citas futuras</button>
-      <button (click)="btnCargarPrevias()" class="cambiarCitas">Citas pasadas</button>
-    </div>
-    <br>
+  <div class="btncitas">
+    <button (click)="btnCargarFuturas()" class="cambiarCitas">
+      Citas futuras
+    </button>
+    <button (click)="btnCargarPrevias()" class="cambiarCitas">
+      Citas pasadas
+    </button>
+  </div>
+  <br />
   <table>
     <thead>
       <tr class="trcont">
@@ -20,8 +24,8 @@
     <tbody>
       @for (cita of citas; track $index) {
       <tr class="trcont">
-        <!-- <td><span [innerHTML]="cita.id"></span></td> -->
-         <td><span [innerHTML]="cita.fecha"></span></td>
+        <td><span [innerHTML]="cita.id"></span></td> 
+        <td><span [innerHTML]="cita.fecha"></span></td>
         <td>
           <span [innerHTML]="cita.hora.hours"></span>:
           <span
