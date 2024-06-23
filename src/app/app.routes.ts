@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { CitasComponent } from './components/citas/citas.component';
-import { MascotasComponent } from './components/mascotas/mascotas.component';
-import { AgendarComponent } from './components/agendar/agendar.component';
+import { InicioComponent } from './components/inicio/inicio.component';
+import { CitafuturaComponent } from './components/citafutura/citafutura.component';
+import { MascotaComponent } from './components/mascota/mascota.component';
+import { AgendaComponent } from './components/agenda/agenda.component';
 import { GraficasComponent } from './components/admin/graficas/graficas.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
@@ -14,11 +14,11 @@ import { PhoneLoginComponent } from './components/authentication/phone-login/pho
 import { AdminComponent } from './components/admin/admin/admin.component';
 
 export const routes: Routes = [
-  { path: 'inicio', component: HomeComponent, title: 'PW Inicio' },
+  { path: 'inicio', component: InicioComponent, title: 'PW Inicio' },
   {
     path: 'mascotas',
-    component: MascotasComponent,
-    title: 'PW Mascotas',
+    component: MascotaComponent,
+    title: 'PW mascotas',
   },
   {
     path: 'acercade',
@@ -30,13 +30,13 @@ export const routes: Routes = [
     component: ContactoComponent,
     title: 'PW Contacto',
   },
-  { path: 'agendar', component: AgendarComponent, title: 'PW Agendar' },
+  { path: 'agenda', component: AgendaComponent, title: 'PW Agenda' },
   {
-    path: 'agendar/:id',
-    component: AgendarComponent,
-    title: 'PW Agendar',
+    path: 'agenda/:id',
+    component: AgendaComponent,
+    title: 'PW Agenda',
   },
-  { path: 'citas', component: CitasComponent, title: 'PW Citas' },
+  { path: 'citas', component: CitafuturaComponent, title: 'PW citas' },
   { path: 'login', component: LoginComponent, title: 'PW Login' },
   {
     path: 'login',

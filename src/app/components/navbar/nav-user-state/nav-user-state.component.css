@@ -4,3 +4,21 @@
   text-decoration: none;
   background-color: transparent;
 }
+
+.nav-link{
+  color: rgb(196, 196, 196);
+  text-decoration: none;
+
+  &:hover{
+    color: rgb(226, 226, 226);
+  }
+
+  &.active{
+    color: white;
+  }
+}
+
+.nav-link.active {
+  color: white;
+  font-weight: bold;
+}

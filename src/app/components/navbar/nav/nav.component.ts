@@ -17,7 +17,7 @@ export class NavComponent {
     'Mascotas',
     'Acerca De',
     'Contacto',
-    'Agendar',
+    'Agenda',
     'Citas',
   ];
 }

@@ -1,0 +1,79 @@
+h1 {
+    font-size: 2rem;
+}
+h2 {
+    font-size: 1.5rem;
+}
+
+.c-item {
+    height: 32rem;
+}
+
+.c-img {
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+}
+
+.carousel-caption {
+    font-size: 1rem;
+}
+
+.video {
+    display: flex;
+    justify-content: center;
+    height: auto;
+    margin: 1rem;
+}
+
+.about {
+    padding: 2rem;
+    padding-left: 8rem;
+    padding-right: 8rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.cards-container{
+    text-align: center;
+    padding: 2rem;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.aboutus {
+    padding: 2rem;
+    padding-left: 8rem;
+    padding-right: 8rem;
+    font-size: 1rem;   
+}
+
+.aboutus h1 {
+    text-align: center;
+}
+
+.aboutus img {
+    padding-right: 2rem;
+}
+
+.integrante {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+    align-items: center;
+    text-align: justify;
+}
+
+.legal {
+    padding: 2rem;
+    font-size: 1rem;
+    text-align: center;
+}
