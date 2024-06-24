@@ -1,7 +1,56 @@
-<p>phone-login works!</p>
-<p>
-  Email Login?
-  <button routerLink="/login/email">
-    <i class="fa-solid fa-envelope"></i>
+<div>
+  <div class="forms">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" id="loginForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          placeholder="example@email.com"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="email.invalid">{{
+          getEmailErrorMessage()
+        }}</mat-error>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!loginForm.valid"
+        id="sendCoideButton"
+      >
+        Enviar código
+      </button>
+    </form>
+    <form
+      [formGroup]="confirmForm"
+      (ngSubmit)="onSubmitConfirm()"
+      id="confirmForm"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Codigo</mat-label>
+        <input matInput type="string" formControlName="codigo" />
+        <mat-icon matSuffix>pin</mat-icon>
+        <mat-error *ngIf="email.invalid">{{
+          getEmailErrorMessage()
+        }}</mat-error>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!loginForm.valid"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+  <button mat-raised-button routerLink="/login/email" class="loginType">
+    <div class="d-flex g-3 align-items-center">
+      <mat-label>Login por Email</mat-label>
+      <mat-icon class="m-0">email</mat-icon>
+    </div>
   </button>
-</p>
+</div>
