@@ -74,5 +74,5 @@ export const routes: Routes = [
     ],
   },
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '/inicio' },
 ];
