@@ -7,6 +7,9 @@ import {
   setDoc,
   getDoc,
   docSnapshots,
+  query,
+  where,
+  getDocs,
 } from '@angular/fire/firestore';
 import { User } from '../../interfaces/user';
 
@@ -35,6 +38,14 @@ export class UsersFbService {
     } else {
       return false;
     }
+  }
+
+  async isPhoneAlreadyRegistered(phoneNumber: string): Promise<boolean> {
+    const ref = await collection(this.firestore, 'users');
+    const q = await query(ref, where('phoneNumber', '==', phoneNumber));
+    return getDocs(q).then((querySnapshot) => {
+      return !querySnapshot.empty;
+    });
   }
 
   setUser(

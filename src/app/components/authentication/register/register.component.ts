@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -12,7 +12,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,7 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxMatIntlTelInputComponent } from 'ngx-mat-intl-tel-input';
 import { AuthService } from '../../../services/firebase/auth.service';
 import { Router, RouterModule } from '@angular/router';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -51,12 +51,7 @@ import { Router, RouterModule } from '@angular/router';
 export class RegisterComponent {
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
-
-  nameError: string = '';
-  nickNameError: string = '';
-  emailError: string = '';
-  passwordError: string = '';
-  confirmPasswordError: string = '';
+  @ViewChild('phonephoneNumber') phoneInputRef!: NgxMatIntlTelInputComponent;
 
   nameErrorMessages: any = {
     required: 'No se puede dejar vacio',
@@ -158,8 +153,6 @@ export class RegisterComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnDestory() {}
-
   passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
     const password: string = control.value;
     if (!password) return null;
@@ -196,23 +189,11 @@ export class RegisterComponent {
 
   errors(control: FormControl, htmlMatFormField: HTMLElement): string[] {
     const errors = control.errors ? Object.keys(control.errors) : [];
-    // si el unico error es el required, ignorarlo
-    switch (errors.length) {
-      case 1:
-        if (errors.includes('required')) {
-          htmlMatFormField.style.marginBottom = '0px';
-          control.markAsUntouched();
-          return errors;
-        }
-        break;
-      case 0:
-        htmlMatFormField.style.marginBottom = '0px';
-        control.markAsUntouched();
-        return errors;
-      default:
-        break;
+    if (errors.length === 0 || (!control.touched && errors.length === 1)) {
+      htmlMatFormField.style.marginBottom = '0px';
+      control.markAsUntouched();
+      return errors;
     }
-
     htmlMatFormField.style.marginBottom = errors.length * 18 + 20 + 'px';
     control.markAsTouched();
     return errors;
@@ -238,6 +219,27 @@ export class RegisterComponent {
           document.getElementById('registerForm')!.style.display = 'none';
           document.getElementById('codeVerificationForm')!.style.display =
             'flex';
+        })
+        .catch((error) => {
+          console.log('errorOnSubmit', error);
+          let errorCode = error.message;
+          // error.message Firebase: Error (auth/email-already-in-use).
+          if (error.message.includes('auth/email-already-in-use'))
+            errorCode = 'El correo ya se encuentra registrado';
+          Swal.fire({
+            title: 'Error',
+            text: errorCode,
+            icon: 'error',
+          }).then(() => {
+            this.registerForm.reset({
+              name: '',
+              nickname: '',
+              email: '',
+              password: '',
+              confirmPassword: '',
+            });
+            this.phoneInputRef.reset();
+          });
         });
     }
     if (this.registerForm.invalid) {
@@ -253,9 +255,21 @@ export class RegisterComponent {
         .then((result) => {
           console.log('result', result);
           if (result) {
-            this.router.navigate(['/inicio']);
+            Swal.fire({
+              title: 'Éxito',
+              text: 'Usuario registrado con éxito',
+              icon: 'success',
+            }).then(() => {
+              this.router.navigate(['/inicio']);
+            });
           } else {
-            this.router.navigate(['/register']);
+            Swal.fire({
+              title: 'Error',
+              text: 'Código incorrecto',
+              icon: 'error',
+            }).then(() => {
+              window.location.reload();
+            });
           }
         });
     }

@@ -38,6 +38,8 @@ export class AuthService {
   ): Promise<any> {
     if (!name || !nickname || !email || !phoneNumber || !password)
       throw new Error('Missing fields');
+    if (await this.userService.isPhoneAlreadyRegistered(phoneNumber))
+      throw new Error('El número de teléfono ya se encuentra registrado');
     const response = await createUserWithEmailAndPassword(
       this.firebaseAuth,
       email,
@@ -79,7 +81,7 @@ export class AuthService {
         }
       );
       setTimeout(() => {}, 3000);
-      this.linkPhoneSendCode(phoneNumber, captchaVerifier);
+      await this.linkPhoneSendCode(phoneNumber, captchaVerifier);
     } catch (error) {
       console.log('errorGenerateCaptcha', error);
       throw error;
