@@ -3,6 +3,7 @@ import {
   Firestore,
   addDoc,
   collection,
+  deleteDoc,
   doc,
   setDoc,
 } from '@angular/fire/firestore';
@@ -28,5 +29,10 @@ export class UsersFbService {
       email: email,
       phoneNumber: phoneNumber,
     });
+  }
+
+  deleteUserWithUID(uid: string) {
+    const ref = doc(this.firestore, `users/${uid}`);
+    return deleteDoc(ref);
   }
 }

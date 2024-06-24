@@ -13,45 +13,52 @@ import { UsersFbService } from './users-fb.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private confirmationResult!: ConfirmationResult;
+  private user?: FirebaseUser;
+  private confirmationResult?: ConfirmationResult;
 
   constructor(
     private firebaseAuth: Auth,
     private userService: UsersFbService
   ) {}
 
-  signUp(
+  async signUp(
     name: string,
     nickname: string,
     email: string,
     phoneNumber: string,
     password: string,
     htmlElement: HTMLElement
-  ) {
-    if (!name || !nickname || !email || !phoneNumber || !password) return;
-    const response = createUserWithEmailAndPassword(
+  ): Promise<any> {
+    if (!name || !nickname || !email || !phoneNumber || !password)
+      throw new Error('Missing fields');
+    const response = await createUserWithEmailAndPassword(
       this.firebaseAuth,
       email,
       password
-    ).then((userCredential) => {
-      const user = userCredential.user;
-      // linkear el usuario con el telefono, verificando el numero
-      this.linkPhoneGenerateCaptcha(user, phoneNumber, htmlElement);
-      this.userService.addUserWithUID(
-        user.uid,
-        name,
-        nickname,
-        email,
-        phoneNumber
-      );
-    });
+    )
+      .then((userCredential) => {
+        this.user = userCredential.user;
+        // linkear el usuario con el telefono, verificando el numero
+        this.linkPhoneGenerateCaptcha(phoneNumber, htmlElement);
+        this.userService.addUserWithUID(
+          this.user.uid,
+          name,
+          nickname,
+          email,
+          phoneNumber
+        );
+      })
+      .catch((error) => {
+        this.SignUpError();
+        throw new Error(error.message);
+      });
+    return response;
   }
 
-  async linkPhoneGenerateCaptcha(
-    user: FirebaseUser,
+  private async linkPhoneGenerateCaptcha(
     phoneNumber: string,
     element: HTMLElement
-  ) {
+  ): Promise<void> {
     console.log('linkPhoneNumber');
     try {
       const captchaVerifier = new RecaptchaVerifier(
@@ -65,25 +72,49 @@ export class AuthService {
         }
       );
       setTimeout(() => {}, 3000);
-      linkWithPhoneNumber(user, phoneNumber, captchaVerifier)
-        .then((confirmationResult) => {
-          console.log('confirmationResult', confirmationResult);
-          this.confirmationResult = confirmationResult;
-        })
-        .catch((error) => {
-          console.log('error', error);
-        });
+      this.linkPhoneSendCode(phoneNumber, captchaVerifier);
     } catch (error) {
       console.log('error', error);
+      this.SignUpError();
+      throw new Error('Error generating captcha');
     }
   }
 
-  async linkPhoneVerifyCode(code: string) {
+  private async linkPhoneSendCode(
+    phoneNumber: string,
+    captchaVerifier: RecaptchaVerifier
+  ) {
+    linkWithPhoneNumber(this.user!, phoneNumber, captchaVerifier)
+      .then((confirmationResult) => {
+        console.log('confirmationResult', confirmationResult);
+        this.confirmationResult = confirmationResult;
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  }
+
+  async linkPhoneVerifyCode(code: string): Promise<boolean> {
     console.log('linkPhoneVerifyCode');
     try {
-      await this.confirmationResult.confirm(code);
+      await this.confirmationResult!.confirm(code);
+      console.log('success');
+      return true;
     } catch (error) {
       console.log('error', error);
+      this.SignUpError();
+      // Show error to user
+      return false;
     }
+  }
+
+  private async SignUpError(): Promise<void> {
+    // User couldn't sign in (bad verification code?) delete user
+    if (!this.user) return;
+    await this.user!.delete();
+    await this.userService.deleteUserWithUID(this.user!.uid);
+    this.user = undefined;
+    this.confirmationResult = undefined;
+    return;
   }
 }

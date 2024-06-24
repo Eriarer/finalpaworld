@@ -20,7 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxMatIntlTelInputComponent } from 'ngx-mat-intl-tel-input';
 import { AuthService } from '../../../services/firebase/auth.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -154,7 +154,9 @@ export class RegisterComponent {
     code: this.code,
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnDestory() {}
 
   passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
     const password: string = control.value;
@@ -202,16 +204,20 @@ export class RegisterComponent {
     ) as HTMLElement;
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
-      this.authService.signUp(
-        this.name.value,
-        this.nickname.value,
-        this.email.value,
-        this.phoneNumber.value,
-        this.password.value,
-        button
-      );
-      document.getElementById('registerForm')!.style.display = 'none';
-      document.getElementById('codeVerificationForm')!.style.display = 'flex';
+      this.authService
+        .signUp(
+          this.name.value,
+          this.nickname.value,
+          this.email.value,
+          this.phoneNumber.value,
+          this.password.value,
+          button
+        )
+        .then((response) => {
+          document.getElementById('registerForm')!.style.display = 'none';
+          document.getElementById('codeVerificationForm')!.style.display =
+            'flex';
+        });
     }
     if (this.registerForm.invalid) {
       console.log('Form is invalid');
@@ -221,7 +227,13 @@ export class RegisterComponent {
   onSubmitCodeVerification() {
     if (this.codeVerificationForm.valid) {
       console.log(this.codeVerificationForm.value);
-      this.authService.linkPhoneVerifyCode(this.code.value);
+      this.authService.linkPhoneVerifyCode(this.code.value).then((result) => {
+        if (result) {
+          this.router.navigate(['/inicio']);
+        } else {
+          this.router.navigate(['/register']);
+        }
+      });
     }
     if (this.codeVerificationForm.invalid) {
       console.log('Form is invalid');
