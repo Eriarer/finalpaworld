@@ -1,100 +1,76 @@
-<div id="carouselExampleIndicators" class="carousel slide">
+<div class="controls" tabindex="-1">
+  <button (click)="startReading()" title="Start Reading" aria-label="Start Reading" tabindex="0">
+    <i class="fas fa-play"></i>
+  </button>
+  <button (click)="pauseReading()" title="Pause Reading" aria-label="Pause Reading" tabindex="0">
+    <i class="fas fa-pause"></i>
+  </button>
+  <button (click)="resumeReading()" title="Resume Reading" aria-label="Resume Reading" tabindex="0">
+    <i class="fas fa-play-circle"></i>
+  </button>
+  <button (click)="stopReading()" title="Stop Reading" aria-label="Stop Reading" tabindex="0">
+    <i class="fas fa-stop"></i>
+  </button>
+</div>
+
+
+<!-- Carrusel -->
+<section id="carouselExampleIndicators" class="carousel slide" tabindex="0">
   <div class="carousel-indicators">
-    <button
-      type="button"
-      data-bs-target="#carouselExampleIndicators"
-      data-bs-slide-to="0"
-      class="active"
-      aria-current="true"
-      aria-label="Slide 1"
-    ></button>
-    <button
-      type="button"
-      data-bs-target="#carouselExampleIndicators"
-      data-bs-slide-to="1"
-      aria-label="Slide 2"
-    ></button>
-    <button
-      type="button"
-      data-bs-target="#carouselExampleIndicators"
-      data-bs-slide-to="2"
-      aria-label="Slide 3"
-    ></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
   </div>
   <div class="carousel-inner">
-    <div class="carousel-item active c-item">
-      <img
-        src="assets/img/carousel/1.jpg"
-        class="d-block w-100 c-img"
-        alt="..."
-      />
+    <article class="carousel-item active c-item" tabindex="0">
+      <img src="assets/img/carousel/1.jpg" class="d-block w-100 c-img" alt="...">
       <div class="carousel-caption d-none d-md-block">
         <h1>Encuentra a tu nuevo mejor amigo</h1>
-        <p>
-          Explora la alegría de adoptar una mascota que espera un hogar lleno de
-          amor.
-        </p>
+        <p>Explora la alegría de adoptar una mascota que espera un hogar lleno de amor.</p>
       </div>
-    </div>
-    <div class="carousel-item c-item">
-      <img
-        src="assets/img/carousel/2.jpg"
-        class="d-block w-100 c-img"
-        alt="..."
-      />
+    </article>
+    <article class="carousel-item c-item" tabindex="0">
+      <img src="assets/img/carousel/2.jpg" class="d-block w-100 c-img" alt="...">
       <div class="carousel-caption d-none d-md-block">
         <h1>Cambia una vida, adopta</h1>
         <p>Adopta una mascota y cambia su vida para siempre.</p>
       </div>
-    </div>
-    <div class="carousel-item c-item">
-      <img
-        src="assets/img/carousel/3.jpg"
-        class="d-block w-100 c-img"
-        alt="..."
-      />
+    </article>
+    <article class="carousel-item c-item" tabindex="0">
+      <img src="assets/img/carousel/3.jpg" class="d-block w-100 c-img" alt="...">
       <div class="carousel-caption d-none d-md-block">
         <h1>Un hogar para cada corazón</h1>
         <p>Encuentra a tu compañero ideal y dale un hogar lleno de amor.</p>
       </div>
-    </div>
+    </article>
   </div>
-  <button
-    class="carousel-control-prev"
-    type="button"
-    data-bs-target="#carouselExampleIndicators"
-    data-bs-slide="prev"
-  >
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
   </button>
-  <button
-    class="carousel-control-next"
-    type="button"
-    data-bs-target="#carouselExampleIndicators"
-    data-bs-slide="next"
-  >
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
-</div>
+</section>
 
-<br><br><br>
-
-<section class="location-section py-5">
+<!-- Ubicación -->
+<section class="location-section py-5" tabindex="0">
   <div class="container">
     <div class="row">
       <div class="col-md-6">
         <h2 class="section-title">Visítanos en Nuestra Ubicación</h2>
         <p>Nos encontramos en el corazón de la ciudad, proporcionando un hogar amoroso para mascotas necesitadas. Nuestro centro de adopción está abierto de lunes a viernes de 9:00 AM a 6:00 PM y los sábados de 10:00 AM a 4:00 PM. Ven y conoce a nuestras mascotas, estamos seguros de que encontrarás a tu nuevo mejor amigo.</p>
-        <p>Dirección: Calle Felipe 123, Aguascalientes</p>
-        <p>Teléfono: 123-456-7890</p>
-        <p>Email: palworld.org</p>
+        <address>
+          <p>Dirección: Calle Felipe 123, Aguascalientes</p>
+          <p>Teléfono: 123-456-7890</p>
+          <p>Email: <a href="mailto:palworld.org">palworld.org</a></p>
+        </address>
         <div class="social-icons">
-          <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
-          <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.facebook.com" target="_blank" tabindex="0"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com" target="_blank" tabindex="0"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com" target="_blank" tabindex="0"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.twitter.com" target="_blank" tabindex="0"><i class="fab fa-twitter"></i></a>
         </div>
       </div>
       <div class="col-md-6">
@@ -106,46 +82,47 @@
   </div>
 </section>
 
-
-<section class="animal-gallery py-5">
+<!-- Galería de Animales -->
+<section class="animal-gallery py-5" tabindex="0">
   <div class="container">
     <h2 class="section-title text-center mb-4">🐾 Animales Disponibles para Adopción 🐾</h2>
     <div class="row">
       <div class="col-md-4 mb-4">
-        <div class="card">
+        <article class="card" tabindex="0">
           <img src="assets/img/pets/1.webp" class="card-img-top" alt="Animal 1">
           <div class="card-body">
             <h5 class="card-title">Bella</h5>
             <p class="card-text">Bella es una perrita juguetona y cariñosa que adora correr y jugar al aire libre.</p>
             <a href="#" class="btn btn-primary">Más Información</a>
           </div>
-        </div>
+        </article>
       </div>
       <div class="col-md-4 mb-4">
-        <div class="card">
+        <article class="card" tabindex="0">
           <img src="assets/img/pets/8.webp" class="card-img-top" alt="Animal 2">
           <div class="card-body">
             <h5 class="card-title">Max</h5>
             <p class="card-text">Max es un gato curioso y muy amigable que disfruta de la compañía humana.</p>
             <a href="#" class="btn btn-primary">Más Información</a>
           </div>
-        </div>
+        </article>
       </div>
       <div class="col-md-4 mb-4">
-        <div class="card">
+        <article class="card" tabindex="0">
           <img src="assets/img/pets/10.webp" class="card-img-top" alt="Animal 3">
           <div class="card-body">
             <h5 class="card-title">Luna</h5>
             <p class="card-text">Luna es una gatita tranquila y dulce que busca un hogar lleno de amor y cuidado.</p>
             <a href="#" class="btn btn-primary">Más Información</a>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   </div>
 </section>
 
-<section class="testimonials py-5 bg-light">
+<!-- Testimonios -->
+<section class="testimonials py-5 bg-light" tabindex="0">
   <div class="container">
     <h2 class="section-title text-center mb-5">Testimonios de Adoptantes</h2>
     <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -155,7 +132,7 @@
         <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active">
+        <article class="carousel-item active" tabindex="0">
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="testimonial-card p-4 text-center">
@@ -163,13 +140,13 @@
                 <blockquote class="blockquote">
                   <p class="mb-4">"Adoptar a Bella ha sido una experiencia maravillosa. Ella ha traído mucha alegría a nuestro hogar. El proceso de adopción fue fácil y rápido. ¡Recomiendo a todos adoptar una mascota!"</p>
                   <footer class="blockquote-footer">Ana García y Bella</footer>
-                  <br>
                 </blockquote>
               </div>
             </div>
           </div>
-        </div>
-        <div class="carousel-item">
+        </article>
+       
+        <article class="carousel-item" tabindex="0">
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="testimonial-card p-4 text-center">
@@ -177,13 +154,12 @@
                 <blockquote class="blockquote">
                   <p class="mb-4">"Max es el mejor amigo que podría haber pedido. Es muy cariñoso y juguetón. Estoy muy agradecido por haberlo encontrado."</p>
                   <footer class="blockquote-footer">Juan Pérez y Max</footer>
-                  <br>
                 </blockquote>
               </div>
             </div>
           </div>
-        </div>
-        <div class="carousel-item">
+        </article>
+        <article class="carousel-item" tabindex="0">
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="testimonial-card p-4 text-center">
@@ -191,12 +167,11 @@
                 <blockquote class="blockquote">
                   <p class="mb-4">"Luna ha cambiado nuestras vidas para mejor. Es una gatita muy dulce y nos encanta tenerla en nuestra familia. Gracias por ayudarnos a encontrarla."</p>
                   <footer class="blockquote-footer">Marta López y Luna</footer>
-                  <br>
                 </blockquote>
               </div>
             </div>
           </div>
-        </div>
+        </article>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -210,9 +185,8 @@
   </div>
 </section>
 
-<br><br>
-
-<section class="donations py-5">
+<!-- Donaciones -->
+<section class="donations py-5" tabindex="0">
   <div class="container">
     <div class="row">
       <div class="col-md-6 d-flex align-items-center">
@@ -231,15 +205,15 @@
       <div class="col text-center">
         <h3 class="donation-subtitle mb-4">💰 Formas de Donar 💰</h3>
         <div class="d-flex justify-content-center">
-          <div class="donation-method mx-3">
+          <div class="donation-method mx-3" tabindex="0">
             <i class="fas fa-credit-card fa-3x"></i>
             <h5 class="mt-2">Tarjeta de Crédito</h5>
           </div>
-          <div class="donation-method mx-3">
+          <div class="donation-method mx-3" tabindex="0">
             <i class="fas fa-paypal fa-3x"></i>
             <h5 class="mt-2">PayPal</h5>
           </div>
-          <div class="donation-method mx-3">
+          <div class="donation-method mx-3" tabindex="0">
             <i class="fas fa-hand-holding-heart fa-3x"></i>
             <h5 class="mt-2">Donación en Especie</h5>
           </div>
@@ -248,4 +222,4 @@
     </div>
   </div>
 </section>
-<br><br>
+
