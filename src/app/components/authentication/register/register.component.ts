@@ -264,11 +264,11 @@ export class RegisterComponent {
             });
           } else {
             Swal.fire({
-              title: 'Error',
-              text: 'Código incorrecto',
-              icon: 'error',
+              title: 'Número de telefono no verificado',
+              text: 'El número de telefono no pudo verificarse.\nTendras que verificarlo mas tarde.',
+              icon: 'warning',
             }).then(() => {
-              window.location.reload();
+              this.router.navigate(['/inicio']);
             });
           }
         });

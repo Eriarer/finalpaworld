@@ -80,7 +80,7 @@ export class AuthService {
           },
         }
       );
-      setTimeout(() => {}, 3000);
+      await setTimeout(() => {}, 3000);
       await this.linkPhoneSendCode(phoneNumber, captchaVerifier);
     } catch (error) {
       console.log('errorGenerateCaptcha', error);
