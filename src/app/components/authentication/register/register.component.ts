@@ -66,8 +66,9 @@ export class RegisterComponent {
   };
   nickNameErrorMessages: any = {
     required: 'No se puede dejar vacio',
-    minlength: 'El nombre debe tener al menos 3 caracteres',
-    maxlength: 'El nombre debe tener máximo 8 caracteres',
+    minlength: 'El apodo debe tener al menos 3 caracteres',
+    maxlength: 'El apodo debe tener máximo 8 caracteres',
+    pattern: 'El apodo solo puede contener letras',
   };
   emailErrorMessages: any = {
     required: 'No se puede dejar vacio',
@@ -101,6 +102,7 @@ export class RegisterComponent {
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(8),
+      Validators.pattern('^[a-zA-Z]*$'),
     ],
   });
   email = new FormControl('', {
@@ -194,17 +196,35 @@ export class RegisterComponent {
 
   errors(control: FormControl, htmlMatFormField: HTMLElement): string[] {
     const errors = control.errors ? Object.keys(control.errors) : [];
-    htmlMatFormField.style.marginBottom = errors.length * 18 + 'px';
+    // si el unico error es el required, ignorarlo
+    switch (errors.length) {
+      case 1:
+        if (errors.includes('required')) {
+          htmlMatFormField.style.marginBottom = '0px';
+          control.markAsUntouched();
+          return errors;
+        }
+        break;
+      case 0:
+        htmlMatFormField.style.marginBottom = '0px';
+        control.markAsUntouched();
+        return errors;
+      default:
+        break;
+    }
+
+    htmlMatFormField.style.marginBottom = errors.length * 18 + 20 + 'px';
+    control.markAsTouched();
     return errors;
   }
 
-  onSubmitRegister() {
+  async onSubmitRegister() {
     const button: HTMLElement = document.getElementById(
       'submitBtn'
     ) as HTMLElement;
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
-      this.authService
+      await this.authService
         .signUp(
           this.name.value,
           this.nickname.value,
@@ -214,6 +234,7 @@ export class RegisterComponent {
           button
         )
         .then((response) => {
+          console.log('responseOnSubmit', response);
           document.getElementById('registerForm')!.style.display = 'none';
           document.getElementById('codeVerificationForm')!.style.display =
             'flex';
@@ -224,16 +245,19 @@ export class RegisterComponent {
     }
   }
 
-  onSubmitCodeVerification() {
+  async onSubmitCodeVerification() {
     if (this.codeVerificationForm.valid) {
       console.log(this.codeVerificationForm.value);
-      this.authService.linkPhoneVerifyCode(this.code.value).then((result) => {
-        if (result) {
-          this.router.navigate(['/inicio']);
-        } else {
-          this.router.navigate(['/register']);
-        }
-      });
+      await this.authService
+        .linkPhoneVerifyCode(this.code.value)
+        .then((result) => {
+          console.log('result', result);
+          if (result) {
+            this.router.navigate(['/inicio']);
+          } else {
+            this.router.navigate(['/register']);
+          }
+        });
     }
     if (this.codeVerificationForm.invalid) {
       console.log('Form is invalid');

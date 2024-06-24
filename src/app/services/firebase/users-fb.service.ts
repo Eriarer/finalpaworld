@@ -3,9 +3,10 @@ import {
   Firestore,
   addDoc,
   collection,
-  deleteDoc,
   doc,
   setDoc,
+  getDoc,
+  docSnapshots,
 } from '@angular/fire/firestore';
 import { User } from '../../interfaces/user';
 
@@ -15,7 +16,28 @@ import { User } from '../../interfaces/user';
 export class UsersFbService {
   constructor(private firestore: Firestore) {}
 
-  addUserWithUID(
+  async isUserAdmin(uid: string): Promise<boolean> {
+    const ref = doc(this.firestore, `users/${uid}`);
+    const docSnapshot = await getDoc(ref);
+    if (docSnapshot.exists() && docSnapshot.data()['admin']) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async isUserPhoneLinked(uid: string): Promise<boolean> {
+    const ref = doc(this.firestore, `users/${uid}`);
+    const docSnapshot = await getDoc(ref);
+    console.log('docSnapshot', docSnapshot.data());
+    if (docSnapshot.exists() && docSnapshot.data()['phoneNumber']) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  setUser(
     uid: string,
     name: string,
     nickname: string,
@@ -28,11 +50,12 @@ export class UsersFbService {
       nickname: nickname,
       email: email,
       phoneNumber: phoneNumber,
+      phoneLinked: false,
     });
   }
 
-  deleteUserWithUID(uid: string) {
+  linkUserPhone(uid: string) {
     const ref = doc(this.firestore, `users/${uid}`);
-    return deleteDoc(ref);
+    return setDoc(ref, { phoneLinked: true }, { merge: true });
   }
 }

@@ -6,6 +6,9 @@ import {
   linkWithPhoneNumber,
   User as FirebaseUser,
   ConfirmationResult,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
 } from '@angular/fire/auth';
 import { User } from '../../interfaces/user';
 import { UsersFbService } from './users-fb.service';
@@ -13,13 +16,17 @@ import { UsersFbService } from './users-fb.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private user?: FirebaseUser;
-  private confirmationResult?: ConfirmationResult;
+  private static user?: FirebaseUser;
+  private static confirmationResult?: ConfirmationResult;
 
   constructor(
     private firebaseAuth: Auth,
     private userService: UsersFbService
   ) {}
+
+  getUser(): FirebaseUser | undefined {
+    return AuthService.user;
+  }
 
   async signUp(
     name: string,
@@ -36,12 +43,12 @@ export class AuthService {
       email,
       password
     )
-      .then((userCredential) => {
-        this.user = userCredential.user;
+      .then(async (userCredential) => {
+        AuthService.user = userCredential.user;
         // linkear el usuario con el telefono, verificando el numero
-        this.linkPhoneGenerateCaptcha(phoneNumber, htmlElement);
-        this.userService.addUserWithUID(
-          this.user.uid,
+        await this.linkPhoneGenerateCaptcha(phoneNumber, htmlElement);
+        await this.userService.setUser(
+          AuthService.user.uid,
           name,
           nickname,
           email,
@@ -49,13 +56,13 @@ export class AuthService {
         );
       })
       .catch((error) => {
-        this.SignUpError();
+        console.log('error SignUp', error);
         throw new Error(error.message);
       });
     return response;
   }
 
-  private async linkPhoneGenerateCaptcha(
+  async linkPhoneGenerateCaptcha(
     phoneNumber: string,
     element: HTMLElement
   ): Promise<void> {
@@ -74,47 +81,69 @@ export class AuthService {
       setTimeout(() => {}, 3000);
       this.linkPhoneSendCode(phoneNumber, captchaVerifier);
     } catch (error) {
-      console.log('error', error);
-      this.SignUpError();
-      throw new Error('Error generating captcha');
+      console.log('errorGenerateCaptcha', error);
+      throw error;
     }
   }
 
-  private async linkPhoneSendCode(
+  async linkPhoneSendCode(
     phoneNumber: string,
     captchaVerifier: RecaptchaVerifier
   ) {
-    linkWithPhoneNumber(this.user!, phoneNumber, captchaVerifier)
+    linkWithPhoneNumber(AuthService.user!, phoneNumber, captchaVerifier)
       .then((confirmationResult) => {
         console.log('confirmationResult', confirmationResult);
-        this.confirmationResult = confirmationResult;
+        AuthService.confirmationResult = confirmationResult;
       })
       .catch((error) => {
-        console.log('error', error);
+        console.log('error Sending Code', error);
+        throw new Error('Error sending code' + error.message);
       });
   }
 
   async linkPhoneVerifyCode(code: string): Promise<boolean> {
     console.log('linkPhoneVerifyCode');
     try {
-      await this.confirmationResult!.confirm(code);
+      await AuthService.confirmationResult!.confirm(code);
       console.log('success');
+      this.userService.linkUserPhone(AuthService.user!.uid);
+      AuthService.user = undefined;
+      AuthService.confirmationResult = undefined;
       return true;
     } catch (error) {
       console.log('error', error);
-      this.SignUpError();
       // Show error to user
       return false;
     }
   }
 
-  private async SignUpError(): Promise<void> {
-    // User couldn't sign in (bad verification code?) delete user
-    if (!this.user) return;
-    await this.user!.delete();
-    await this.userService.deleteUserWithUID(this.user!.uid);
-    this.user = undefined;
-    this.confirmationResult = undefined;
-    return;
+  async signInWithEmailAndPassword(
+    email: string,
+    password: string,
+    htmlElement: HTMLElement
+  ) {
+    return signInWithEmailAndPassword(this.firebaseAuth, email, password)
+      .then((userCredential) => {
+        this.userService
+          .isUserPhoneLinked(userCredential.user.uid)
+          .then((isLinked) => {
+            if (isLinked) {
+              console.log('User has phone');
+              // Add session persistence
+              setPersistence(this.firebaseAuth, browserLocalPersistence)
+                .then(() => {
+                  console.log('Persistence set');
+                })
+                .catch((error) => {
+                  console.log('error', error);
+                });
+              return;
+            }
+          });
+      })
+      .catch((error) => {
+        console.log('error', error);
+        throw error;
+      });
   }
 }

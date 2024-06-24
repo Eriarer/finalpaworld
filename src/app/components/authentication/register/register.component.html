@@ -11,7 +11,12 @@
     <!-- Nombre Completo -->
     <mat-form-field #nameField>
       <mat-label>Nombre Completo</mat-label>
-      <input matInput [formControl]="name" required />
+      <input
+        matInput
+        [formControl]="name"
+        (blur)="errors(name, nameField._elementRef.nativeElement)"
+        required
+      />
       <mat-icon matSuffix>person</mat-icon>
       <mat-error *ngIf="name.invalid">
         <ng-container
@@ -27,7 +32,12 @@
     <!-- Nickname -->
     <mat-form-field #nicknameField>
       <mat-label>Nickname</mat-label>
-      <input matInput [formControl]="nickname" required />
+      <input
+        matInput
+        [formControl]="nickname"
+        (blur)="errors(nickname, nicknameField._elementRef.nativeElement)"
+        required
+      />
       <mat-icon matSuffix>person_outline</mat-icon>
       <mat-error *ngIf="nickname.invalid">
         <ng-container
@@ -46,7 +56,13 @@
     <!-- Email -->
     <mat-form-field #emailField>
       <mat-label>Email</mat-label>
-      <input matInput type="email" [formControl]="email" required />
+      <input
+        matInput
+        type="email"
+        [formControl]="email"
+        (blur)="errors(email, emailField._elementRef.nativeElement)"
+        required
+      />
       <mat-icon matSuffix>email</mat-icon>
       <mat-error *ngIf="email.invalid">
         <ng-container
@@ -69,6 +85,7 @@
         [enableSearch]="true"
         formControlName="phoneNumber"
         #phonephoneNumber
+        (blur)="errors(phoneNumber, phoneField._elementRef.nativeElement)"
         [required]="true"
       ></ngx-mat-intl-tel-input>
       <mat-icon matSuffix>phone</mat-icon>
@@ -93,6 +110,7 @@
         matInput
         [type]="hidePassword ? 'password' : 'text'"
         [formControl]="password"
+        (blur)="errors(password, passwordField._elementRef.nativeElement)"
         required
       />
       <button
@@ -126,6 +144,12 @@
         matInput
         [type]="hideConfirmPassword ? 'password' : 'text'"
         [formControl]="confirmPassword"
+        (blur)="
+          errors(
+            confirmPassword,
+            confirmPasswordField._elementRef.nativeElement
+          )
+        "
         required
       />
       <button
@@ -175,7 +199,12 @@
     <!-- Code Verification -->
     <mat-form-field #codeField>
       <mat-label>Código de Verificación</mat-label>
-      <input matInput [formControl]="code" required />
+      <input
+        matInput
+        [formControl]="code"
+        (blur)="errors(code, codeField._elementRef.nativeElement)"
+        required
+      />
       <mat-icon matSuffix>code</mat-icon>
       <mat-error *ngIf="code.invalid">
         <ng-container
@@ -194,7 +223,6 @@
       mat-raised-button
       type="submit"
       [disabled]="!codeVerificationForm.valid"
-      id="submitBtn"
     >
       Verificar
     </button>
