@@ -187,7 +187,7 @@ export class AgendaComponent {
   //función para calcular el tiempo en el refugio del animal
   GettiempoRefugio(): number {
     let fechaActual = new Date();
-    let fechaIngreso = new Date(this.mascota.fechaIngreso);
+    let fechaIngreso = this.mascota.fechaIngreso;
     let tiempoRefugio = fechaActual.getTime() - fechaIngreso.getTime();
     return Math.floor(tiempoRefugio / (1000 * 60 * 60 * 24));
   }
@@ -270,12 +270,22 @@ export class AgendaComponent {
     } else {
       //Todo es correcto
       this.dataCita = this.CitasFbService.newCita();
-      this.dataCita.fecha = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
+      let selectedDate2 = this.selectedDate
+        ? new Date(this.selectedDate)
+        : null;
+      this.dataCita.fechaHora = this.selectedDate;
+      this.dataCita.fechaHora.setHours(Number(this.selectedHour.split(':')[0]));
+      this.dataCita.fechaHora.setMinutes(
+        Number(this.selectedHour.split(':')[1])
+      );
+      this.dataCita.adoptante.nombre = this.nombreAdop.value ?? '';
+      this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
+      this.dataCita.mascota = this.mascota;
 
-      this.dataCita.hora = {
-        hours: Number(this.selectedHour.split(':')[0]),
-        minutes: Number(this.selectedHour.split(':')[1]),
-      };
+      // this.dataCita.hora = {
+      //   hours: Number(this.selectedHour.split(':')[0]),
+      //   minutes: Number(this.selectedHour.split(':')[1]),
+      // };
       this.dataCita.adoptante.nombre = this.nombreAdop.value ?? '';
       this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
       this.dataCita.mascota = this.mascota;
@@ -294,16 +304,20 @@ export class AgendaComponent {
   //Obtener citas de firebase,
   async actualizaHorasDisp() {
     let citas = await this.CitasFbService.getAllCitas();
-    let selectedDate2 = `${this.selectedDate.getDate()}/${this.selectedDate.getMonth()}/${this.selectedDate.getFullYear()}`;
+    console.log('Citas obtenidas: ', citas);
+    let selectedDate2 = this.selectedDate ? new Date(this.selectedDate) : null;
     console.log('entrando a actualizar Horas disponibles');
     citas.forEach((cita) => {
-      //convirtiendo a string la fecha seleccionada
       //mostrando cita en consola
-      console.log(cita);
-
-      if (selectedDate2 && cita.fecha === selectedDate2) {
-        let horaCita = cita.hora.hours.toString();
-        let minCita = cita.hora.minutes.toString();
+      console.log('Cita actual: ' + cita);
+      if (
+        selectedDate2 &&
+        selectedDate2.getDate() == cita.fechaHora.getDate() &&
+        selectedDate2.getMonth() == cita.fechaHora.getMonth() &&
+        selectedDate2.getFullYear() == cita.fechaHora.getFullYear()
+      ) {
+        let horaCita = cita.fechaHora.getHours.toString();
+        let minCita = cita.fechaHora.getMinutes.toString();
         if (minCita === '0') {
           minCita = '00';
         }
@@ -314,6 +328,14 @@ export class AgendaComponent {
         }
       }
     });
+  }
+
+  UnirFechaHora(date: Date, time: string): Date {
+    console.log('Fecha recibida: ', date);
+    const [hours, minutes] = time.split(':').map(Number);
+    date.setHours(hours, minutes, 0, 0);
+    console.log('Fecha y hora unidas: ', date);
+    return date;
   }
 
   //borrando el contenido de los campos input

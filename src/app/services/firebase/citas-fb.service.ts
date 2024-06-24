@@ -7,11 +7,12 @@ import {
   collectionData,
   query,
   orderBy,
+  where,
+  Timestamp,
 } from '@angular/fire/firestore';
 
 import { Observable, firstValueFrom } from 'rxjs';
 import { Cita } from '../../interfaces/cita';
-import { CitasService } from '../citas-inicio/citas.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,19 +24,14 @@ export class CitasFbService {
   urlAPI: string = 'https://paworld.free.beeceptor.com';
   http: any;
 
-  constructor(
-    private firestore: Firestore,
-    private citasService: CitasService
-  ) {
+  constructor(private firestore: Firestore) {
     console.log('constructro firestore service');
-    this.addCitasDefault();
   }
 
   newCita(): Cita {
     return {
       // id: this.citas.length + 1,
-      fecha: '',
-      hora: { hours: 0, minutes: 0 },
+      fechaHora: new Date(),
       adoptante: {
         id: '',
         nombre: '',
@@ -48,7 +44,7 @@ export class CitasFbService {
         color: '',
         tipo: '',
         raza: '',
-        fechaIngreso: '',
+        fechaIngreso: new Date(),
         descripcion: '',
         imagen: '',
         sexo: '',
@@ -69,24 +65,29 @@ export class CitasFbService {
     await addDoc(collection(this.firestore, 'citas'), cita);
 
     //ejecutando getAllCitas para probarlo
+    this.getAllCitas();
   }
 
-  async getAllCitas(): Promise<Cita[]> {
-    // Obtener los datos de Firestore sin ordenarlos
-    const q = query(this.citasRef);
+  // async getAllCitas(): Promise<Cita[]> {
+  //   // Obtener los datos de Firestore sin ordenarlos
+  //   const q = query(this.citasRef);
 
-    this.citasFB = collectionData(q, {
+  //   this.citasFB = collectionData(q, {
+  //     idField: 'id',
+  //   }) as Observable<Cita[]>;
+
+  //   const data = await firstValueFrom(this.citasFB);
+  //   console.log('data', data);
+  //   return this.citas;
+  // }
+
+  async getAllCitas(): Promise<Cita[]> {
+    this.citasFB = collectionData(this.citasRef, {
       idField: 'id',
     }) as Observable<Cita[]>;
 
     const data = await firstValueFrom(this.citasFB);
-
-    // Convertir y ordenar las fechas
-    this.citas = data.sort((a, b) => {
-      const dateA = this.convertToComparableDate(a.fecha);
-      const dateB = this.convertToComparableDate(b.fecha);
-      return dateA - dateB;
-    });
+    this.citas = data;
 
     return this.citas;
   }
@@ -97,16 +98,31 @@ export class CitasFbService {
     return new Date(year + 2000, month - 1, day).getTime();
   }
 
-  async addCitasDefault() {
-    //Verificar si ya hay datos en firebase
-    if ((await this.getAllCitas()).length > 0) {
-      return;
-    }
-    //recorriendo arreglo de citas predefinidas y agregandolas a firebase
-    this.citasService.citasDefinidas.forEach(async (cita) => {
-      await addDoc(collection(this.firestore, 'citas'), cita);
-    });
+  /////////////////Métodos Citas pasadas y futuras/////////////////////
+  async getCitasFuturas(fechaReferencia: Date): Promise<Cita[]> {
+    console.log('Consultar citas futuras a partir de la fecha de referencia');
+    // Consultar citas futuras a partir de la fecha de referencia
+    const q = query(
+      this.citasRef,
+      where('fechaHora', '>', fechaReferencia),
+      orderBy('fechaHora', 'asc')
+    );
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    let data = await firstValueFrom(this.citasFB);
+    console.log('Arreglo de Citas Futuras', data);
+    return data;
   }
 
-  /////////////////Obteniendo datos predefinidos
+  async getCitasPasadas(fechaReferencia: Date): Promise<Cita[]> {
+    // Consultar citas pasadas hasta la fecha de referencia
+    const q = query(
+      this.citasRef,
+      where('fechaHora', '<', fechaReferencia),
+      orderBy('fechaHora', 'desc')
+    );
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    const data = await firstValueFrom(this.citasFB);
+    console.log('Arreglo de Citas Pasadas', data);
+    return data;
+  }
 }

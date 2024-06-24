@@ -1,5 +1,4 @@
 <div id="container">
-  @if (citas.length > 0) {
   <div class="btncitas">
     <button (click)="btnCargarFuturas()" class="cambiarCitas">
       Citas futuras
@@ -9,6 +8,8 @@
     </button>
   </div>
   <br />
+  @if (citas.length > 0) {
+  <h1>Cargando citas</h1>
   <table>
     <thead>
       <tr class="trcont">
@@ -24,13 +25,12 @@
     <tbody>
       @for (cita of citas; track $index) {
       <tr class="trcont">
-        <td><span [innerHTML]="cita.id"></span></td> 
-        <td><span [innerHTML]="cita.fecha"></span></td>
+        <td><span [innerHTML]="cita.id"></span></td>
         <td>
-          <span [innerHTML]="cita.hora.hours"></span>:
-          <span
-            [innerHTML]="cita.hora.minutes == 0 ? '00' : cita.hora.minutes"
-          ></span>
+          <span>{{ cita.fechaHora | timestampToDateString }}</span>
+        </td>
+        <td>
+          <span>{{ cita.fechaHora | timestampToHourString }}</span>
         </td>
         <td>
           <span [innerHTML]="cita.adoptante.nombre"></span><br />
