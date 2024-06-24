@@ -32,8 +32,8 @@ export class UsersFbService {
   async isUserPhoneLinked(uid: string): Promise<boolean> {
     const ref = doc(this.firestore, `users/${uid}`);
     const docSnapshot = await getDoc(ref);
-    console.log('docSnapshot', docSnapshot.data());
-    if (docSnapshot.exists() && docSnapshot.data()['phoneNumber']) {
+    console.log('docSnapshot', docSnapshot.data()!['phoneLinked']);
+    if (docSnapshot.exists() && docSnapshot.data()!['phoneLinked'] === true) {
       return true;
     } else {
       return false;
@@ -45,6 +45,17 @@ export class UsersFbService {
     const q = await query(ref, where('phoneNumber', '==', phoneNumber));
     return getDocs(q).then((querySnapshot) => {
       return !querySnapshot.empty;
+    });
+  }
+
+  getPhoneByEmail(email: string): Promise<string> {
+    const ref = collection(this.firestore, 'users');
+    const q = query(ref, where('email', '==', email));
+    return getDocs(q).then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        return '';
+      }
+      return querySnapshot.docs[0].data()['phoneNumber'];
     });
   }
 

@@ -9,23 +9,29 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
+  signInWithPhoneNumber,
+  updateProfile,
 } from '@angular/fire/auth';
 import { User } from '../../interfaces/user';
 import { UsersFbService } from './users-fb.service';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private static user?: FirebaseUser;
-  private static confirmationResult?: ConfirmationResult;
+  private user?: FirebaseUser;
+  private confirmationResult?: ConfirmationResult;
 
   constructor(
     private firebaseAuth: Auth,
     private userService: UsersFbService
   ) {}
 
-  getUser(): FirebaseUser | undefined {
-    return AuthService.user;
+  getCurrentUser(): Observable<FirebaseUser | null> {
+    return new Observable((subscriber) => {
+      const unsubscribe = this.firebaseAuth.onAuthStateChanged(subscriber);
+      return { unsubscribe };
+    });
   }
 
   async signUp(
@@ -46,16 +52,19 @@ export class AuthService {
       password
     )
       .then(async (userCredential) => {
-        AuthService.user = userCredential.user;
+        this.user = userCredential.user;
         // linkear el usuario con el telefono, verificando el numero
         await this.linkPhoneGenerateCaptcha(phoneNumber, htmlElement);
         await this.userService.setUser(
-          AuthService.user.uid,
+          this.user.uid,
           name,
           nickname,
           email,
           phoneNumber
         );
+        await updateProfile(this.user, {
+          displayName: nickname,
+        });
       })
       .catch((error) => {
         console.log('error SignUp', error);
@@ -92,10 +101,10 @@ export class AuthService {
     phoneNumber: string,
     captchaVerifier: RecaptchaVerifier
   ) {
-    linkWithPhoneNumber(AuthService.user!, phoneNumber, captchaVerifier)
+    linkWithPhoneNumber(this.user!, phoneNumber, captchaVerifier)
       .then((confirmationResult) => {
         console.log('confirmationResult', confirmationResult);
-        AuthService.confirmationResult = confirmationResult;
+        this.confirmationResult = confirmationResult;
       })
       .catch((error) => {
         console.log('error Sending Code', error);
@@ -106,11 +115,11 @@ export class AuthService {
   async linkPhoneVerifyCode(code: string): Promise<boolean> {
     console.log('linkPhoneVerifyCode');
     try {
-      await AuthService.confirmationResult!.confirm(code);
+      await this.confirmationResult!.confirm(code);
       console.log('success');
-      this.userService.linkUserPhone(AuthService.user!.uid);
-      AuthService.user = undefined;
-      AuthService.confirmationResult = undefined;
+      this.userService.linkUserPhone(this.user!.uid);
+      this.user = undefined;
+      this.confirmationResult = undefined;
       return true;
     } catch (error) {
       console.log('error', error);
@@ -128,18 +137,10 @@ export class AuthService {
       .then((userCredential) => {
         this.userService
           .isUserPhoneLinked(userCredential.user.uid)
-          .then((isLinked) => {
-            if (isLinked) {
-              console.log('User has phone');
-              // Add session persistence
-              setPersistence(this.firebaseAuth, browserLocalPersistence)
-                .then(() => {
-                  console.log('Persistence set');
-                })
-                .catch((error) => {
-                  console.log('error', error);
-                });
-              return;
+          .then(async (isLinked) => {
+            console.log('userCredential', userCredential);
+            if (userCredential.user.phoneNumber != null) {
+              console.log('userCredential', userCredential.user.phoneNumber);
             }
           });
       })
@@ -147,5 +148,49 @@ export class AuthService {
         console.log('error', error);
         throw error;
       });
+  }
+
+  async singInWithPhoneNumberByEmail(email: string, htmlElement: HTMLElement) {
+    if (!email || !htmlElement) throw new Error('Missing fields');
+    let phoneNumber = await this.userService.getPhoneByEmail(email);
+    if (!phoneNumber) throw new Error('Phone number not found');
+    let captchaVerifier = new RecaptchaVerifier(
+      this.firebaseAuth,
+      htmlElement,
+      {
+        size: 'invisible',
+        callback: (response: any) => {
+          console.log('captcha resolved');
+        },
+      }
+    );
+    await setTimeout(() => {}, 3000);
+    await this.signInWithPhoneNumberSendCode(phoneNumber, captchaVerifier);
+  }
+
+  async signInWithPhoneNumberSendCode(
+    phoneNumber: string,
+    captchaVerifier: RecaptchaVerifier
+  ) {
+    signInWithPhoneNumber(this.firebaseAuth, phoneNumber, captchaVerifier).then(
+      (confirmationResult) => {
+        this.confirmationResult = confirmationResult;
+      }
+    );
+  }
+
+  async signInWithPhoneNumberVerifyCode(code: string): Promise<any> {
+    try {
+      await this.confirmationResult!.confirm(code).then((result) => {
+        console.log('result', result);
+        return result;
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  async signOut() {
+    return this.firebaseAuth.signOut();
   }
 }
