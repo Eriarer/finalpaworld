@@ -19,6 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxMatIntlTelInputComponent } from 'ngx-mat-intl-tel-input';
+import { AuthService } from '../../../services/firebase/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -41,6 +43,7 @@ import { NgxMatIntlTelInputComponent } from 'ngx-mat-intl-tel-input';
     MatDatepickerModule,
     NgxMatIntlTelInputComponent,
     CommonModule,
+    RouterModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -137,6 +140,22 @@ export class RegisterComponent {
     { validators: this.passwordMatchValidator }
   );
 
+  codeErrorMessages: any = {
+    required: 'No se puede dejar vacio',
+    minlength: 'El código debe tener al menos 6 caracteres',
+  };
+
+  code = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(6)],
+  });
+
+  codeVerificationForm = new FormGroup({
+    code: this.code,
+  });
+
+  constructor(private authService: AuthService) {}
+
   passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
     const password: string = control.value;
     if (!password) return null;
@@ -178,10 +197,33 @@ export class RegisterComponent {
   }
 
   onSubmitRegister() {
+    const button: HTMLElement = document.getElementById(
+      'submitBtn'
+    ) as HTMLElement;
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
+      this.authService.signUp(
+        this.name.value,
+        this.nickname.value,
+        this.email.value,
+        this.phoneNumber.value,
+        this.password.value,
+        button
+      );
+      document.getElementById('registerForm')!.style.display = 'none';
+      document.getElementById('codeVerificationForm')!.style.display = 'flex';
     }
     if (this.registerForm.invalid) {
+      console.log('Form is invalid');
+    }
+  }
+
+  onSubmitCodeVerification() {
+    if (this.codeVerificationForm.valid) {
+      console.log(this.codeVerificationForm.value);
+      this.authService.linkPhoneVerifyCode(this.code.value);
+    }
+    if (this.codeVerificationForm.invalid) {
       console.log('Form is invalid');
     }
   }
