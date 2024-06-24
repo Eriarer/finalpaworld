@@ -135,18 +135,20 @@
     font-size: 1.1rem;
     font-weight: bold;
   }
-  
-  .carousel-indicators [data-bs-target] {
-    background-color: #0044cc;
-  }
-  
-  .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-    background-color: #0044cc;
-    border-radius: 50%;
-    padding: 10px;
-  }
-    
+  .c-item {
+    height: 32rem;
+}
+
+.c-img {
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+}
+
+.carousel-caption {
+    font-size: 1rem;
+}
+
   .donations {
     background-color: #e6f2ff;
   }
