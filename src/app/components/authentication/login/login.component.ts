@@ -8,9 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatError } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/firebase/auth.service';
-import { User } from '@angular/fire/auth';
 import { UserState } from '../../../interfaces/userState';
-import { take } from 'rxjs';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -30,10 +30,11 @@ import { take } from 'rxjs';
 })
 export class LoginComponent {
   loginType: string = 'email';
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+    this.loginType = this.router.url.split('/')[2];
+  }
 
   ngOnInit() {
-    //escuchar los eventos de cambio de ruta
     this.authService
       .getCurrentUserState()
       .toPromise()
