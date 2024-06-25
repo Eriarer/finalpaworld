@@ -7,6 +7,10 @@ form {
   min-height: 200px;
 }
 
+#confirmForm {
+  display: none;
+}
+
 .loginType {
   width: 100%;
   max-width: 200px;

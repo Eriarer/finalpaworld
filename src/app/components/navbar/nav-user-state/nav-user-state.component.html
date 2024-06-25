@@ -1,5 +1,5 @@
 <ul class="navbar-nav justify-content-end pe-3">
-  <div class="d-flex flex-column justify-content-center">
+  <div class="d-flex flex-column justify-content-center mt-lg-0 mt-4">
     <div class="displayName" *ngIf="userLogged">
       <mat-icon matSuffix>account_circle</mat-icon>
       {{ displayName }}
@@ -28,7 +28,7 @@
       </li>
 
       <!-- Admin -->
-      <li class="nav-item dropdown" *ngIf="userLogged && admin">
+      <li class="nav-item dropdown" *ngIf="admin">
         <div
           class="btn-group"
           [class.dropstart]="dropstart"

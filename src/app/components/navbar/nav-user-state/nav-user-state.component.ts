@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/firebase/auth.service';
 import { CommonModule } from '@angular/common';
 import { UsersFbService } from '../../../services/firebase/users-fb.service';
 import { MatIcon } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-user-state',
@@ -13,9 +14,11 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './nav-user-state.component.css',
 })
 export class NavUserStateComponent {
+  private userStateSubscription?: Subscription;
   userLogged: boolean = true;
   admin: boolean = false;
   displayName: string = '';
+
   // bt breakpoints
   bs_sm: number = 576;
   bs_md: number = 768;
@@ -27,32 +30,31 @@ export class NavUserStateComponent {
   adminRoute: boolean = false;
   // crear un listener para el tamaño de la pantalla
   // y cambiar el valor de dropstart
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private userService: UsersFbService
-  ) {
+  constructor(private router: Router, private authService: AuthService) {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
-    this.authService.getCurrentUser().subscribe((user) => {
-      if (user) {
-        console.log('User is signed in', user);
-        console.log('UserID', user.uid);
-        console.log('UserEmail', user.email);
-        console.log('UserPhone', user.phoneNumber);
-        console.log('UserDisplayName', user.displayName);
-        this.userLogged = true;
-        this.displayName = user.displayName!;
-        this.userService.isUserAdmin(user.uid).then((isAdmin) => {
+  }
+
+  ngOnInit() {
+    this.userStateSubscription = this.authService
+      .getCurrentUserState()
+      .subscribe(({ user, isAdmin }) => {
+        if (user) {
+          this.userLogged = true;
+          this.displayName = user.displayName || '';
           this.admin = isAdmin;
-        });
-      } else {
-        console.log('No user signed in');
-        this.userLogged = false;
-        this.admin = false;
-        this.displayName = '';
-      }
-    });
+        } else {
+          this.userLogged = false;
+          this.admin = false;
+          this.displayName = '';
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.userStateSubscription) {
+      this.userStateSubscription.unsubscribe();
+    }
   }
 
   handleResize = () => {
@@ -62,10 +64,6 @@ export class NavUserStateComponent {
       this.dropstart = false;
     }
   };
-
-  ngOnInit() {
-    this.isAdmin();
-  }
 
   isAdmin() {
     this.router.events.subscribe((event) => {
@@ -82,6 +80,8 @@ export class NavUserStateComponent {
   logout() {
     this.router.navigate(['/inicio']);
     this.authService.signOut();
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   }
 }

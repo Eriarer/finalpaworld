@@ -213,15 +213,25 @@
           </mat-error>
         </mat-form-field>
         <!-- Submit Button -->
-        <button
-          mat-flat-button
-          color="accent"
-          mat-raised-button
-          type="submit"
-          [disabled]="!codeVerificationForm.valid"
-        >
-          Verificar
-        </button>
+        <div class="d-flex justify-content-around">
+          <button
+            mat-flat-button
+            color="accent"
+            mat-raised-button
+            type="submit"
+            [disabled]="!codeVerificationForm.valid"
+          >
+            Verificar
+          </button>
+          <button
+            mat-flat-button
+            color="tertiary"
+            mat-raised-button
+            [routerLink]="['/inicio']"
+          >
+            Continuar Sin verificar
+          </button>
+        </div>
       </form>
     </div>
     <div class="card-footer">
