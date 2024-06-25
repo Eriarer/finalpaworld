@@ -40,6 +40,7 @@ import { AuthService } from '../../services/firebase/auth.service';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LoaderComponent } from '../loader/loader.component';
+import { UsersFbService } from '../../services/firebase/users-fb.service';
 
 // Define custom date format for fr locale
 export const FR_DATE_FORMATS = {
@@ -160,7 +161,8 @@ export class AgendaComponent {
     public activatedRoute: ActivatedRoute,
     public CitasFbService: CitasFbService,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private userService: UsersFbService
   ) {
     // conseguir el ID de la url /agenda/:id
     this.activatedRoute.params.subscribe((params) => {
@@ -270,7 +272,7 @@ export class AgendaComponent {
   }
 
   //Función para guardar datos de la cita en el localstorage con el service citas
-  GuardarCita() {
+  async GuardarCita() {
     if (this.razonAdop.invalid) {
       Swal.fire({
         title: 'Error!',
@@ -303,17 +305,19 @@ export class AgendaComponent {
       this.dataCita.mascota = this.mascota;
 
       this.dataCita.adoptante.razon = this.razonAdop.value ?? '';
-      this.dataCita.adoptante.nombre = this.userLogged.displayName;
+      this.dataCita.adoptante.nombre = await this.userService.getUsernameByUid(
+        this.userLogged.uid
+      );
       this.dataCita.adoptante.telefono = this.userLogged.phoneNumber;
       this.dataCita.adoptante.correo = this.userLogged.email;
       this.submit(); //Envio de correo
       const response = this.CitasFbService.addCita(this.dataCita); //agregando a firebase
+      this.isLoading = false;
       Swal.fire({
         title: 'Cita agendada',
         text: 'La cita ha sido agendada correctamente, se ha enviado un correo con la información.',
         icon: 'success',
       });
-      this.isLoading = false;
 
       this.clearFields();
     }
@@ -321,28 +325,19 @@ export class AgendaComponent {
 
   //Obtener citas de firebase,
   async actualizaHorasDisp() {
-    let citas = await this.CitasFbService.getAllCitas();
     let selectedDate2 = this.selectedDate ? new Date(this.selectedDate) : null;
-    citas.forEach((cita) => {
-      //mostrando cita en consola
-      if (
-        selectedDate2 &&
-        selectedDate2.getDate() == cita.fechaHora.getDate() &&
-        selectedDate2.getMonth() == cita.fechaHora.getMonth() &&
-        selectedDate2.getFullYear() == cita.fechaHora.getFullYear()
-      ) {
-        let horaCita = cita.fechaHora.getHours.toString();
-        let minCita = cita.fechaHora.getMinutes.toString();
-        if (minCita === '0') {
-          minCita = '00';
-        }
-        let horaCita2 = horaCita + ':' + minCita;
-        this.horasOcupadas.push(horaCita2);
-        if (this.selectedHour == horaCita2) {
-          this.selectedHour = '';
-        }
-      }
-    });
+    this.isLoading = true;
+    try {
+      this.horasOcupadas = await this.CitasFbService.getAllHoursOcupied(
+        selectedDate2
+      );
+    } catch (e) {
+      this.isLoading = false;
+      console.log(e);
+      return;
+    }finally{
+    this.isLoading = false;
+    }
   }
 
   UnirFechaHora(date: Date, time: string): Date {

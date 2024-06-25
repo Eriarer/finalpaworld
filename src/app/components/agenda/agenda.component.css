@@ -9,11 +9,12 @@
   max-width: 1200px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items:center;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 2em;
   column-gap: 2em;
+
 }
 
 .petInfoRow {

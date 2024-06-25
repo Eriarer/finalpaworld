@@ -27,22 +27,20 @@ export class CitasFbService {
   private userStateSubscription?: Subscription;
   userLogged: any;
 
-  constructor(private firestore: Firestore,
-    private authService: AuthService,
-  ) {
+  constructor(private firestore: Firestore, private authService: AuthService) {
     this.prubUserLog();
   }
 
-  async prubUserLog(){
+  async prubUserLog() {
     this.userStateSubscription = await this.authService
-    .getCurrentUserState()
-    .subscribe(({ user, isAdmin }) => {
-      if (user != null) {
-        this.userLogged = user;
-      } else {
-        this.userLogged = user;
-      }
-    });
+      .getCurrentUserState()
+      .subscribe(({ user, isAdmin }) => {
+        if (user != null) {
+          this.userLogged = user;
+        } else {
+          this.userLogged = user;
+        }
+      });
   }
 
   newCita(): Cita {
@@ -83,7 +81,6 @@ export class CitasFbService {
     }
     //añadiendo a firebase
     await addDoc(collection(this.firestore, 'citas'), cita);
-
   }
 
   // async getAllCitas(): Promise<Cita[]> {
@@ -122,18 +119,18 @@ export class CitasFbService {
     this.prubUserLog();
     const loggedUser = this.userLogged.email;
     console.log('Usuario logueado: ', loggedUser);
-  
+
     const q = query(
       this.citasRef,
       where('fechaHora', '>', fechaReferencia),
       orderBy('fechaHora', 'asc')
     );
-  
+
     this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
     let data = await firstValueFrom(this.citasFB);
-  
+
     // Filtrar las citas por el correo del adoptante en el cliente
-    return data.filter(cita => cita.adoptante?.correo === loggedUser);
+    return data.filter((cita) => cita.adoptante?.correo === loggedUser);
   }
 
   async getCitasPasadas(fechaReferencia: Date): Promise<Cita[]> {
@@ -148,5 +145,38 @@ export class CitasFbService {
     const data = await firstValueFrom(this.citasFB);
     console.log('Arreglo de Citas Pasadas', data);
     return data;
+  }
+
+  //return an array full of objects  {horas: String: hh:mm}
+  async getAllHoursOcupied(today: Date | null) {
+    if (today == null) throw new Error('No se ha proporcionado la fecha');
+    console.log('Fecha de hoy', today);
+    // convertir  today  a formato Timestamp
+    const now = Timestamp.fromDate(today);
+    let tomorrow: any = now.toDate();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    console.log('Fecha de mañana', tomorrow);
+    tomorrow = Timestamp.fromDate(tomorrow);
+    const q = query(
+      this.citasRef,
+      where('fechaHora', '>=', now),
+      where('fechaHora', '<', tomorrow),
+      orderBy('fechaHora', 'asc')
+    );
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    const data = await firstValueFrom(this.citasFB);
+    console.log('Arreglo de Citas Pasadas', data);
+    let hoursOcupied: any[] = [];
+    data.forEach((cita: any) => {
+      let hour = cita.fechaHora.toDate().getHours();
+      let minute = cita.fechaHora.toDate().getMinutes();
+      hour = hour < 10 ? `0${hour}` : hour;
+      minute = minute < 10 ? `0${minute}` : minute;
+      let time = `${hour}:${minute}`;
+      hoursOcupied.push(time);
+    });
+    console.log('Horas ocupadas', hoursOcupied);
+    return hoursOcupied;
   }
 }
