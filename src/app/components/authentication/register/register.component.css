@@ -1,0 +1,15 @@
+#registerForm,
+#codeVerificationForm {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+#codeVerificationForm {
+  display: none;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 500px;
+}

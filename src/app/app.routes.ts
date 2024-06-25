@@ -4,13 +4,13 @@ import { CitafuturaComponent } from './components/citafutura/citafutura.componen
 import { MascotaComponent } from './components/mascota/mascota.component';
 import { AgendaComponent } from './components/agenda/agenda.component';
 import { GraficasComponent } from './components/admin/graficas/graficas.component';
-import { LoginComponent } from './components/login/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/authentication/login/login.component';
+import { RegisterComponent } from './components/authentication/register/register.component';
 import { ContactoComponent } from './components/contacto/contacto.component';
 import { AcercaDeComponent } from './components/acerca-de/acerca-de.component';
 import { ConsultasComponent } from './components/admin/consultas/consultas.component';
-import { EmailLoginComponent } from './components/login/email-login/email-login.component';
-import { PhoneLoginComponent } from './components/login/phone-login/phone-login.component';
+import { EmailLoginComponent } from './components/authentication/email-login/email-login.component';
+import { PhoneLoginComponent } from './components/authentication/phone-login/phone-login.component';
 import { AdminComponent } from './components/admin/admin/admin.component';
 
 export const routes: Routes = [
@@ -74,5 +74,5 @@ export const routes: Routes = [
     ],
   },
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '/inicio' },
 ];

@@ -11,7 +11,8 @@
           class="d-inline-block align-text-top"
         />
         <p class="m-0 ms-2">
-          {{ appName }}</p>
+          {{ appName }}
+        </p>
       </div>
     </a>
     <!-- Toggle -->
@@ -45,9 +46,10 @@
               class="d-inline-block align-text-top"
             />
             <p class="m-0 ms-2">
-              {{ appName }}</p>
+              {{ appName }}
+            </p>
           </div>
-          </h5>
+        </h5>
         <button
           type="button"
           class="btn-close"
@@ -72,12 +74,15 @@
           }
         </ul>
         <!-- Manejar usuario -->
-        <app-nav-serach></app-nav-serach>
+        <div class="d-flex flex-row justify-content-center align-items-center">
+          <app-nav-serach></app-nav-serach>
+        </div>
         <app-nav-user-state></app-nav-user-state>
       </div>
     </div>
   </div>
 </nav>
-<div class="d-flex flex-column flex-grow-1 container">
+<div class="d-flex flex-column flex-grow-1 container mt-5">
   <ng-content></ng-content>
+  <br />
 </div>

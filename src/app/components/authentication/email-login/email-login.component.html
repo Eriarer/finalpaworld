@@ -1,0 +1,60 @@
+<div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="example@email.com"
+      />
+      <mat-icon matSuffix>email</mat-icon>
+      <mat-error *ngIf="email.invalid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+
+    <!-- password -->
+    <mat-form-field #passwordField>
+      <mat-label>Contraseña</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        [formControl]="password"
+        required
+      />
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility" : "visibility_off"
+        }}</mat-icon>
+      </button>
+      <mat-error *ngIf="password.invalid">
+        <!--dos errores, required y minlength  -->
+        <ng-container *ngIf="password.hasError('required')">
+          La contraseña es requerida
+        </ng-container>
+        <ng-container *ngIf="password.hasError('minlength')">
+          La contraseña debe tener al menos 6 caracteres
+        </ng-container>
+      </mat-error>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!loginForm.valid"
+      id="loginButton"
+    >
+      Login
+    </button>
+  </form>
+  <button mat-raised-button routerLink="/login/phone" class="loginType">
+    <div class="d-flex g-3 align-items-center">
+      <mat-label>Login por SMS</mat-label>
+      <mat-icon class="m-0">sms</mat-icon>
+    </div>
+  </button>
+</div>
