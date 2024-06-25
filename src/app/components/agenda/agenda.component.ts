@@ -292,6 +292,7 @@ export class AgendaComponent {
         icon: 'error',
       });
     } else {
+      this.isLoading = true;
       //Todo es correcto
       this.dataCita = this.CitasFbService.newCita();
       let selectedDate2 = this.selectedDate
@@ -310,15 +311,15 @@ export class AgendaComponent {
       );
       this.dataCita.adoptante.telefono = this.userLogged.phoneNumber;
       this.dataCita.adoptante.correo = this.userLogged.email;
-      this.submit(); //Envio de correo
       const response = this.CitasFbService.addCita(this.dataCita); //agregando a firebase
+      // this.dataCita.fechaHora.getDate();
+      this.submit(); //Envio de correo
       this.isLoading = false;
       Swal.fire({
         title: 'Cita agendada',
         text: 'La cita ha sido agendada correctamente, se ha enviado un correo con la información.',
         icon: 'success',
       });
-
       this.clearFields();
     }
   }
@@ -326,7 +327,6 @@ export class AgendaComponent {
   //Obtener citas de firebase,
   async actualizaHorasDisp() {
     let selectedDate2 = this.selectedDate ? new Date(this.selectedDate) : null;
-    this.isLoading = true;
     try {
       this.horasOcupadas = await this.CitasFbService.getAllHoursOcupied(
         selectedDate2
@@ -335,8 +335,8 @@ export class AgendaComponent {
       this.isLoading = false;
       console.log(e);
       return;
-    }finally{
-    this.isLoading = false;
+    } finally {
+      this.isLoading = false;
     }
   }
 
