@@ -23,6 +23,7 @@ import { AuthService } from '../../../services/firebase/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { UserState } from '../../../interfaces/userState';
+import { LoaderComponent } from '../../loader/loader.component';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -45,11 +46,13 @@ import { UserState } from '../../../interfaces/userState';
     NgxMatIntlTelInputComponent,
     CommonModule,
     RouterModule,
+    LoaderComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  isLoading: boolean = false;
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
   @ViewChild('phonephoneNumber') phoneInputRef!: NgxMatIntlTelInputComponent;
@@ -157,6 +160,7 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOninit() {
+    this.isLoading = true;
     this.authService
       .getCurrentUserState()
       .toPromise()
@@ -166,6 +170,7 @@ export class RegisterComponent {
           this.router.navigate(['/']);
         }
       });
+    this.isLoading = false;
   }
 
   passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
@@ -220,6 +225,7 @@ export class RegisterComponent {
     ) as HTMLElement;
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
+      this.isLoading = true;
       await this.authService
         .signUp(
           this.name.value,
@@ -250,6 +256,9 @@ export class RegisterComponent {
               confirmPassword: '',
             });
           });
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     }
     if (this.registerForm.invalid) {
@@ -260,6 +269,7 @@ export class RegisterComponent {
   async onSubmitCodeVerification() {
     if (this.codeVerificationForm.valid) {
       console.log(this.codeVerificationForm.value);
+      this.isLoading = true;
       await this.authService
         .linkPhoneVerifyCode(this.code.value)
         .then((result) => {
@@ -282,6 +292,9 @@ export class RegisterComponent {
               location.reload();
             }, 100);
           });
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     }
     if (this.codeVerificationForm.invalid) {

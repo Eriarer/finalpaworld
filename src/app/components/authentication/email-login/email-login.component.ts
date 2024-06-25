@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/firebase/auth.service';
 import { UsersFbService } from '../../../services/firebase/users-fb.service';
 import Swal from 'sweetalert2';
+import { LoaderComponent } from '../../loader/loader.component';
 @Component({
   selector: 'app-email-login',
   standalone: true,
@@ -29,12 +30,14 @@ import Swal from 'sweetalert2';
     MatButtonModule,
     MatIconModule,
     MatError,
+    LoaderComponent,
   ],
   templateUrl: './email-login.component.html',
   styleUrl: './email-login.component.css',
 })
 export class EmailLoginComponent {
   hidePassword: boolean = true;
+  isLoading: boolean = false;
 
   password = new FormControl('', {
     nonNullable: true,
@@ -92,6 +95,7 @@ export class EmailLoginComponent {
     }
     console.log('Form submitted');
     let buttonElement = document.getElementById('loginButton')!;
+    this.isLoading = true;
     this.authService
       .signInWithEmailAndPassword(
         this.email.value,
@@ -123,6 +127,9 @@ export class EmailLoginComponent {
             password: '',
           });
         });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 
@@ -142,6 +149,7 @@ export class EmailLoginComponent {
       console.log('Codigo Errors', this.confirmForm.get('codigo')!.errors);
     }
     console.log('Form submitted', this.codigo.value);
+    this.isLoading = true;
     this.authService
       .linkPhoneVerifyCode(this.codigo.value)
       .then((response) => {
@@ -165,6 +173,9 @@ export class EmailLoginComponent {
             window.location.reload();
           }, 100);
         });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }
