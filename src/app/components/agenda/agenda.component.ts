@@ -363,24 +363,24 @@ export class AgendaComponent {
 
   //////// Envio de correo ////////
   submit() {
-    console.log('Datos recibidos para envio de correo: ');
-    //imprimiendo datos de this.dataCita
-    console.log('fecha cita:' + this.dataCita.fechaHora);
-    console.log('mascota:' + this.dataCita.mascota.raza);
-    console.log('adoptante:' + this.dataCita.adoptante.nombre);
     this.isLoading = true;
     this.http
       .post(
         'https://correopaworld-production.up.railway.app/cita',
         this.dataCita
       )
-      .subscribe((error) => {
-        console.log(error);
-        Swal.fire({
-          icon: 'error',
-          title: '¡Lo sentimos!',
-          text: 'Ocurrió un error al enviar el correo de su cita.',
-        });
-      });
+      .subscribe(
+        (res) => {
+          console.log(res);
+        },
+        (error) => {
+          console.log(error);
+          Swal.fire({
+            icon: 'error',
+            title: '¡Lo sentimos!',
+            text: 'Ocurrió un error al enviar el correo de su cita.',
+          });
+        }
+      );
   }
 }
