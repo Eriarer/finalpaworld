@@ -14,6 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/firebase/auth.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
   selector: 'app-phone-login',
@@ -28,11 +29,13 @@ import Swal from 'sweetalert2';
     MatIconModule,
     MatError,
     CommonModule,
+    LoaderComponent,
   ],
   templateUrl: './phone-login.component.html',
   styleUrl: './phone-login.component.css',
 })
 export class PhoneLoginComponent {
+  isLoading: boolean = false;
   email = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.email],
@@ -73,6 +76,7 @@ export class PhoneLoginComponent {
     if (this.loginForm.valid) {
       console.log('Form submitted, value:' + this.loginForm.value);
       let captchaContainer = document.getElementById('sendCoideButton')!;
+      this.isLoading = true;
       //autenticando con email enlazado al telefono, autenticando con telefono
       await this.authService
         .singInWithPhoneNumberByEmail(this.email.value, captchaContainer)
@@ -90,6 +94,9 @@ export class PhoneLoginComponent {
               email: '',
             });
           });
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     }
   }
@@ -110,6 +117,7 @@ export class PhoneLoginComponent {
       console.log('Codigo Errors', this.confirmForm.get('codigo')!.errors);
     }
     console.log('Form submitted', this.codigo.value);
+    this.isLoading = true;
     this.authService
       .signInWithPhoneNumberVerifyCode(this.codigo.value)
       .then((response) => {
@@ -133,6 +141,9 @@ export class PhoneLoginComponent {
             window.location.reload();
           }, 100);
         });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }
