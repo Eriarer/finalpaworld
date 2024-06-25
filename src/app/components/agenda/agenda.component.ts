@@ -19,6 +19,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  FormGroup,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, merge } from 'rxjs';
@@ -36,6 +37,10 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CitasFbService } from '../../services/firebase/citas-fb.service';
 import { AuthService } from '../../services/firebase/auth.service';
+import { RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { LoaderComponent } from '../loader/loader.component';
+
 // Define custom date format for fr locale
 export const FR_DATE_FORMATS = {
   parse: {
@@ -75,11 +80,15 @@ export const FR_DATE_FORMATS = {
     MatInputModule,
     MatDatepickerModule,
     CommonModule,
+    RouterOutlet,
+    ReactiveFormsModule,
+    LoaderComponent,
   ],
   templateUrl: './agenda.component.html',
   styleUrl: './agenda.component.css',
 })
 export class AgendaComponent {
+  isLoading: boolean = false;
   //datos del usuario
   nombre: string = '';
   telefono = 0;
@@ -135,7 +144,7 @@ export class AgendaComponent {
     Validators.minLength(10),
     Validators.maxLength(10),
   ]);
-  razonAdop= new FormControl('', [
+  razonAdop = new FormControl('', [
     Validators.required,
     Validators.pattern('[a-zA-Z ]*'),
   ]);
@@ -145,12 +154,13 @@ export class AgendaComponent {
   selectedFecha: any;
   private userStateSubscription?: Subscription;
   userLogged: any;
-  
+
   constructor(
     public mascotasService: MascotasService,
     public activatedRoute: ActivatedRoute,
     public CitasFbService: CitasFbService,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {
     // conseguir el ID de la url /agenda/:id
     this.activatedRoute.params.subscribe((params) => {
@@ -180,10 +190,9 @@ export class AgendaComponent {
     merge(this.nombreAdop.statusChanges, this.razonAdop.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());
-
   }
 
-   ngOnInit() {
+  ngOnInit() {
     this.tiempoRefugio = this.GettiempoRefugio();
 
     this.userStateSubscription = this.authService
@@ -202,7 +211,6 @@ export class AgendaComponent {
       this.userStateSubscription.unsubscribe();
     }
   }
-
 
   //función para calcular el tiempo en el refugio del animal
   GettiempoRefugio(): number {
@@ -298,13 +306,15 @@ export class AgendaComponent {
       this.dataCita.adoptante.nombre = this.userLogged.displayName;
       this.dataCita.adoptante.telefono = this.userLogged.phoneNumber;
       this.dataCita.adoptante.correo = this.userLogged.email;
-      const response = this.CitasFbService.addCita(this.dataCita);
-
+      this.submit(); //Envio de correo
+      const response = this.CitasFbService.addCita(this.dataCita); //agregando a firebase
       Swal.fire({
         title: 'Cita agendada',
-        text: 'La cita ha sido agendada correctamente',
+        text: 'La cita ha sido agendada correctamente, se ha enviado un correo con la información.',
         icon: 'success',
       });
+      this.isLoading = false;
+
       this.clearFields();
     }
   }
@@ -349,5 +359,28 @@ export class AgendaComponent {
     this.razonAdop.markAsUntouched();
     this.nombreAdop.markAsUntouched();
     this.telAdop.markAsUntouched();
+  }
+
+  //////// Envio de correo ////////
+  submit() {
+    console.log('Datos recibidos para envio de correo: ');
+    //imprimiendo datos de this.dataCita
+    console.log('fecha cita:' + this.dataCita.fechaHora);
+    console.log('mascota:' + this.dataCita.mascota.raza);
+    console.log('adoptante:' + this.dataCita.adoptante.nombre);
+    this.isLoading = true;
+    this.http
+      .post(
+        'https://correopaworld-production.up.railway.app/cita',
+        this.dataCita
+      )
+      .subscribe((error) => {
+        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Lo sentimos!',
+          text: 'Ocurrió un error al enviar el correo de su cita.',
+        });
+      });
   }
 }
