@@ -1,1 +1,40 @@
-<p>contacto works!</p>
+<header>
+    <h1> Contacto </h1>
+</header>
+<div class="formulario">
+    <form [formGroup]="formularioContacto" (ngSubmit)="submit()">
+        @if (this.formularioContacto.get('nombre')?.errors?.['required']) {
+        <span> ⚠️ Se requiere un nombre </span>
+        }
+        @if (this.formularioContacto.get('nombre')?.errors?.['maxlength']) {
+        <span> ⚠️ El nombre no puede exceder los 50 caracteres </span>
+        }
+        <input type="text" formControlName="nombre" placeholder="Nombre" required>
+
+        @if (this.formularioContacto.get('asunto')?.errors?.['required']) {
+        <span> ⚠️ Se requiere un asunto </span>
+        }
+        @if (this.formularioContacto.get('asunto')?.errors?.['maxlength']) {
+        <span> ⚠️ El asunto no puede exceder los 50 caracteres </span>
+        }
+        <input type="text" formControlName="asunto" placeholder="Asunto">
+
+        @if (this.formularioContacto.get('correo')?.errors?.['required'] ||
+        this.formularioContacto.get('correo')?.errors?.['email']) {
+        <span> ⚠️ Se requiere un correo válido </span>
+        }
+        <input type="text" formControlName="correo" placeholder="Correo" required>
+
+        @if (this.formularioContacto.get('mensaje')?.errors?. ['required']) {
+        <div> ⚠️ Se requiere un mensaje </div>
+        }
+        @if (this.formularioContacto.get('mensaje')?.errors?.['maxlength']) {
+        <div> ⚠️ El mensaje no puede exceder los 500 caracteres </div>
+        }
+        <textarea rows="10" cols="80" formControlName="mensaje" placeholder="Mensaje" required></textarea>
+
+        <button type="submit">Confirmar</button>
+    </form>
+</div>
+
+<div class="resultado" [innerHTML]="resultado"></div>
