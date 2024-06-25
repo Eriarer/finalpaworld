@@ -22,6 +22,7 @@ import { NgxMatIntlTelInputComponent } from 'ngx-mat-intl-tel-input';
 import { AuthService } from '../../../services/firebase/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
+import { UserState } from '../../../interfaces/userState';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -151,7 +152,21 @@ export class RegisterComponent {
     code: this.code,
   });
 
+  /////// Inicio de las funciones
+
   constructor(private authService: AuthService, private router: Router) {}
+
+  ngOninit() {
+    this.authService
+      .getCurrentUserState()
+      .toPromise()
+      .then((userState: UserState | undefined) => {
+        if (!userState) return;
+        if (userState.user) {
+          this.router.navigate(['/']);
+        }
+      });
+  }
 
   passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
     const password: string = control.value;
@@ -221,24 +236,19 @@ export class RegisterComponent {
             'flex';
         })
         .catch((error) => {
-          console.log('errorOnSubmit', error);
-          let errorCode = error.message;
-          // error.message Firebase: Error (auth/email-already-in-use).
-          if (error.message.includes('auth/email-already-in-use'))
-            errorCode = 'El correo ya se encuentra registrado';
           Swal.fire({
             title: 'Error',
-            text: errorCode,
+            text: error.message,
             icon: 'error',
           }).then(() => {
             this.registerForm.reset({
               name: '',
               nickname: '',
               email: '',
+              phoneNumber: '',
               password: '',
               confirmPassword: '',
             });
-            this.phoneInputRef.reset();
           });
         });
     }
@@ -253,24 +263,25 @@ export class RegisterComponent {
       await this.authService
         .linkPhoneVerifyCode(this.code.value)
         .then((result) => {
-          console.log('result', result);
-          if (result) {
-            Swal.fire({
-              title: 'Éxito',
-              text: 'Usuario registrado con éxito',
-              icon: 'success',
-            }).then(() => {
-              this.router.navigate(['/inicio']);
-            });
-          } else {
-            Swal.fire({
-              title: 'Número de telefono no verificado',
-              text: 'El número de telefono no pudo verificarse.\nTendras que verificarlo mas tarde.',
-              icon: 'warning',
-            }).then(() => {
-              this.router.navigate(['/inicio']);
-            });
-          }
+          Swal.fire({
+            title: 'Exito',
+            text: 'Registro exitoso',
+            icon: 'success',
+          }).then(() => {
+            this.router.navigate(['/inicio']);
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: 'Error',
+            text: error.message,
+            icon: 'error',
+          }).then(() => {
+            this.router.navigate(['/registro']);
+            setTimeout(() => {
+              location.reload();
+            }, 100);
+          });
         });
     }
     if (this.codeVerificationForm.invalid) {
