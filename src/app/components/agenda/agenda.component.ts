@@ -189,13 +189,11 @@ export class AgendaComponent {
     this.userStateSubscription = this.authService
       .getCurrentUserState()
       .subscribe(({ user, isAdmin }) => {
-        console.log('Usuario: ', user);
         if (user != null) {
           this.userLogged = user;
         } else {
           this.userLogged = user;
         }
-        console.log('Usuario logueado final: ', this.userLogged);
       });
   }
 
@@ -314,12 +312,9 @@ export class AgendaComponent {
   //Obtener citas de firebase,
   async actualizaHorasDisp() {
     let citas = await this.CitasFbService.getAllCitas();
-    console.log('Citas obtenidas: ', citas);
     let selectedDate2 = this.selectedDate ? new Date(this.selectedDate) : null;
-    console.log('entrando a actualizar Horas disponibles');
     citas.forEach((cita) => {
       //mostrando cita en consola
-      console.log('Cita actual: ' + cita);
       if (
         selectedDate2 &&
         selectedDate2.getDate() == cita.fechaHora.getDate() &&
@@ -341,10 +336,8 @@ export class AgendaComponent {
   }
 
   UnirFechaHora(date: Date, time: string): Date {
-    console.log('Fecha recibida: ', date);
     const [hours, minutes] = time.split(':').map(Number);
     date.setHours(hours, minutes, 0, 0);
-    console.log('Fecha y hora unidas: ', date);
     return date;
   }
 
