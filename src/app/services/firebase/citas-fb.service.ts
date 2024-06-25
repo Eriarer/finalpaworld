@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import { AuthService } from './auth.service';
 import {
   Firestore,
   collection,
@@ -11,7 +11,7 @@ import {
   Timestamp,
 } from '@angular/fire/firestore';
 
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { Cita } from '../../interfaces/cita';
 
 @Injectable({
@@ -24,8 +24,25 @@ export class CitasFbService {
   urlAPI: string = 'https://paworld.free.beeceptor.com';
   http: any;
 
-  constructor(private firestore: Firestore) {
-    console.log('constructro firestore service');
+  private userStateSubscription?: Subscription;
+  userLogged: any;
+
+  constructor(private firestore: Firestore,
+    private authService: AuthService,
+  ) {
+    this.prubUserLog();
+  }
+
+  async prubUserLog(){
+    this.userStateSubscription = await this.authService
+    .getCurrentUserState()
+    .subscribe(({ user, isAdmin }) => {
+      if (user != null) {
+        this.userLogged = user;
+      } else {
+        this.userLogged = user;
+      }
+    });
   }
 
   newCita(): Cita {
@@ -53,6 +70,7 @@ export class CitasFbService {
   }
 
   async addCita(cita: Cita) {
+    this.prubUserLog();
     //Verificar que cita no esté vacía
     if (
       cita.mascota.id == 0 ||
@@ -64,11 +82,8 @@ export class CitasFbService {
       return;
     }
     //añadiendo a firebase
-    console.log('Añadiendo cita a firebase', cita);
     await addDoc(collection(this.firestore, 'citas'), cita);
 
-    //ejecutando getAllCitas para probarlo
-    this.getAllCitas();
   }
 
   // async getAllCitas(): Promise<Cita[]> {
@@ -85,6 +100,7 @@ export class CitasFbService {
   // }
 
   async getAllCitas(): Promise<Cita[]> {
+    this.prubUserLog();
     this.citasFB = collectionData(this.citasRef, {
       idField: 'id',
     }) as Observable<Cita[]>;
@@ -103,21 +119,26 @@ export class CitasFbService {
 
   /////////////////Métodos Citas pasadas y futuras/////////////////////
   async getCitasFuturas(fechaReferencia: Date): Promise<Cita[]> {
-    console.log('Consultar citas futuras a partir de la fecha de referencia');
-    // Consultar citas futuras a partir de la fecha de referencia
+    this.prubUserLog();
+    const loggedUser = this.userLogged.email;
+    console.log('Usuario logueado: ', loggedUser);
+  
     const q = query(
       this.citasRef,
       where('fechaHora', '>', fechaReferencia),
       orderBy('fechaHora', 'asc')
     );
+  
     this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
     let data = await firstValueFrom(this.citasFB);
-    console.log('Arreglo de Citas Futuras', data);
-    return data;
+  
+    // Filtrar las citas por el correo del adoptante en el cliente
+    return data.filter(cita => cita.adoptante?.correo === loggedUser);
   }
 
   async getCitasPasadas(fechaReferencia: Date): Promise<Cita[]> {
     // Consultar citas pasadas hasta la fecha de referencia
+    this.prubUserLog();
     const q = query(
       this.citasRef,
       where('fechaHora', '<', fechaReferencia),

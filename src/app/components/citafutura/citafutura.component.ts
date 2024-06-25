@@ -35,12 +35,10 @@ export class CitafuturaComponent {
   async cargacitasFuturas() {
     //dateObject = new Date(fechaHora);
     this.citas = await this.CitasFbService.getCitasFuturas(this.fechaActual);
-    console.log(this.citas);
   }
 
   async cargacitasPrevias() {
     this.citas = await this.CitasFbService.getCitasPasadas(this.fechaActual);
-    console.log(this.citas);
   }
 
   btnCargarPrevias(): void {

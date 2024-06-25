@@ -32,7 +32,6 @@ export class UsersFbService {
   async isUserPhoneLinked(uid: string): Promise<boolean> {
     const ref = doc(this.firestore, `users/${uid}`);
     const docSnapshot = await getDoc(ref);
-    console.log('docSnapshot', docSnapshot.data()!['phoneLinked']);
     if (docSnapshot.exists() && docSnapshot.data()!['phoneLinked'] === true) {
       return true;
     } else {
