@@ -1,5 +1,5 @@
 <div>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" id="loginForm">
     <mat-form-field appearance="fill">
       <mat-label>Email</mat-label>
       <input
@@ -51,6 +51,38 @@
       Login
     </button>
   </form>
+  <form
+    [formGroup]="confirmForm"
+    (ngSubmit)="onSubmitConfirm()"
+    id="confirmForm"
+  >
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo</mat-label>
+      <input matInput type="string" formControlName="codigo" />
+      <mat-icon matSuffix>pin</mat-icon>
+      <mat-error *ngIf="codigo.invalid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-around">
+      <button
+        mat-flat-button
+        color="accent"
+        mat-raised-button
+        type="submit"
+        [disabled]="!codigo.valid"
+      >
+        Verificar
+      </button>
+      <button
+        mat-flat-button
+        color="tertiary"
+        mat-raised-button
+        [routerLink]="['/inicio']"
+      >
+        Continuar sin verificar
+      </button>
+    </div>
+  </form>
   <button mat-raised-button routerLink="/login/phone" class="loginType">
     <div class="d-flex g-3 align-items-center">
       <mat-label>Login por SMS</mat-label>
@@ -58,3 +90,4 @@
     </div>
   </button>
 </div>
+<app-loader [visible]="isLoading"></app-loader>

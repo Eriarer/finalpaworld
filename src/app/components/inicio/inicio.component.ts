@@ -6,8 +6,8 @@ import { DomseguroPipe } from './domseguro.pipe';
   standalone: true,
   imports: [DomseguroPipe],
   templateUrl: './inicio.component.html',
-  styleUrl: './inicio.component.css'
+  styleUrl: './inicio.component.css',
 })
 export class InicioComponent {
-  video: string = "IPBB2iyVq7w";
+  video: string = 'IPBB2iyVq7w';
 }

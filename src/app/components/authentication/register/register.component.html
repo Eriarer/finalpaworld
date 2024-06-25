@@ -83,6 +83,7 @@
           <ngx-mat-intl-tel-input
             formControlName="phone"
             [preferredCountries]="['mx', 'us']"
+            [onlyCountries]="['mx', 'us', 'ca', 'es', 'pk', 'se']"
             [enablePlaceholder]="true"
             [enableSearch]="true"
             formControlName="phoneNumber"
@@ -213,15 +214,25 @@
           </mat-error>
         </mat-form-field>
         <!-- Submit Button -->
-        <button
-          mat-flat-button
-          color="accent"
-          mat-raised-button
-          type="submit"
-          [disabled]="!codeVerificationForm.valid"
-        >
-          Verificar
-        </button>
+        <div class="d-flex justify-content-around">
+          <button
+            mat-flat-button
+            color="accent"
+            mat-raised-button
+            type="submit"
+            [disabled]="!codeVerificationForm.valid"
+          >
+            Verificar
+          </button>
+          <button
+            mat-flat-button
+            color="tertiary"
+            mat-raised-button
+            [routerLink]="['/inicio']"
+          >
+            Continuar Sin verificar
+          </button>
+        </div>
       </form>
     </div>
     <div class="card-footer">
@@ -232,3 +243,4 @@
     </div>
   </div>
 </div>
+<app-loader [visible]="isLoading"></app-loader>

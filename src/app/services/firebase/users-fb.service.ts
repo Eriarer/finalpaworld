@@ -32,7 +32,6 @@ export class UsersFbService {
   async isUserPhoneLinked(uid: string): Promise<boolean> {
     const ref = doc(this.firestore, `users/${uid}`);
     const docSnapshot = await getDoc(ref);
-    console.log('docSnapshot', docSnapshot.data()!['phoneLinked']);
     if (docSnapshot.exists() && docSnapshot.data()!['phoneLinked'] === true) {
       return true;
     } else {
@@ -46,6 +45,28 @@ export class UsersFbService {
     return getDocs(q).then((querySnapshot) => {
       return !querySnapshot.empty;
     });
+  }
+
+  async isPhoneLinked(phoneNumber: string): Promise<boolean> {
+    const ref = await collection(this.firestore, 'users');
+    const q = await query(
+      ref,
+      where('phoneNumber', '==', phoneNumber),
+      where('phoneLinked', '==', true)
+    );
+    return getDocs(q).then((querySnapshot) => {
+      return !querySnapshot.empty;
+    });
+  }
+
+  async getUsernameByUid(uid: string): Promise<string> {
+    const ref = await doc(this.firestore, `users/${uid}`);
+    const docSnapshot = await getDoc(ref);
+    
+    if (!docSnapshot.exists() || !docSnapshot.data()!['name'])
+      throw new Error('Usuario no encontrado');
+    
+    return docSnapshot.data()!['name'];
   }
 
   getPhoneByEmail(email: string): Promise<string> {
@@ -76,8 +97,20 @@ export class UsersFbService {
     });
   }
 
-  linkUserPhone(uid: string) {
+  setPhoneLinkedByPhoneNumber(phoneNumber: string) {
+    const ref = collection(this.firestore, 'users');
+    const q = query(ref, where('phoneNumber', '==', phoneNumber));
+    getDocs(q).then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        return;
+      }
+      const docRef = doc(this.firestore, `users/${querySnapshot.docs[0].id}`);
+      setDoc(docRef, { phoneLinked: true }, { merge: true });
+    });
+  }
+
+  setPhoneLinkedByUid(uid: string) {
     const ref = doc(this.firestore, `users/${uid}`);
-    return setDoc(ref, { phoneLinked: true }, { merge: true });
+    setDoc(ref, { phoneLinked: true }, { merge: true });
   }
 }

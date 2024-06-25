@@ -14,6 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatError } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/firebase/auth.service';
+import { UsersFbService } from '../../../services/firebase/users-fb.service';
+import Swal from 'sweetalert2';
+import { LoaderComponent } from '../../loader/loader.component';
 @Component({
   selector: 'app-email-login',
   standalone: true,
@@ -27,12 +30,14 @@ import { AuthService } from '../../../services/firebase/auth.service';
     MatButtonModule,
     MatIconModule,
     MatError,
+    LoaderComponent,
   ],
   templateUrl: './email-login.component.html',
   styleUrl: './email-login.component.css',
 })
 export class EmailLoginComponent {
   hidePassword: boolean = true;
+  isLoading: boolean = false;
 
   password = new FormControl('', {
     nonNullable: true,
@@ -49,28 +54,28 @@ export class EmailLoginComponent {
     password: this.password,
   });
 
-  constructor(private router: Router, private authService: AuthService) {}
+  codigo = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(6)],
+  });
 
-  onSubmitLogin() {
-    if (this.loginForm.invalid) {
-      console.log('Form not submitted');
-      console.log('Email Errors', this.loginForm.get('email')!.errors);
-      console.log('Password Errors', this.loginForm.get('password')!.errors);
-      return;
+  confirmForm = new FormGroup({
+    codigo: this.codigo,
+  });
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userUservice: UsersFbService
+  ) {}
+
+  getEmailErrorMessage() {
+    const emailControl = this.loginForm.get('email');
+    if (emailControl?.hasError('required')) {
+      return 'El email no puede estar vacio';
     }
-    console.log('Form submitted');
-    let loginButton = document.getElementById('loginButton')!;
-    this.authService
-      .signInWithEmailAndPassword(
-        this.email.value,
-        this.password.value,
-        loginButton
-      )
-      .then(() => {
-        this.router.navigate(['/inicio']);
-      });
+    return emailControl?.hasError('email') ? 'Not a valid email' : '';
   }
-
   getPasswordErrorMessage() {
     const passwordControl = this.loginForm.get('password');
     if (passwordControl?.hasError('required')) {
@@ -80,11 +85,97 @@ export class EmailLoginComponent {
       ? 'Password must be at least 6 characters long'
       : '';
   }
-  getEmailErrorMessage() {
-    const emailControl = this.loginForm.get('email');
-    if (emailControl?.hasError('required')) {
-      return 'Email is required';
+
+  onSubmitLogin() {
+    if (this.loginForm.invalid) {
+      console.log('Form not submitted');
+      console.log('Email Errors', this.loginForm.get('email')!.errors);
+      console.log('Password Errors', this.loginForm.get('password')!.errors);
+      return;
     }
-    return emailControl?.hasError('email') ? 'Not a valid email' : '';
+    console.log('Form submitted');
+    let buttonElement = document.getElementById('loginButton')!;
+    this.isLoading = true;
+    this.authService
+      .signInWithEmailAndPassword(
+        this.email.value,
+        this.password.value,
+        buttonElement
+      )
+      .then((respone) => {
+        if (respone !== undefined) {
+          document.getElementById('loginForm')!.style.display = 'none';
+          document.getElementById('confirmForm')!.style.display = 'flex';
+          return;
+        }
+        Swal.fire({
+          title: 'Success',
+          text: 'Login successful',
+          icon: 'success',
+        }).then(() => {
+          this.router.navigate(['/inicio']);
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Error',
+          text: error.message,
+          icon: 'error',
+        }).then(() => {
+          this.loginForm.reset({
+            email: '',
+            password: '',
+          });
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
+  }
+
+  getCodigoErrorMessage() {
+    const codigoControl = this.confirmForm.get('codigo');
+    if (codigoControl?.hasError('required')) {
+      return 'El codigo no puede estar vacio';
+    } else if (codigoControl?.hasError('minlength')) {
+      return 'El codigo debe tener al menos 6 caracteres';
+    }
+    return '';
+  }
+
+  onSubmitConfirm() {
+    if (this.confirmForm.invalid) {
+      console.log('Form not submitted');
+      console.log('Codigo Errors', this.confirmForm.get('codigo')!.errors);
+    }
+    console.log('Form submitted', this.codigo.value);
+    this.isLoading = true;
+    this.authService
+      .linkPhoneVerifyCode(this.codigo.value)
+      .then((response) => {
+        console.log('response', response);
+        Swal.fire({
+          title: 'Exito',
+          text: 'Autenticacion exitosa',
+          icon: 'success',
+        }).then(() => {
+          this.router.navigate(['/inicio']);
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Error',
+          text: error.message,
+          icon: 'error',
+        }).then(() => {
+          this.router.navigate(['/login/phone']);
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }

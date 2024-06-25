@@ -37,7 +37,7 @@ export const routes: Routes = [
     title: 'PW Agenda',
   },
   { path: 'citas', component: CitafuturaComponent, title: 'PW citas' },
-  { path: 'login', component: LoginComponent, title: 'PW Login' },
+  { path: 'login', redirectTo: '/login/email', pathMatch: 'full' },
   {
     path: 'login',
     component: LoginComponent,

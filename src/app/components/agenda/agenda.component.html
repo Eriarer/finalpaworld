@@ -37,33 +37,15 @@
       <div class="dataAdop">
         <mat-divider></mat-divider>
         <br />
-        <h2 class="text-center">Ingresa tus datos</h2>
+        <h2 class="text-center">Datos de la Cita</h2>
         <mat-form-field>
-          <mat-label>Nombre Completo</mat-label>
-          <input
+          <mat-label>Razón de adopción</mat-label>
+          <textarea
             matInput
-            [formControl]="nombreAdop"
+            [formControl]="razonAdop"
             (blur)="updateErrorMessage()"
             required
-          />
-          <mat-icon matSuffix>person</mat-icon>
-          @if (nombreAdop.invalid) {
-          <mat-error>{{ errorMessage }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Teléfono</mat-label>
-          <input
-            matInput
-            type="number"
-            [formControl]="telAdop"
-            (blur)="updateErrorMessage2()"
-            required
-          />
-          <mat-icon matSuffix>phone</mat-icon>
-          @if (telAdop.invalid) {
-          <mat-error>{{ errorMessage2 }}</mat-error>
-          }
+          ></textarea>
         </mat-form-field>
         <div>
           <mat-form-field>
@@ -86,6 +68,7 @@
             <mat-datepicker #picker disabled="false"></mat-datepicker>
           </mat-form-field>
         </div>
+
         <br />
         <div>
           <mat-form-field>
@@ -123,3 +106,5 @@
     </div>
   </div>
 </div>
+
+<app-loader [visible]="isLoading"></app-loader>

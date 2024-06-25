@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import { AuthService } from './auth.service';
 import {
   Firestore,
   collection,
@@ -7,11 +7,12 @@ import {
   collectionData,
   query,
   orderBy,
+  where,
+  Timestamp,
 } from '@angular/fire/firestore';
 
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, Subscription, firstValueFrom } from 'rxjs';
 import { Cita } from '../../interfaces/cita';
-import { CitasService } from '../citas-inicio/citas.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,24 +24,34 @@ export class CitasFbService {
   urlAPI: string = 'https://paworld.free.beeceptor.com';
   http: any;
 
-  constructor(
-    private firestore: Firestore,
-    private citasService: CitasService
-  ) {
-    console.log('constructro firestore service');
-    this.addCitasDefault();
+  private userStateSubscription?: Subscription;
+  userLogged: any;
+
+  constructor(private firestore: Firestore, private authService: AuthService) {
+    this.prubUserLog();
+  }
+
+  async prubUserLog() {
+    this.userStateSubscription = await this.authService
+      .getCurrentUserState()
+      .subscribe(({ user, isAdmin }) => {
+        if (user != null) {
+          this.userLogged = user;
+        } else {
+          this.userLogged = user;
+        }
+      });
   }
 
   newCita(): Cita {
     return {
       // id: this.citas.length + 1,
-      fecha: '',
-      hora: { hours: 0, minutes: 0 },
+      fechaHora: new Date(),
       adoptante: {
-        id: '',
         nombre: '',
         telefono: '',
         correo: '',
+        razon: '',
       },
       mascota: {
         id: 0,
@@ -48,7 +59,7 @@ export class CitasFbService {
         color: '',
         tipo: '',
         raza: '',
-        fechaIngreso: '',
+        fechaIngreso: new Date(),
         descripcion: '',
         imagen: '',
         sexo: '',
@@ -57,36 +68,42 @@ export class CitasFbService {
   }
 
   async addCita(cita: Cita) {
+    this.prubUserLog();
     //Verificar que cita no esté vacía
     if (
+      cita.mascota.id == 0 ||
       cita.adoptante.nombre == '' ||
       cita.adoptante.telefono == '' ||
-      cita.mascota.id == 0
+      cita.adoptante.correo == '' ||
+      cita.adoptante.razon == ''
     ) {
       return;
     }
     //añadiendo a firebase
     await addDoc(collection(this.firestore, 'citas'), cita);
-
-    //ejecutando getAllCitas para probarlo
   }
 
-  async getAllCitas(): Promise<Cita[]> {
-    // Obtener los datos de Firestore sin ordenarlos
-    const q = query(this.citasRef);
+  // async getAllCitas(): Promise<Cita[]> {
+  //   // Obtener los datos de Firestore sin ordenarlos
+  //   const q = query(this.citasRef);
 
-    this.citasFB = collectionData(q, {
+  //   this.citasFB = collectionData(q, {
+  //     idField: 'id',
+  //   }) as Observable<Cita[]>;
+
+  //   const data = await firstValueFrom(this.citasFB);
+  //   console.log('data', data);
+  //   return this.citas;
+  // }
+
+  async getAllCitas(): Promise<Cita[]> {
+    this.prubUserLog();
+    this.citasFB = collectionData(this.citasRef, {
       idField: 'id',
     }) as Observable<Cita[]>;
 
     const data = await firstValueFrom(this.citasFB);
-
-    // Convertir y ordenar las fechas
-    this.citas = data.sort((a, b) => {
-      const dateA = this.convertToComparableDate(a.fecha);
-      const dateB = this.convertToComparableDate(b.fecha);
-      return dateA - dateB;
-    });
+    this.citas = data;
 
     return this.citas;
   }
@@ -97,16 +114,69 @@ export class CitasFbService {
     return new Date(year + 2000, month - 1, day).getTime();
   }
 
-  async addCitasDefault() {
-    //Verificar si ya hay datos en firebase
-    if ((await this.getAllCitas()).length > 0) {
-      return;
-    }
-    //recorriendo arreglo de citas predefinidas y agregandolas a firebase
-    this.citasService.citasDefinidas.forEach(async (cita) => {
-      await addDoc(collection(this.firestore, 'citas'), cita);
-    });
+  /////////////////Métodos Citas pasadas y futuras/////////////////////
+  async getCitasFuturas(fechaReferencia: Date): Promise<Cita[]> {
+    this.prubUserLog();
+    const loggedUser = this.userLogged.email;
+    console.log('Usuario logueado: ', loggedUser);
+
+    const q = query(
+      this.citasRef,
+      where('fechaHora', '>', fechaReferencia),
+      orderBy('fechaHora', 'asc')
+    );
+
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    let data = await firstValueFrom(this.citasFB);
+
+    // Filtrar las citas por el correo del adoptante en el cliente
+    return data.filter((cita) => cita.adoptante?.correo === loggedUser);
   }
 
-  /////////////////Obteniendo datos predefinidos
+  async getCitasPasadas(fechaReferencia: Date): Promise<Cita[]> {
+    // Consultar citas pasadas hasta la fecha de referencia
+    this.prubUserLog();
+    const q = query(
+      this.citasRef,
+      where('fechaHora', '<', fechaReferencia),
+      orderBy('fechaHora', 'desc')
+    );
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    const data = await firstValueFrom(this.citasFB);
+    console.log('Arreglo de Citas Pasadas', data);
+    return data;
+  }
+
+  //return an array full of objects  {horas: String: hh:mm}
+  async getAllHoursOcupied(today: Date | null) {
+    if (today == null) throw new Error('No se ha proporcionado la fecha');
+    console.log('Fecha de hoy', today);
+    // convertir  today  a formato Timestamp
+    const now = Timestamp.fromDate(today);
+    let tomorrow: any = now.toDate();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    console.log('Fecha de mañana', tomorrow);
+    tomorrow = Timestamp.fromDate(tomorrow);
+    const q = query(
+      this.citasRef,
+      where('fechaHora', '>=', now),
+      where('fechaHora', '<', tomorrow),
+      orderBy('fechaHora', 'asc')
+    );
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    const data = await firstValueFrom(this.citasFB);
+    console.log('Arreglo de Citas Pasadas', data);
+    let hoursOcupied: any[] = [];
+    data.forEach((cita: any) => {
+      let hour = cita.fechaHora.toDate().getHours();
+      let minute = cita.fechaHora.toDate().getMinutes();
+      hour = hour < 10 ? `0${hour}` : hour;
+      minute = minute < 10 ? `0${minute}` : minute;
+      let time = `${hour}:${minute}`;
+      hoursOcupied.push(time);
+    });
+    console.log('Horas ocupadas', hoursOcupied);
+    return hoursOcupied;
+  }
 }

@@ -24,6 +24,9 @@
         Enviar código
       </button>
     </form>
+
+    <!-- FORMS -->
+
     <form
       [formGroup]="confirmForm"
       (ngSubmit)="onSubmitConfirm()"
@@ -33,18 +36,30 @@
         <mat-label>Codigo</mat-label>
         <input matInput type="string" formControlName="codigo" />
         <mat-icon matSuffix>pin</mat-icon>
-        <mat-error *ngIf="email.invalid">{{
+        <mat-error *ngIf="codigo.invalid">{{
           getEmailErrorMessage()
         }}</mat-error>
       </mat-form-field>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!loginForm.valid"
-      >
-        Login
-      </button>
+      <!-- Submit Button -->
+      <div class="d-flex justify-content-around">
+        <button
+          mat-flat-button
+          color="accent"
+          mat-raised-button
+          type="submit"
+          [disabled]="!codigo.valid"
+        >
+          Verificar
+        </button>
+        <button
+          mat-flat-button
+          color="tertiary"
+          mat-raised-button
+          [routerLink]="['/inicio']"
+        >
+          Cancelar
+        </button>
+      </div>
     </form>
   </div>
   <button mat-raised-button routerLink="/login/email" class="loginType">
@@ -54,3 +69,4 @@
     </div>
   </button>
 </div>
+<app-loader [visible]="isLoading"></app-loader>
