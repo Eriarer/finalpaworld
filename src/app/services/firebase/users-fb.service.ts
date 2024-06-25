@@ -72,12 +72,6 @@ export class UsersFbService {
       nickname: nickname,
       email: email,
       phoneNumber: phoneNumber,
-      phoneLinked: false,
     });
-  }
-
-  linkUserPhone(uid: string) {
-    const ref = doc(this.firestore, `users/${uid}`);
-    return setDoc(ref, { phoneLinked: true }, { merge: true });
   }
 }
