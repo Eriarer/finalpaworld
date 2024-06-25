@@ -39,9 +39,8 @@ export class ContactoComponent {
   submit() {
     if (this.formularioContacto.valid) {
       console.log(this.formularioContacto.value);
-      const url = 'http://localhost:3000/correo';
       this.http
-        .post('http://localhost:3000/contacto', this.formularioContacto.value)
+        .post('https://correopaworld-production.up.railway.app/contacto', this.formularioContacto.value)
         .subscribe(
           (res) => {
             console.log(res);
