@@ -9,6 +9,7 @@ import {
   orderBy,
   where,
   Timestamp,
+  getCountFromServer,
 } from '@angular/fire/firestore';
 
 import { Observable, Subscription, firstValueFrom } from 'rxjs';
@@ -179,4 +180,38 @@ export class CitasFbService {
     console.log('Horas ocupadas', hoursOcupied);
     return hoursOcupied;
   }
+
+  async getUltimasSieteDias(): Promise<{ fecha: string, cantCitas: number }[]> {
+    let today = new Date();
+    let lastSevenDaysArray: { fecha: string, cantCitas: number }[] = [];
+    for (let i = 0; i < 7; i++) {
+      let date = new Date(today);
+      date.setDate(date.getDate() - i);
+  
+      let dateStr = date.toISOString().split('T')[0];
+      let dateTomorrow = new Date(date);
+      dateTomorrow.setDate(dateTomorrow.getDate() + 1);
+  
+      let q = await query(
+        this.citasRef,
+        where('fechaHora', '>=', Timestamp.fromDate(date)),
+        where('fechaHora', '<', Timestamp.fromDate(dateTomorrow)
+      )
+      );
+  
+      let snapshot = await getCountFromServer(q);
+      let cantCitas = snapshot.data().count;
+      // fecha en formado dd/mm/aa
+      let fecha  = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear().toString().slice(2);
+      lastSevenDaysArray.push({
+        fecha: fecha,
+        cantCitas: cantCitas,
+      });
+    }
+    // invertir el arreglo para que las fechas estén en orden ascendente
+    lastSevenDaysArray.reverse();
+    return lastSevenDaysArray;
+  }
+
+
 }
