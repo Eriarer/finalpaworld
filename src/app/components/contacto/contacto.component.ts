@@ -7,16 +7,18 @@ import {
 } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [RouterOutlet, ReactiveFormsModule],
+  imports: [RouterOutlet, ReactiveFormsModule, LoaderComponent],
   templateUrl: './contacto.component.html',
   styleUrl: './contacto.component.css',
 })
 export class ContactoComponent {
-  resultado!: string;
+  isLoading: boolean = false;
 
   formularioContacto = new FormGroup({
     nombre: new FormControl('', [
@@ -39,24 +41,32 @@ export class ContactoComponent {
   submit() {
     if (this.formularioContacto.valid) {
       console.log(this.formularioContacto.value);
+      this.isLoading = true;
       this.http
-        .post('https://correopaworld-production.up.railway.app/contacto', this.formularioContacto.value)
+        .post(
+          'https://correopaworld-production.up.railway.app/contacto',
+          this.formularioContacto.value
+        )
         .subscribe(
           (res) => {
             console.log(res);
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: '¡Gracias!',
+              text: 'Hemos recibido tus comentarios.',
+            });
           },
           (error) => {
             console.log(error);
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: '¡Lo sentimos!',
+              text: 'Ocurrió un error al enviar tus comentarios.',
+            });
           }
         );
-
-      this.resultado =
-        'Gracias por tus comentarios ' +
-        this.formularioContacto.value.nombre +
-        '.<br>Enviaremos una respuesta a tu correo ' +
-        this.formularioContacto.value.correo +
-        '.';
-    } else
-      this.resultado = 'Por favor, completa correctamente todos los campos.';
+    }
   }
 }
