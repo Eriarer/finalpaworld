@@ -33,10 +33,10 @@ export class CitasFbService {
       // id: this.citas.length + 1,
       fechaHora: new Date(),
       adoptante: {
-        id: '',
         nombre: '',
         telefono: '',
         correo: '',
+        razon: '',
       },
       mascota: {
         id: 0,
@@ -55,13 +55,16 @@ export class CitasFbService {
   async addCita(cita: Cita) {
     //Verificar que cita no esté vacía
     if (
+      cita.mascota.id == 0 ||
       cita.adoptante.nombre == '' ||
       cita.adoptante.telefono == '' ||
-      cita.mascota.id == 0
+      cita.adoptante.correo == '' ||
+      cita.adoptante.razon == ''
     ) {
       return;
     }
     //añadiendo a firebase
+    console.log('Añadiendo cita a firebase', cita);
     await addDoc(collection(this.firestore, 'citas'), cita);
 
     //ejecutando getAllCitas para probarlo

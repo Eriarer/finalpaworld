@@ -21,7 +21,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { merge } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -35,7 +35,7 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CitasFbService } from '../../services/firebase/citas-fb.service';
-
+import { AuthService } from '../../services/firebase/auth.service';
 // Define custom date format for fr locale
 export const FR_DATE_FORMATS = {
   parse: {
@@ -135,15 +135,22 @@ export class AgendaComponent {
     Validators.minLength(10),
     Validators.maxLength(10),
   ]);
+  razonAdop= new FormControl('', [
+    Validators.required,
+    Validators.pattern('[a-zA-Z ]*'),
+  ]);
   errorMessage2 = '';
   selectedDate: any;
   selectedHour: string | undefined;
   selectedFecha: any;
-
+  private userStateSubscription?: Subscription;
+  userLogged: any;
+  
   constructor(
     public mascotasService: MascotasService,
     public activatedRoute: ActivatedRoute,
-    public CitasFbService: CitasFbService
+    public CitasFbService: CitasFbService,
+    private authService: AuthService
   ) {
     // conseguir el ID de la url /agenda/:id
     this.activatedRoute.params.subscribe((params) => {
@@ -170,19 +177,34 @@ export class AgendaComponent {
     );
 
     //Manejo de errores en el formulario
-    merge(this.nombreAdop.statusChanges, this.nombreAdop.valueChanges)
+    merge(this.nombreAdop.statusChanges, this.razonAdop.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());
 
-    merge(this.telAdop.statusChanges, this.telAdop.valueChanges)
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateErrorMessage2());
   }
 
-  ngOnInit(): void {
-    //obteniendo la mascota mediante el ID de la URL, si no hay ID se obtiene la primera mascota
+   ngOnInit() {
     this.tiempoRefugio = this.GettiempoRefugio();
+
+    this.userStateSubscription = this.authService
+      .getCurrentUserState()
+      .subscribe(({ user, isAdmin }) => {
+        console.log('Usuario: ', user);
+        if (user != null) {
+          this.userLogged = user;
+        } else {
+          this.userLogged = user;
+        }
+        console.log('Usuario logueado final: ', this.userLogged);
+      });
   }
+
+  ngOnDestroy() {
+    if (this.userStateSubscription) {
+      this.userStateSubscription.unsubscribe();
+    }
+  }
+
 
   //función para calcular el tiempo en el refugio del animal
   GettiempoRefugio(): number {
@@ -216,10 +238,10 @@ export class AgendaComponent {
 
   //Funciones para el manejo de errores
   updateErrorMessage() {
-    if (this.nombreAdop.hasError('required')) {
+    if (this.razonAdop.hasError('required')) {
       this.errorMessage = 'Debes ingresar un valor';
-    } else if (this.nombreAdop.hasError('pattern')) {
-      this.errorMessage = 'Nombre invalido';
+    } else if (this.razonAdop.hasError('pattern')) {
+      this.errorMessage = 'Razón invalida';
     } else {
       this.errorMessage = '';
     }
@@ -243,16 +265,10 @@ export class AgendaComponent {
 
   //Función para guardar datos de la cita en el localstorage con el service citas
   GuardarCita() {
-    if (this.nombreAdop.invalid) {
+    if (this.razonAdop.invalid) {
       Swal.fire({
         title: 'Error!',
-        text: 'Nombre invalido',
-        icon: 'error',
-      });
-    } else if (this.telAdop.invalid) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Teléfono invalido',
+        text: 'Razón invalida',
         icon: 'error',
       });
     } else if (this.selectedDate == null) {
@@ -278,18 +294,12 @@ export class AgendaComponent {
       this.dataCita.fechaHora.setMinutes(
         Number(this.selectedHour.split(':')[1])
       );
-      this.dataCita.adoptante.nombre = this.nombreAdop.value ?? '';
-      this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
       this.dataCita.mascota = this.mascota;
 
-      // this.dataCita.hora = {
-      //   hours: Number(this.selectedHour.split(':')[0]),
-      //   minutes: Number(this.selectedHour.split(':')[1]),
-      // };
-      this.dataCita.adoptante.nombre = this.nombreAdop.value ?? '';
-      this.dataCita.adoptante.telefono = this.telAdop.value ?? '';
-      this.dataCita.mascota = this.mascota;
-      // this.citasService.addCita(this.dataCita);
+      this.dataCita.adoptante.razon = this.razonAdop.value ?? '';
+      this.dataCita.adoptante.nombre = this.userLogged.displayName;
+      this.dataCita.adoptante.telefono = this.userLogged.phoneNumber;
+      this.dataCita.adoptante.correo = this.userLogged.email;
       const response = this.CitasFbService.addCita(this.dataCita);
 
       Swal.fire({
@@ -340,10 +350,10 @@ export class AgendaComponent {
 
   //borrando el contenido de los campos input
   clearFields() {
-    this.nombreAdop.setValue('');
-    this.telAdop.setValue('');
+    this.razonAdop.setValue('');
     this.selectedDate = this.selectedFecha = this.selectedHour = '';
     //Eliminar la flag de touched para eliminar el error
+    this.razonAdop.markAsUntouched();
     this.nombreAdop.markAsUntouched();
     this.telAdop.markAsUntouched();
   }
