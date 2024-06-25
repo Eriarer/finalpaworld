@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 1021;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.32);
+}
+
+.cdk-overlay-pane {
+  height: 550px;
+  max-width: 50%;
+  width: 100%;
+  max-width: 800px;
+}

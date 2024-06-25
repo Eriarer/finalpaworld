@@ -1,0 +1,125 @@
+<div class="wrapper">
+  <div class="contenedor">
+    <div id="dataPet">
+      <div class="slider">
+        <div class="slides">
+          <div class="slide-item">
+            <img src="{{ mascota.imagen }}" alt="..." />
+          </div>
+        </div>
+        <pre class="slide-prev" (click)="AnteriorMascota()"></pre>
+        <pre class="slide-next" (click)="SiguienteMascota()"></pre>
+      </div>
+      <div id="petInfo">
+        <h2 style="font-size: 1.2em">{{ mascota.raza }}</h2>
+        <div class="divSex">
+          <p>Sexo: {{ mascota.sexo }}</p>
+          @if(mascota.sexo == 'Macho') {
+          <i class="bi bi-gender-male"></i>
+          }@else{
+          <i class="bi bi-gender-female"></i>
+          }
+        </div>
+
+        <div class="petInfoRow">
+          <p class="dato">Edad: {{ mascota.edad }} año(s)</p>
+          <p class="dato">Color: {{ mascota.color }}</p>
+        </div>
+        <p>
+          Tiempo en el refugio <i class="bi bi-clock"></i>:
+          {{ tiempoRefugio }} días
+        </p>
+        <p class="descripcion">Descripción: {{ mascota.descripcion }}</p>
+      </div>
+    </div>
+
+    <div id="SecAdop">
+      <div class="dataAdop">
+        <mat-divider></mat-divider>
+        <br />
+        <h2 class="text-center">Ingresa tus datos</h2>
+        <mat-form-field>
+          <mat-label>Nombre Completo</mat-label>
+          <input
+            matInput
+            [formControl]="nombreAdop"
+            (blur)="updateErrorMessage()"
+            required
+          />
+          <mat-icon matSuffix>person</mat-icon>
+          @if (nombreAdop.invalid) {
+          <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Teléfono</mat-label>
+          <input
+            matInput
+            type="number"
+            [formControl]="telAdop"
+            (blur)="updateErrorMessage2()"
+            required
+          />
+          <mat-icon matSuffix>phone</mat-icon>
+          @if (telAdop.invalid) {
+          <mat-error>{{ errorMessage2 }}</mat-error>
+          }
+        </mat-form-field>
+        <div>
+          <mat-form-field>
+            <mat-label>Fecha de cita</mat-label>
+            <input
+              matInput
+              [min]="minDate"
+              [max]="maxDate"
+              [matDatepicker]="picker"
+              (dateChange)="onDateChange($event)"
+              #selectedDate
+              readonly="true"
+              [(ngModel)]="selectedFecha"
+            />
+            <mat-hint class="fecha">DD/MM/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <br />
+        <div>
+          <mat-form-field>
+            <mat-label>Horario</mat-label>
+            <mat-select [(ngModel)]="selectedHour">
+              <mat-option
+                *ngFor="let hour of horas"
+                [value]="hour"
+                [disabled]="horasOcupadas.includes(hour)"
+                >{{ hour }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="mt-3 botones">
+        <button
+          id="btnDeleteData"
+          mat-flat-button
+          color="warn"
+          (click)="clearFields()"
+          class="me-2"
+        >
+          Borrar datos
+        </button>
+        <button
+          id="btnAgendar"
+          mat-flat-button
+          color="primary"
+          (click)="GuardarCita()"
+        >
+          Agendar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

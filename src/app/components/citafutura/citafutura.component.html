@@ -1,0 +1,56 @@
+<div id="container">
+  @if (citas.length > 0) {
+  <div class="btncitas">
+    <button (click)="btnCargarFuturas()" class="cambiarCitas">
+      Citas futuras
+    </button>
+    <button (click)="btnCargarPrevias()" class="cambiarCitas">
+      Citas pasadas
+    </button>
+  </div>
+  <br />
+  <table>
+    <thead>
+      <tr class="trcont">
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Adoptante</th>
+        <th>Imagen</th>
+        <th>Tipo</th>
+        <th>Raza</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (cita of citas; track $index) {
+      <tr class="trcont">
+        <td><span [innerHTML]="cita.id"></span></td> 
+        <td><span [innerHTML]="cita.fecha"></span></td>
+        <td>
+          <span [innerHTML]="cita.hora.hours"></span>:
+          <span
+            [innerHTML]="cita.hora.minutes == 0 ? '00' : cita.hora.minutes"
+          ></span>
+        </td>
+        <td>
+          <span [innerHTML]="cita.adoptante.nombre"></span><br />
+          <span>Numero: </span>
+          <span [innerHTML]="cita.adoptante.telefono"></span>
+        </td>
+        <td>
+          <img
+            [src]="cita.mascota.imagen"
+            alt="Imagen de la mascota"
+            class="mascota-imagen"
+          />
+        </td>
+        <td><span [innerHTML]="cita.mascota.tipo"></span></td>
+        <td><span [innerHTML]="cita.mascota.raza"></span></td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  } @else {
+  <h1>No hay citas futuras</h1>
+  }
+</div>

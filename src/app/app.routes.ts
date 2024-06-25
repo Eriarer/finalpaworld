@@ -1,24 +1,24 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { CitasComponent } from './components/citas/citas.component';
-import { MascotasComponent } from './components/mascotas/mascotas.component';
-import { AgendarComponent } from './components/agendar/agendar.component';
+import { InicioComponent } from './components/inicio/inicio.component';
+import { CitafuturaComponent } from './components/citafutura/citafutura.component';
+import { MascotaComponent } from './components/mascota/mascota.component';
+import { AgendaComponent } from './components/agenda/agenda.component';
 import { GraficasComponent } from './components/admin/graficas/graficas.component';
-import { LoginComponent } from './components/login/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/authentication/login/login.component';
+import { RegisterComponent } from './components/authentication/register/register.component';
 import { ContactoComponent } from './components/contacto/contacto.component';
 import { AcercaDeComponent } from './components/acerca-de/acerca-de.component';
 import { ConsultasComponent } from './components/admin/consultas/consultas.component';
-import { EmailLoginComponent } from './components/login/email-login/email-login.component';
-import { PhoneLoginComponent } from './components/login/phone-login/phone-login.component';
+import { EmailLoginComponent } from './components/authentication/email-login/email-login.component';
+import { PhoneLoginComponent } from './components/authentication/phone-login/phone-login.component';
 import { AdminComponent } from './components/admin/admin/admin.component';
 
 export const routes: Routes = [
-  { path: 'inicio', component: HomeComponent, title: 'PW Inicio' },
+  { path: 'inicio', component: InicioComponent, title: 'PW Inicio' },
   {
     path: 'mascotas',
-    component: MascotasComponent,
-    title: 'PW Mascotas',
+    component: MascotaComponent,
+    title: 'PW mascotas',
   },
   {
     path: 'acercade',
@@ -30,14 +30,14 @@ export const routes: Routes = [
     component: ContactoComponent,
     title: 'PW Contacto',
   },
-  { path: 'agendar', component: AgendarComponent, title: 'PW Agendar' },
+  { path: 'agenda', component: AgendaComponent, title: 'PW Agenda' },
   {
-    path: 'agendar/:id',
-    component: AgendarComponent,
-    title: 'PW Agendar',
+    path: 'agenda/:id',
+    component: AgendaComponent,
+    title: 'PW Agenda',
   },
-  { path: 'citas', component: CitasComponent, title: 'PW Citas' },
-  { path: 'login', component: LoginComponent, title: 'PW Login' },
+  { path: 'citas', component: CitafuturaComponent, title: 'PW citas' },
+  { path: 'login', redirectTo: '/login/email', pathMatch: 'full' },
   {
     path: 'login',
     component: LoginComponent,
@@ -74,5 +74,5 @@ export const routes: Routes = [
     ],
   },
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '/inicio' },
 ];

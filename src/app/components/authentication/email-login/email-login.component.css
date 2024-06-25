@@ -1,0 +1,17 @@
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 50px;
+  height: 100%;
+  min-height: 200px;
+}
+
+#confirmForm {
+  display: none;
+}
+
+.loginType {
+  width: 100%;
+  max-width: 200px;
+}

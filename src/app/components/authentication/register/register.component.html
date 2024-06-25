@@ -1,0 +1,245 @@
+<div class="text-center d-flex justify-content-center">
+  <div class="card contenedor">
+    <div class="card-header">
+      <h1>Registro</h1>
+    </div>
+    <div class="card-body">
+      <form
+        #f="ngForm"
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmitRegister()"
+        id="registerForm"
+      >
+        <!-- Nombre Completo -->
+        <mat-form-field #nameField>
+          <mat-label>Nombre Completo</mat-label>
+          <input
+            matInput
+            [formControl]="name"
+            (blur)="errors(name, nameField._elementRef.nativeElement)"
+            required
+          />
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="name.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(name, nameField._elementRef.nativeElement)
+              "
+            >
+              <div>{{ nameErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Nickname -->
+        <mat-form-field #nicknameField>
+          <mat-label>Nickname</mat-label>
+          <input
+            matInput
+            [formControl]="nickname"
+            (blur)="errors(nickname, nicknameField._elementRef.nativeElement)"
+            required
+          />
+          <mat-icon matSuffix>person_outline</mat-icon>
+          <mat-error *ngIf="nickname.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(
+                  nickname,
+                  nicknameField._elementRef.nativeElement
+                )
+              "
+            >
+              <div>{{ nickNameErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field #emailField>
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            [formControl]="email"
+            (blur)="errors(email, emailField._elementRef.nativeElement)"
+            required
+          />
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="email.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(email, emailField._elementRef.nativeElement)
+              "
+            >
+              <div>{{ emailErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Phone -->
+        <mat-form-field #phoneField>
+          <mat-label>Telefono</mat-label>
+          <ngx-mat-intl-tel-input
+            formControlName="phone"
+            [preferredCountries]="['mx', 'us']"
+            [enablePlaceholder]="true"
+            [enableSearch]="true"
+            formControlName="phoneNumber"
+            #phonephoneNumber
+            (blur)="errors(phoneNumber, phoneField._elementRef.nativeElement)"
+            [required]="true"
+          ></ngx-mat-intl-tel-input>
+          <mat-icon matSuffix>phone</mat-icon>
+          <mat-error *ngIf="email.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(
+                  phoneNumber,
+                  phoneField._elementRef.nativeElement
+                )
+              "
+            >
+              <div>{{ phoneNumberErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field #passwordField>
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            [formControl]="password"
+            (blur)="errors(password, passwordField._elementRef.nativeElement)"
+            required
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility" : "visibility_off"
+            }}</mat-icon>
+          </button>
+          <mat-error *ngIf="password.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(
+                  password,
+                  passwordField._elementRef.nativeElement
+                )
+              "
+            >
+              <div>{{ passwordErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Confirm Password -->
+        <mat-form-field #confirmPasswordField>
+          <mat-label>Confirmar Contraseña</mat-label>
+          <input
+            matInput
+            [type]="hideConfirmPassword ? 'password' : 'text'"
+            [formControl]="confirmPassword"
+            required
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="hideConfirmPassword = !hideConfirmPassword"
+          >
+            <mat-icon>{{
+              hideConfirmPassword ? "visibility" : "visibility_off"
+            }}</mat-icon>
+          </button>
+          <mat-error *ngIf="confirmPassword.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(
+                  confirmPassword,
+                  confirmPasswordField._elementRef.nativeElement
+                )
+              "
+            >
+              <div>{{ passwordErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="registerForm.errors?.['passwordsMismatch']">
+          Las contraseñas no coinciden
+        </mat-error>
+        <!-- Submit Button -->
+        <button
+          mat-flat-button
+          color="accent"
+          mat-raised-button
+          type="submit"
+          [disabled]="!registerForm.valid"
+          id="submitBtn"
+        >
+          Registrar
+        </button>
+      </form>
+      <form
+        #f="ngForm"
+        [formGroup]="codeVerificationForm"
+        (ngSubmit)="onSubmitCodeVerification()"
+        id="codeVerificationForm"
+      >
+        <!-- Code Verification -->
+        <mat-form-field #codeField>
+          <mat-label>Código de Verificación</mat-label>
+          <input
+            matInput
+            [formControl]="code"
+            (blur)="errors(code, codeField._elementRef.nativeElement)"
+            required
+          />
+          <mat-icon matSuffix>pin</mat-icon>
+          <mat-error *ngIf="code.invalid">
+            <ng-container
+              *ngFor="
+                let error of errors(code, codeField._elementRef.nativeElement)
+              "
+            >
+              <div>{{ codeErrorMessages[error] }}</div>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-around">
+          <button
+            mat-flat-button
+            color="accent"
+            mat-raised-button
+            type="submit"
+            [disabled]="!codeVerificationForm.valid"
+          >
+            Verificar
+          </button>
+          <button
+            mat-flat-button
+            color="tertiary"
+            mat-raised-button
+            [routerLink]="['/inicio']"
+          >
+            Continuar Sin verificar
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer">
+      <p>
+        Ya tienes una cuenta?
+        <a routerLink="/login/email" href="">Iniciar sesión</a>
+      </p>
+    </div>
+  </div>
+</div>
+<app-loader [visible]="isLoading"></app-loader>

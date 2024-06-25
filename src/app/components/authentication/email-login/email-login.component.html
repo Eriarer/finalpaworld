@@ -1,0 +1,93 @@
+<div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" id="loginForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="example@email.com"
+      />
+      <mat-icon matSuffix>email</mat-icon>
+      <mat-error *ngIf="email.invalid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+
+    <!-- password -->
+    <mat-form-field #passwordField>
+      <mat-label>Contraseña</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        [formControl]="password"
+        required
+      />
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility" : "visibility_off"
+        }}</mat-icon>
+      </button>
+      <mat-error *ngIf="password.invalid">
+        <!--dos errores, required y minlength  -->
+        <ng-container *ngIf="password.hasError('required')">
+          La contraseña es requerida
+        </ng-container>
+        <ng-container *ngIf="password.hasError('minlength')">
+          La contraseña debe tener al menos 6 caracteres
+        </ng-container>
+      </mat-error>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!loginForm.valid"
+      id="loginButton"
+    >
+      Login
+    </button>
+  </form>
+  <form
+    [formGroup]="confirmForm"
+    (ngSubmit)="onSubmitConfirm()"
+    id="confirmForm"
+  >
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo</mat-label>
+      <input matInput type="string" formControlName="codigo" />
+      <mat-icon matSuffix>pin</mat-icon>
+      <mat-error *ngIf="codigo.invalid">{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-around">
+      <button
+        mat-flat-button
+        color="accent"
+        mat-raised-button
+        type="submit"
+        [disabled]="!codigo.valid"
+      >
+        Verificar
+      </button>
+      <button
+        mat-flat-button
+        color="tertiary"
+        mat-raised-button
+        [routerLink]="['/inicio']"
+      >
+        Continuar sin verificar
+      </button>
+    </div>
+  </form>
+  <button mat-raised-button routerLink="/login/phone" class="loginType">
+    <div class="d-flex g-3 align-items-center">
+      <mat-label>Login por SMS</mat-label>
+      <mat-icon class="m-0">sms</mat-icon>
+    </div>
+  </button>
+</div>
+<app-loader [visible]="isLoading"></app-loader>
