@@ -52,6 +52,14 @@ export class PhoneLoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  getEmailErrorMessage() {
+    const emailControl = this.loginForm.get('email');
+    if (emailControl?.hasError('required')) {
+      return 'El email no puede estar vacio';
+    }
+    return emailControl?.hasError('email') ? 'Not a valid email' : '';
+  }
+
   async onSubmitLogin() {
     if (this.loginForm.valid) {
       console.log('Form submitted');
@@ -71,12 +79,14 @@ export class PhoneLoginComponent {
     }
   }
 
-  getEmailErrorMessage() {
-    const emailControl = this.loginForm.get('email');
-    if (emailControl?.hasError('required')) {
-      return 'Email is required';
+  getCodigoErrorMessage() {
+    const codigoControl = this.confirmForm.get('codigo');
+    if (codigoControl?.hasError('required')) {
+      return 'El codigo no puede estar vacio';
+    } else if (codigoControl?.hasError('minlength')) {
+      return 'El codigo debe tener al menos 6 caracteres';
     }
-    return emailControl?.hasError('email') ? 'Not a valid email' : '';
+    return '';
   }
 
   onSubmitConfirm() {
