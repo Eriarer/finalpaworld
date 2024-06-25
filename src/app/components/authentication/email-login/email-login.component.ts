@@ -15,6 +15,7 @@ import { MatError } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/firebase/auth.service';
 import { UsersFbService } from '../../../services/firebase/users-fb.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-email-login',
   standalone: true,
@@ -98,12 +99,30 @@ export class EmailLoginComponent {
         buttonElement
       )
       .then((respone) => {
-        if (respone.captchaNeeded) {
+        if (respone !== undefined) {
           document.getElementById('loginForm')!.style.display = 'none';
           document.getElementById('confirmForm')!.style.display = 'flex';
           return;
         }
-        this.router.navigate(['/inicio']);
+        Swal.fire({
+          title: 'Success',
+          text: 'Login successful',
+          icon: 'success',
+        }).then(() => {
+          this.router.navigate(['/inicio']);
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Error',
+          text: error.message,
+          icon: 'error',
+        }).then(() => {
+          this.loginForm.reset({
+            email: '',
+            password: '',
+          });
+        });
       });
   }
 
@@ -123,10 +142,29 @@ export class EmailLoginComponent {
       console.log('Codigo Errors', this.confirmForm.get('codigo')!.errors);
     }
     console.log('Form submitted', this.codigo.value);
-    this.authService.linkPhoneVerifyCode(this.codigo.value).then((response) => {
-      if (response) {
-        this.router.navigate(['/inicio']);
-      }
-    });
+    this.authService
+      .linkPhoneVerifyCode(this.codigo.value)
+      .then((response) => {
+        console.log('response', response);
+        Swal.fire({
+          title: 'Exito',
+          text: 'Autenticacion exitosa',
+          icon: 'success',
+        }).then(() => {
+          this.router.navigate(['/inicio']);
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Error',
+          text: error.message,
+          icon: 'error',
+        }).then(() => {
+          this.router.navigate(['/login/phone']);
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        });
+      });
   }
 }
