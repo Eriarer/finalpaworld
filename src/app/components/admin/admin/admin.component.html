@@ -1,2 +1,19 @@
-<p>admin works!</p>
+<div class="buttons mb-3">
+  <button
+    mat-raised-button
+    [color]="queryBtn"
+    [routerLink]="['/admin/consultas']"
+    routerLinkActive="active"
+  >
+    Consultas
+  </button>
+  <button
+    mat-raised-button
+    [color]="graficBtn"
+    [routerLink]="['/admin/graficas']"
+    routerLinkActive="active"
+  >
+    Gráficas
+  </button>
+</div>
 <router-outlet></router-outlet>
