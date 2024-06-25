@@ -1,6 +1,4 @@
-<header>
-    <h1> Contacto </h1>
-</header>
+<h1> Contacto </h1>
 <div class="formulario">
     <form [formGroup]="formularioContacto" (ngSubmit)="submit()">
         @if (this.formularioContacto.get('nombre')?.errors?.['required']) {

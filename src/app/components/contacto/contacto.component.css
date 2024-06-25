@@ -1,0 +1,51 @@
+* {
+    font-family: Arial, sans-serif;
+
+}
+
+h1 {
+    text-align: center;
+}
+
+.formulario {
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1.6em;
+    width: fit-content;
+}
+
+input,
+textarea {
+    width: auto;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+button {
+    padding: 1rem;
+    background-color: #4054b4;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.resultado {
+    text-align: center;
+    margin-top: 0.4rem;
+    padding: 1em;
+    border-radius: 5px;
+}
