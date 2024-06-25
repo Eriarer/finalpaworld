@@ -79,10 +79,16 @@ export class InicioComponent implements AfterViewInit {
 
   // Actualiza el contenido a ser leído extrayendo el texto de todos los elementos del componente
   updateContent() {
-    const focusedElement = document.activeElement;
-    if (focusedElement && focusedElement instanceof HTMLElement) {
-      this.content = focusedElement.innerText.trim();
-    }
+    const uniqueTextContent = new Set<string>(); // Utilizamos un Set para evitar texto duplicado
+    const pageContent = this.elementRef.nativeElement.querySelectorAll('i, button, h1, p, h2, a, h5, footer, h3'); //seleccionamos todos los elementos de la pagina
+    this.content = '';
+
+    pageContent.forEach((item: HTMLElement) => {
+      if (item.innerText && item.innerText.trim() && !uniqueTextContent.has(item.innerText.trim())) {
+        uniqueTextContent.add(item.innerText.trim()); // Añadimos el texto al Set para evitar duplicados
+        this.content += item.innerText.trim() + ' ';
+      }
+    });
   }
 
   // Maneja eventos de teclado para la navegación
@@ -90,23 +96,33 @@ export class InicioComponent implements AfterViewInit {
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
       // Mover el foco al siguiente elemento
-      this.moveFocus(true);
+      if (event.target) {
+        const nextElement = (event.target as HTMLElement).nextElementSibling as HTMLElement;
+        if (nextElement) {
+          nextElement.focus(); // Establece el foco en el siguiente elemento
+        }
+      }
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
       // Mover el foco al elemento anterior
-      this.moveFocus(false);
+      if (event.target) {
+        const previousElement = (event.target as HTMLElement).previousElementSibling as HTMLElement;
+        if (previousElement) {
+          previousElement.focus(); // Establece el foco en el elemento anterior
+        }
+      }
     }
   }
 
-  private moveFocus(next: boolean) {
-    const focusableElements = this.elementRef.nativeElement.querySelectorAll('[tabindex="0"]');
-    const elementsArray = Array.from(focusableElements) as HTMLElement[];
-    const currentIndex = elementsArray.indexOf(document.activeElement as HTMLElement);
-    let nextIndex = next ? currentIndex + 1 : currentIndex - 1;
-    if (nextIndex < 0) nextIndex = elementsArray.length - 1;
-    if (nextIndex >= elementsArray.length) nextIndex = 0;
-    elementsArray[nextIndex].focus();
-    this.updateContent();
-  }
+  // private moveFocus(next: boolean) {
+  //   const focusableElements = this.elementRef.nativeElement.querySelectorAll('[tabindex="0"]');
+  //   const elementsArray = Array.from(focusableElements) as HTMLElement[];
+  //   const currentIndex = elementsArray.indexOf(document.activeElement as HTMLElement);
+  //   let nextIndex = next ? currentIndex + 1 : currentIndex - 1;
+  //   if (nextIndex < 0) nextIndex = elementsArray.length - 1;
+  //   if (nextIndex >= elementsArray.length) nextIndex = 0;
+  //   elementsArray[nextIndex].focus();
+  //   this.updateContent();
+  // }
 
   // Alterna el tamaño del cursor (modo de accesibilidad)
   toggleCursorSize() {
