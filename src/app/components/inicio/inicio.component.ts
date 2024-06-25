@@ -16,6 +16,8 @@ export class InicioComponent implements AfterViewInit {
   private isReading: boolean = false; // Estado de lectura en curso
   private isPause: boolean = false; // Estado de pausa
   private content: string = ''; // Contenido a ser leído
+  currentFontSize: number = 18; // Tamaño de fuente actual
+  accessibilityMode: boolean = false; // Modo de accesibilidad (invertir colores)
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {
     // Inicialización de la síntesis de voz
@@ -104,5 +106,30 @@ export class InicioComponent implements AfterViewInit {
     if (nextIndex >= elementsArray.length) nextIndex = 0;
     elementsArray[nextIndex].focus();
     this.updateContent();
+  }
+
+  // Alterna el tamaño del cursor (modo de accesibilidad)
+  toggleCursorSize() {
+    document.body.classList.toggle('cursorGrande'); // Agrega o quita la clase 'cursorGrande' del cuerpo del documento
+  }
+
+   // Aumenta el tamaño del texto (modo de accesibilidad)
+   toggleTextSize() {
+    this.currentFontSize += 2; // Incrementa el tamaño de la fuente en 2px
+    const elements = this.elementRef.nativeElement.querySelectorAll('h2, h3, p, .card-title, .card-text');
+
+    elements.forEach((element: HTMLElement) => {
+      this.renderer.setStyle(element, 'font-size', `${this.currentFontSize}px`); // Establece el nuevo tamaño de fuente en los elementos seleccionados
+    });
+  }
+
+   // Alterna el modo de inversión de colores (modo de accesibilidad)
+   toggleInvertColors() {
+    this.accessibilityMode = !this.accessibilityMode;
+    if (this.accessibilityMode) {
+      this.renderer.addClass(document.body, 'accessibility-mode'); // Agrega la clase 'accessibility-mode' al cuerpo del documento
+    } else {
+      this.renderer.removeClass(document.body, 'accessibility-mode'); // Quita la clase 'accessibility-mode' del cuerpo del documento
+    }
   }
 }
