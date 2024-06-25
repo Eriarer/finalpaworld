@@ -203,3 +203,28 @@
     font-size: 1.1rem;
   }
     
+/* estilos para la accesibilidad web */
+  .controls {
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 3px;
+    border: 3px solid #f1f1f1;
+    padding-bottom: 30px;
+}
+  
+.controls button {
+    margin-right: 10px;
+    padding: 10px;
+    font-size: 30px;
+    background: none;
+    border: 2px solid transparent; /* Border initially transparent */
+    cursor: pointer;
+}
+.animal-gallery .card-title{
+  font-size: 20px;
+}
+
+.img-accesible{
+  width: 70px;
+  margin: 10px;
+}
