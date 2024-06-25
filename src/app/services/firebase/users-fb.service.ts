@@ -48,6 +48,35 @@ export class UsersFbService {
     });
   }
 
+  async isPhoneLinked(phoneNumber: string): Promise<boolean> {
+    const ref = await collection(this.firestore, 'users');
+    const q = await query(
+      ref,
+      where('phoneNumber', '==', phoneNumber),
+      where('phoneLinked', '==', true)
+    );
+    return getDocs(q).then((querySnapshot) => {
+      return !querySnapshot.empty;
+    });
+  }
+
+  setPhoneLinkedByPhoneNumber(phoneNumber: string) {
+    const ref = collection(this.firestore, 'users');
+    const q = query(ref, where('phoneNumber', '==', phoneNumber));
+    getDocs(q).then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        return;
+      }
+      const docRef = doc(this.firestore, `users/${querySnapshot.docs[0].id}`);
+      setDoc(docRef, { phoneLinked: true }, { merge: true });
+    });
+  }
+
+  setPhoneLinkedByUid(uid: string) {
+    const ref = doc(this.firestore, `users/${uid}`);
+    setDoc(ref, { phoneLinked: true }, { merge: true });
+  }
+
   getPhoneByEmail(email: string): Promise<string> {
     const ref = collection(this.firestore, 'users');
     const q = query(ref, where('email', '==', email));
@@ -72,6 +101,7 @@ export class UsersFbService {
       nickname: nickname,
       email: email,
       phoneNumber: phoneNumber,
+      phoneLinked: false,
     });
   }
 }

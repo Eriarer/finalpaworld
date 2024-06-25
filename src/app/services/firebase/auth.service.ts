@@ -106,7 +106,7 @@ export class AuthService {
       await this.linkPhoneSendCode(phoneNumber, captchaVerifier);
     } catch (error: any) {
       console.log('errorGenerateCaptcha', error);
-      throw error;
+      throw new Error('Error al generar el captcha');
     }
   }
 
@@ -130,11 +130,11 @@ export class AuthService {
       }, 300000); // 5 minutos
     } catch (error: any) {
       console.log('error Sending Code', error);
-      throw new Error('Error sending code: ' + error.message);
+      throw new Error('Error al enviar el código');
     }
   }
 
-  async linkPhoneVerifyCode(code: string): Promise<boolean> {
+  async linkPhoneVerifyCode(code: string): Promise<any> {
     console.log('linkPhoneVerifyCode');
     if (!this.confirmationResult) {
       console.log('No confirmation result available');
@@ -145,11 +145,12 @@ export class AuthService {
       await this.confirmationResult.confirm(code);
       console.log('success');
       this.confirmationResult = undefined;
+      this.userService.setPhoneLinkedByUid(this.firebaseAuth.currentUser!.uid);
       return true;
     } catch (error: any) {
       console.log('error', error);
       this.confirmationResult = undefined;
-      return false;
+      throw new Error('Error al verificar el código');
     }
   }
 
@@ -178,14 +179,18 @@ export class AuthService {
       return;
     } catch (error: any) {
       console.log('error', error);
-      throw error;
+      throw new Error('Error al iniciar sesión');
     }
   }
 
   async singInWithPhoneNumberByEmail(email: string, htmlElement: HTMLElement) {
-    if (!email || !htmlElement) throw new Error('Missing fields');
+    if (!email || !htmlElement) throw new Error('Campos faltantes');
     let phoneNumber = await this.userService.getPhoneByEmail(email);
-    if (!phoneNumber) throw new Error('Phone number not found');
+    console.log('phoneNumber', phoneNumber);
+    if (!phoneNumber) throw new Error('Numero no encontrado');
+    let phoneVerified = await this.userService.isPhoneLinked(phoneNumber);
+    console.log('phoneVerified', phoneVerified);
+    if (!phoneVerified) throw new Error('Número de telefono no verificado');
     let captchaVerifier = new RecaptchaVerifier(
       this.firebaseAuth,
       htmlElement,
@@ -219,6 +224,7 @@ export class AuthService {
       });
     } catch (error: any) {
       console.log('error', error);
+      throw new Error('Error al verificar el código');
     }
   }
 
