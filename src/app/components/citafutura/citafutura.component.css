@@ -72,7 +72,9 @@
 .btncitas {
   display: flex;
   flex-direction: row;
-  gap: 4rem; /* Separación entre los botones */
+  gap: 2rem; /* Separación entre los botones */
+  align-items: center;
+  justify-content: center;
 }
 
 .btncitas button {
