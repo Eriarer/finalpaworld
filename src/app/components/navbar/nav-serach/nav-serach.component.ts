@@ -55,7 +55,7 @@ export class NavSerachComponent {
         mascota.color.toLowerCase().includes(this.search.value.toLowerCase()) ||
         mascota.tipo.toLowerCase().includes(this.search.value.toLowerCase()) ||
         mascota.raza.toLowerCase().includes(this.search.value.toLowerCase()) ||
-        mascota.fechaIngreso.includes(this.search.value) ||
+        mascota.fechaIngreso.toString().includes(this.search.value) ||
         mascota.sexo.toLowerCase().includes(this.search.value.toLowerCase())
       );
     });
