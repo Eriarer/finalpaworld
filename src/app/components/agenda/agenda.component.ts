@@ -177,7 +177,7 @@ export class AgendaComponent {
     //La fecha mínima es la fecha actual +1
     this.minDate = new Date(
       fechaActual.getFullYear(),
-      fechaActual.getMonth() - 1,
+      fechaActual.getMonth(),
       fechaActual.getDate() + 1
     );
     //La fecha máxima es la fecha actual +2 meses
