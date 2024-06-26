@@ -10,6 +10,8 @@ import { LoaderComponent } from '../loader/loader.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../services/firebase/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-citafutura',
   standalone: true,
@@ -33,10 +35,20 @@ export class CitafuturaComponent {
   today: Timestamp;
   isLoading: boolean = false;
 
-  constructor(private CitasFbService: CitasFbService) {}
+  constructor(
+    private CitasFbService: CitasFbService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.cargacitasFuturas();
+    this.authService.getCurrentUserState().subscribe(({ user, isAdmin }) => {
+      if (user) {
+        this.cargacitasFuturas();
+      } else {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   private getTodayTimestamp() {

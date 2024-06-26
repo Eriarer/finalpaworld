@@ -32,7 +32,7 @@ import {
 import { MatDatepickerIntl } from '@angular/material/datepicker';
 import 'moment/locale/fr';
 import Swal from 'sweetalert2';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CitasFbService } from '../../services/firebase/citas-fb.service';
 import { AuthService } from '../../services/firebase/auth.service';
@@ -155,13 +155,16 @@ export class AgendaComponent {
   private userStateSubscription?: Subscription;
   userLogged: any;
 
+  isUserLogged: boolean = false;
+
   constructor(
     public mascotasService: MascotasService,
     public activatedRoute: ActivatedRoute,
     public CitasFbService: CitasFbService,
     private authService: AuthService,
     private http: HttpClient,
-    private userService: UsersFbService
+    private userService: UsersFbService,
+    private router: Router
   ) {
     // conseguir el ID de la url /agenda/:id
     this.activatedRoute.params.subscribe((params) => {
@@ -203,6 +206,7 @@ export class AgendaComponent {
           this.userLogged = user;
         } else {
           this.userLogged = user;
+          this.router.navigate(['/login']);
         }
       });
   }
