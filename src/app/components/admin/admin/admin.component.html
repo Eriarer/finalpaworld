@@ -1,15 +1,15 @@
 <div class="buttons mb-3">
   <button
-    mat-raised-button
-    [color]="queryBtn"
+    class="btnRutas"
+    [class.active]="queryBtn"
     [routerLink]="['/admin/consultas']"
     routerLinkActive="active"
   >
     Consultas
   </button>
   <button
-    mat-raised-button
-    [color]="graficBtn"
+    class="btnRutas"
+    [class.active]="graficBtn"
     [routerLink]="['/admin/graficas']"
     routerLinkActive="active"
   >
