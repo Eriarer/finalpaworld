@@ -120,6 +120,12 @@ export class CitasFbService {
   /////////////////Métodos Citas pasadas y futuras/////////////////////
   async getCitasFuturas(fechaReferencia: Date): Promise<Cita[]> {
     this.prubUserLog();
+    for (let i = 0; i < 40; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      console.log('Esperando a que se loguee el usuario');
+      if (this.userLogged != null) break;
+    }
+    if (this.userLogged == null) throw new Error('No existe usuario');
     const loggedUser = this.userLogged.email;
     console.log('Usuario logueado: ', loggedUser);
 
@@ -139,6 +145,11 @@ export class CitasFbService {
   async getCitasPasadas(fechaReferencia: Date): Promise<Cita[]> {
     // Consultar citas pasadas hasta la fecha de referencia
     this.prubUserLog();
+    for (let i = 0; i < 40; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      console.log('Esperando a que se loguee el usuario');
+      if (this.userLogged != null) break;
+    }
     const loggedUser = this.userLogged.email;
 
     this.prubUserLog();
