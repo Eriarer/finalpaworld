@@ -20,8 +20,13 @@
         <div class="col-md-4 mb-3">
           <h5>Suscripción</h5>
           <p>Suscríbete a nuestro boletín:</p>
-          <form>
-            <input type="email" placeholder="Tu email" class="form-control mb-2">
+          <form [formGroup]="formularioBoletin" (ngSubmit)="submit()">
+            <input type="email" formControlName="correo" placeholder="Correo" class="form-control mb-2" required>
+            @if (this.formularioBoletin.get('correo')?.touched && this.formularioBoletin.get('correo')?.errors?.['required'] ||
+            this.formularioBoletin.get('correo')?.errors?.['email']) {
+            <span> Se requiere un correo válido </span>
+            <br>
+            }
             <button type="submit" class="btn btn-primary">Suscribirse</button>
           </form>
         </div>
@@ -43,4 +48,5 @@
     </div>
   </footer>
   
+<app-loader [visible]="isLoading"></app-loader>
   
