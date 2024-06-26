@@ -5,15 +5,21 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/firebase/auth.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
   imports: [
+    
     RouterModule,
+   
     NavSerachComponent,
+   
     NavUserStateComponent,
     CommonModule,
+  ,
+    FooterComponent,
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',

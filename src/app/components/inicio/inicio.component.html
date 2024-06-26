@@ -1,26 +1,70 @@
-
-<div class="controls" tabindex="-1" >
-  <mat-button-toggle-group name="fontStyle" aria-label="Font Style" tabindex="0">
-    <a href="#" title="Accesibilidad"><img src="assets/img/home.imgs/accesibilidad.png" alt="icono de accesibilidad" class="img-accesible"></a>
-    <mat-button-toggle href="#" (click)="startReading()" title="Start Reading" aria-label="Start Reading" tabindex="0"><i class="fas fa-play"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="pauseReading()" title="Pause Reading" aria-label="Pause Reading" tabindex="0"><i class="fas fa-pause"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="resumeReading()" title="Resume Reading" aria-label="Resume Reading" tabindex="0"><i class="fas fa-play-circle"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="stopReading()" title="Stop Reading" aria-label="Stop Reading" tabindex="0"><i class="fas fa-stop"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="toggleCursorSize()" title="Cambiar tamaño del cursor" aria-label="Cambiar tamaño del cursor" tabindex="0"><i class="fas fa-mouse-pointer"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="toggleTextSizeA()" title="Aumentar tamaño de texto" aria-label="Aumentar tamaño de texto" tabindex="0"><i class="fas fa-plus"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="toggleTextSizeD()" title="Disminuir tamaño de texto" aria-label="Disminuir tamaño de texto" tabindex="0"><i class="fas fa-minus"></i></mat-button-toggle>
-    <mat-button-toggle href="#" (click)="toggleInvertColors()" title="Cambiar colores" aria-label="Cambiar colores" tabindex="0"><i class="fas fa-adjust"></i></mat-button-toggle>
-  </mat-button-toggle-group>
+<div class="btn-group dropstart">
+  <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <img title="Accesibilidad" src="assets/img/home.imgs/accesibilidad.png" alt="icono de accesibilidad"
+      class="img-accesible">
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <button *ngIf="!isReading" class="dropdown-item" (click)="startReading()" title="Start Reading"
+        aria-label="Start Reading">
+        <i class="fas fa-play"></i>
+      </button>
+    </li>
+    <li>
+      <button *ngIf="isReading" class="dropdown-item" (click)="pauseReading()" title="Pause Reading"
+        aria-label="Pause Reading">
+        <i class="fas fa-pause"></i>
+      </button>
+    </li>
+    <li>
+      <button *ngIf="!isReading" class="dropdown-item" (click)="resumeReading()" title="Resume Reading"
+        aria-label="Resume Reading">
+        <i class="fas fa-play-circle"></i>
+      </button>
+    </li>
+    <li>
+      <button *ngIf="isReading" class="dropdown-item" (click)="stopReading()" title="Stop Reading"
+        aria-label="Stop Reading">
+        <i class="fas fa-stop"></i>
+      </button>
+    </li>
+    <li>
+      <button class="dropdown-item" [class.active]="isCursorLarge" (click)="toggleCursorSize()"
+        title="Cambiar tamaño del cursor" aria-label="Cambiar tamaño del cursor">
+        <i class="fas fa-mouse-pointer"></i>
+      </button>
+    </li>
+    <li>
+      <button class="dropdown-item" (click)="toggleTextSizeA()" title="Aumentar tamaño de texto"
+        aria-label="Aumentar tamaño de texto">
+        <i class="fas fa-plus"></i>
+      </button>
+    </li>
+    <li>
+      <button class="dropdown-item" (click)="toggleTextSizeD()" title="Disminuir tamaño de texto"
+        aria-label="Disminuir tamaño de texto">
+        <i class="fas fa-minus"></i>
+      </button>
+    </li>
+    <li>
+      <button class="dropdown-item" [class.active]="accessibilityMode" (click)="toggleInvertColors()"
+        title="Cambiar colores" aria-label="Cambiar colores">
+        <i class="fas fa-adjust"></i>
+      </button>
+    </li>
+  </ul>
 </div>
-
 
 
 <!-- Carrusel -->
 <section id="carouselExampleIndicators" class="carousel slide" tabindex="0">
   <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+      aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+      aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+      aria-label="Slide 3"></button>
   </div>
   <div class="carousel-inner">
     <article class="carousel-item active c-item" tabindex="0">
@@ -61,7 +105,9 @@
     <div class="row">
       <div class="col-md-6">
         <h2 class="section-title">Visítanos en Nuestra Ubicación</h2>
-        <p>Nos encontramos en el corazón de la ciudad, proporcionando un hogar amoroso para mascotas necesitadas. Nuestro centro de adopción está abierto de lunes a viernes de 9:00 AM a 6:00 PM y los sábados de 10:00 AM a 4:00 PM. Ven y conoce a nuestras mascotas, estamos seguros de que encontrarás a tu nuevo mejor amigo.</p>
+        <p>Nos encontramos en el corazón de la ciudad, proporcionando un hogar amoroso para mascotas necesitadas.
+          Nuestro centro de adopción está abierto de lunes a viernes de 9:00 AM a 6:00 PM y los sábados de 10:00 AM a
+          4:00 PM. Ven y conoce a nuestras mascotas, estamos seguros de que encontrarás a tu nuevo mejor amigo.</p>
         <address>
           <p>Dirección: Calle Felipe 123, Aguascalientes</p>
           <p>Teléfono: 123-456-7890</p>
@@ -76,7 +122,10 @@
       </div>
       <div class="col-md-6">
         <div class="map-container">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.9205239307745!2d-122.08424948469245!3d37.42199977982532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb5e0a4b2f9fb%3A0x5d4a2c5a2b2f5e0!2sGoogleplex!5e0!3m2!1sen!2sus!4v1594845187436!5m2!1sen!2sus" width="100%" height="350" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.9205239307745!2d-122.08424948469245!3d37.42199977982532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb5e0a4b2f9fb%3A0x5d4a2c5a2b2f5e0!2sGoogleplex!5e0!3m2!1sen!2sus!4v1594845187436!5m2!1sen!2sus"
+            width="100%" height="350" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false"
+            tabindex="0"></iframe>
         </div>
       </div>
     </div>
@@ -128,7 +177,8 @@
     <h2 class="section-title text-center mb-5">Testimonios de Adoptantes</h2>
     <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
-        <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
@@ -137,23 +187,28 @@
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="testimonial-card p-4 text-center">
-                <img src="assets/img/home.imgs/testimonios1.webp" class="testimonial-img rounded-circle mb-3" alt="Ana García y Bella">
+                <img src="assets/img/home.imgs/testimonios1.webp" class="testimonial-img rounded-circle mb-3"
+                  alt="Ana García y Bella">
                 <blockquote class="blockquote">
-                  <p class="mb-4">"Adoptar a Bella ha sido una experiencia maravillosa. Ella ha traído mucha alegría a nuestro hogar. El proceso de adopción fue fácil y rápido. ¡Recomiendo a todos adoptar una mascota!"</p>
+                  <p class="mb-4">"Adoptar a Bella ha sido una experiencia maravillosa. Ella ha traído mucha alegría a
+                    nuestro hogar. El proceso de adopción fue fácil y rápido. ¡Recomiendo a todos adoptar una mascota!"
+                  </p>
                   <footer class="blockquote-footer">Ana García y Bella</footer>
                 </blockquote>
               </div>
             </div>
           </div>
         </article>
-       
+
         <article class="carousel-item" tabindex="0">
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="testimonial-card p-4 text-center">
-                <img src="assets/img/home.imgs/testimonios2.webp" class="testimonial-img rounded-circle mb-3" alt="Juan Pérez y Max">
+                <img src="assets/img/home.imgs/testimonios2.webp" class="testimonial-img rounded-circle mb-3"
+                  alt="Juan Pérez y Max">
                 <blockquote class="blockquote">
-                  <p class="mb-4">"Max es el mejor amigo que podría haber pedido. Es muy cariñoso y juguetón. Estoy muy agradecido por haberlo encontrado."</p>
+                  <p class="mb-4">"Max es el mejor amigo que podría haber pedido. Es muy cariñoso y juguetón. Estoy muy
+                    agradecido por haberlo encontrado."</p>
                   <footer class="blockquote-footer">Juan Pérez y Max</footer>
                 </blockquote>
               </div>
@@ -164,9 +219,11 @@
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="testimonial-card p-4 text-center">
-                <img src="assets/img/home.imgs/testimonios3.webp" class="testimonial-img rounded-circle mb-3" alt="Marta López y Luna">
+                <img src="assets/img/home.imgs/testimonios3.webp" class="testimonial-img rounded-circle mb-3"
+                  alt="Marta López y Luna">
                 <blockquote class="blockquote">
-                  <p class="mb-4">"Luna ha cambiado nuestras vidas para mejor. Es una gatita muy dulce y nos encanta tenerla en nuestra familia. Gracias por ayudarnos a encontrarla."</p>
+                  <p class="mb-4">"Luna ha cambiado nuestras vidas para mejor. Es una gatita muy dulce y nos encanta
+                    tenerla en nuestra familia. Gracias por ayudarnos a encontrarla."</p>
                   <footer class="blockquote-footer">Marta López y Luna</footer>
                 </blockquote>
               </div>
@@ -193,8 +250,10 @@
       <div class="col-md-6 d-flex align-items-center">
         <div class="info">
           <h2 class="section-title">Ayuda a Nuestra Causa</h2>
-          <p>Tu donación puede hacer una gran diferencia en la vida de un animal. Con tu apoyo, podemos proporcionar refugio, alimento y atención médica a mascotas necesitadas.</p>
-          <p>Incluso la donación más pequeña puede marcar una gran diferencia. Ayúdanos a darle una segunda oportunidad a estos animales.</p>
+          <p>Tu donación puede hacer una gran diferencia en la vida de un animal. Con tu apoyo, podemos proporcionar
+            refugio, alimento y atención médica a mascotas necesitadas.</p>
+          <p>Incluso la donación más pequeña puede marcar una gran diferencia. Ayúdanos a darle una segunda oportunidad
+            a estos animales.</p>
           <a href="#" class="btn btn-primary btn-lg mt-3">Dona Ahora</a>
         </div>
       </div>
@@ -223,4 +282,3 @@
     </div>
   </div>
 </section>
-
