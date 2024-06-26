@@ -181,28 +181,32 @@ export class CitasFbService {
     return hoursOcupied;
   }
 
-  async getUltimasSieteDias(): Promise<{ fecha: string, cantCitas: number }[]> {
+  async getUltimasSieteDias(): Promise<{ fecha: string; cantCitas: number }[]> {
     let today = new Date();
-    let lastSevenDaysArray: { fecha: string, cantCitas: number }[] = [];
+    let lastSevenDaysArray: { fecha: string; cantCitas: number }[] = [];
     for (let i = 0; i < 7; i++) {
       let date = new Date(today);
       date.setDate(date.getDate() - i);
-  
+
       let dateStr = date.toISOString().split('T')[0];
       let dateTomorrow = new Date(date);
       dateTomorrow.setDate(dateTomorrow.getDate() + 1);
-  
+
       let q = await query(
         this.citasRef,
         where('fechaHora', '>=', Timestamp.fromDate(date)),
-        where('fechaHora', '<', Timestamp.fromDate(dateTomorrow)
-      )
+        where('fechaHora', '<', Timestamp.fromDate(dateTomorrow))
       );
-  
+
       let snapshot = await getCountFromServer(q);
       let cantCitas = snapshot.data().count;
       // fecha en formado dd/mm/aa
-      let fecha  = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear().toString().slice(2);
+      let fecha =
+        date.getDate() +
+        '/' +
+        (date.getMonth() + 1) +
+        '/' +
+        date.getFullYear().toString().slice(2);
       lastSevenDaysArray.push({
         fecha: fecha,
         cantCitas: cantCitas,
@@ -213,5 +217,53 @@ export class CitasFbService {
     return lastSevenDaysArray;
   }
 
-
+  async getMultiQueryCitas(
+    username: string,
+    fecha: Date,
+    perro: boolean,
+    gato: boolean
+  ): Promise<Cita[]> {
+    let result: Cita[] = [];
+    // crear un arreglo de consultas where dependiendo si el parametro es nulo o no
+    let queries = [];
+    if (username) {
+      // si el nombre no es de tipo string continuar adelante
+      if (typeof username !== 'string')
+        throw new Error('El nombre no es de tipo string');
+      queries.push(where('adoptante.nombre', '>=', username));
+      queries.push(where('adoptante.nombre', '<', username + '\uf8ff'));
+    }
+    if (fecha) {
+      // si la vecha no es de tipo Date continuar adelante
+      if (!(fecha instanceof Date))
+        throw new Error('La fecha no es de tipo Date');
+      let tomorrow = new Date(fecha);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      queries.push(where('fechaHora', '>=', Timestamp.fromDate(fecha)));
+      queries.push(where('fechaHora', '<', Timestamp.fromDate(tomorrow)));
+    }
+    if (perro || gato) {
+      const petTypes = [];
+      if (perro) petTypes.push('perro');
+      if (gato) petTypes.push('gato');
+      queries.push(where('mascota.tipo', 'in', petTypes));
+    }
+    if (queries.length == 0) {
+      console.log('No se ha proporcionado ningún parámetro de consulta');
+      await this.getAllCitas()
+        .then((data) => {
+          result = data;
+        })
+        .catch((error) => {
+          console.error('Error al obtener las citas', error);
+        });
+    } else {
+      console.log('queries', queries);
+      // realizar la consulta
+      let q = query(this.citasRef, ...queries, orderBy('fechaHora', 'asc'));
+      this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+      result = await firstValueFrom(this.citasFB);
+    }
+    return result;
+  }
 }
