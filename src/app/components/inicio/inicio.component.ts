@@ -1,37 +1,47 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { DomseguroPipe } from './domseguro.pipe';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [DomseguroPipe, MatButtonToggleModule],
+  imports: [DomseguroPipe, MatButtonToggleModule, CommonModule],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css',
 })
 export class InicioComponent implements AfterViewInit {
-  video: string = "IPBB2iyVq7w";
+  video: string = 'IPBB2iyVq7w';
 
   private synth: SpeechSynthesis; // Objeto para la síntesis de voz
   private utterance: SpeechSynthesisUtterance; // Objeto para gestionar las frases a sintetizar
-  private isReading: boolean = false; // Estado de lectura en curso
-  private isPause: boolean = false; // Estado de pausa
+  isReading: boolean = false; // Estado de lectura en curso
+  isPause: boolean = false; // Estado de pausa
   private content: string = ''; // Contenido a ser leído
   currentFontSize: number = 18; // Tamaño de fuente actual
   accessibilityMode: boolean = false; // Modo de accesibilidad (invertir colores)
+  isCursorLarge: boolean = false; // Tamaño del cursor
 
   @ViewChild('filterBtn', { static: true }) filterBtn: ElementRef | undefined;
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {
     // Inicialización de la síntesis de voz
-    this.synth = window.speechSynthesis;// 
+    this.synth = window.speechSynthesis; //
     this.utterance = new SpeechSynthesisUtterance();
   }
   //Funciones para boton accesibilidad
   ngOnInit() {
-    if(this.filterBtn) {
+    if (this.filterBtn) {
       // Add event listener to the toggle button
-      const toggleBtn = this.filterBtn.nativeElement.querySelector('.toggle-btn');
+      const toggleBtn =
+        this.filterBtn.nativeElement.querySelector('.toggle-btn');
       this.renderer.listen(toggleBtn, 'click', () => {
         this.toggleMenu();
       });
@@ -42,6 +52,46 @@ export class InicioComponent implements AfterViewInit {
         this.renderer.listen(option, 'click', () => {
           this.closeMenu();
         });
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.filterBtn) {
+      // Remove event listener from the toggle button
+      const toggleBtn =
+        this.filterBtn.nativeElement.querySelector('.toggle-btn');
+      toggleBtn.removeEventListener('click', () => {
+        this.toggleMenu();
+      });
+
+      // Remove event listeners from the menu options
+      const menuOptions = this.filterBtn.nativeElement.querySelectorAll('a');
+      menuOptions.forEach((option: HTMLElement) => {
+        option.removeEventListener('click', () => {
+          this.closeMenu();
+        });
+      });
+    }
+    if (this.synth) {
+      this.synth.cancel();
+    }
+    if (this.utterance) {
+      this.utterance.onend = null;
+    }
+    if (this.isCursorLarge) {
+      document.body.classList.remove('cursorGrande');
+    }
+    if (this.accessibilityMode) {
+      document.body.classList.remove('accessibility-mode');
+    }
+    if(this.currentFontSize != 18){
+      const elements = this.elementRef.nativeElement.querySelectorAll(
+        'h2, h3, p, .card-title, .card-text'
+      );
+  
+      elements.forEach((element: HTMLElement) => {
+        this.renderer.setStyle(element, 'font-size', `18px`); // Establece el nuevo tamaño de fuente en los elementos seleccionados
       });
     }
   }
@@ -61,12 +111,12 @@ export class InicioComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-     // Re-inicialización de la síntesis de voz después de que la vista ha sido inicializada
-     this.synth = window.speechSynthesis;
-     this.utterance = new SpeechSynthesisUtterance();
-     this.updateContent(); // Actualiza el contenido a ser leído
+    // Re-inicialización de la síntesis de voz después de que la vista ha sido inicializada
+    this.synth = window.speechSynthesis;
+    this.utterance = new SpeechSynthesisUtterance();
+    this.updateContent(); // Actualiza el contenido a ser leído
   }
- 
+
   // Inicia la lectura del contenido
   startReading() {
     if (this.isReading) {
@@ -115,11 +165,17 @@ export class InicioComponent implements AfterViewInit {
   // Actualiza el contenido a ser leído extrayendo el texto de todos los elementos del componente
   updateContent() {
     const uniqueTextContent = new Set<string>(); // Utilizamos un Set para evitar texto duplicado
-    const pageContent = this.elementRef.nativeElement.querySelectorAll('i, button, h1, p, h2, a, h5, footer, h3'); //seleccionamos todos los elementos de la pagina
+    const pageContent = this.elementRef.nativeElement.querySelectorAll(
+      'i, button, h1, p, h2, a, h5, footer, h3'
+    ); //seleccionamos todos los elementos de la pagina
     this.content = '';
 
     pageContent.forEach((item: HTMLElement) => {
-      if (item.innerText && item.innerText.trim() && !uniqueTextContent.has(item.innerText.trim())) {
+      if (
+        item.innerText &&
+        item.innerText.trim() &&
+        !uniqueTextContent.has(item.innerText.trim())
+      ) {
         uniqueTextContent.add(item.innerText.trim()); // Añadimos el texto al Set para evitar duplicados
         this.content += item.innerText.trim() + ' ';
       }
@@ -132,7 +188,8 @@ export class InicioComponent implements AfterViewInit {
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
       // Mover el foco al siguiente elemento
       if (event.target) {
-        const nextElement = (event.target as HTMLElement).nextElementSibling as HTMLElement;
+        const nextElement = (event.target as HTMLElement)
+          .nextElementSibling as HTMLElement;
         if (nextElement) {
           nextElement.focus(); // Establece el foco en el siguiente elemento
         }
@@ -140,7 +197,8 @@ export class InicioComponent implements AfterViewInit {
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
       // Mover el foco al elemento anterior
       if (event.target) {
-        const previousElement = (event.target as HTMLElement).previousElementSibling as HTMLElement;
+        const previousElement = (event.target as HTMLElement)
+          .previousElementSibling as HTMLElement;
         if (previousElement) {
           previousElement.focus(); // Establece el foco en el elemento anterior
         }
@@ -150,13 +208,16 @@ export class InicioComponent implements AfterViewInit {
 
   // Alterna el tamaño del cursor (modo de accesibilidad)
   toggleCursorSize() {
+    this.isCursorLarge = !this.isCursorLarge;
     document.body.classList.toggle('cursorGrande'); // Agrega o quita la clase 'cursorGrande' del cuerpo del documento
   }
 
-   // Aumenta el tamaño del texto (modo de accesibilidad)
-   toggleTextSizeA() {
+  // Aumenta el tamaño del texto (modo de accesibilidad)
+  toggleTextSizeA() {
     this.currentFontSize += 2; // Incrementa el tamaño de la fuente en 2px
-    const elements = this.elementRef.nativeElement.querySelectorAll('h2, h3, p, .card-title, .card-text');
+    const elements = this.elementRef.nativeElement.querySelectorAll(
+      'h2, h3, p, .card-title, .card-text'
+    );
 
     elements.forEach((element: HTMLElement) => {
       this.renderer.setStyle(element, 'font-size', `${this.currentFontSize}px`); // Establece el nuevo tamaño de fuente en los elementos seleccionados
@@ -164,19 +225,20 @@ export class InicioComponent implements AfterViewInit {
   }
 
   // Disminuye el tamaño del texto (modo de accesibilidad)
-   // Aumenta el tamaño del texto (modo de accesibilidad)
-   toggleTextSizeD() {
+  // Aumenta el tamaño del texto (modo de accesibilidad)
+  toggleTextSizeD() {
     this.currentFontSize -= 2; // decrementa el tamaño de la fuente en 2px
-    const elements = this.elementRef.nativeElement.querySelectorAll('h2, h3, p, .card-title, .card-text');
+    const elements = this.elementRef.nativeElement.querySelectorAll(
+      'h2, h3, p, .card-title, .card-text'
+    );
 
     elements.forEach((element: HTMLElement) => {
       this.renderer.setStyle(element, 'font-size', `${this.currentFontSize}px`); // Establece el nuevo tamaño de fuente en los elementos seleccionados
     });
   }
-  
 
-   // Alterna el modo de inversión de colores (modo de accesibilidad)
-   toggleInvertColors() {
+  // Alterna el modo de inversión de colores (modo de accesibilidad)
+  toggleInvertColors() {
     this.accessibilityMode = !this.accessibilityMode;
     if (this.accessibilityMode) {
       this.renderer.addClass(document.body, 'accessibility-mode'); // Agrega la clase 'accessibility-mode' al cuerpo del documento
@@ -184,6 +246,4 @@ export class InicioComponent implements AfterViewInit {
       this.renderer.removeClass(document.body, 'accessibility-mode'); // Quita la clase 'accessibility-mode' del cuerpo del documento
     }
   }
-
-  
 }

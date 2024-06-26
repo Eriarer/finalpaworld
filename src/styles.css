@@ -10,37 +10,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Estilos para el cursor grande */
-.cursorGrande {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
 
-/* Estilos para el cursor pequeño */
-.cursorGrande .controls button {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
 
-.cursorGrande #carouselExampleIndicators button {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
-
-.cursorGrande .location-section a {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
-
-.cursorGrande .location-section iframe {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
-
-.cursorGrande .animal-gallery a {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
-
-.cursorGrande .testimonials button {
-    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
-}
-
-.cursorGrande .navbar-nav a {
+/* cambiar el cursor grande a todos los tipos de cursor */
+.cursorGrande * {
     cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
 }
 
@@ -108,4 +81,35 @@ body.accessibility-mode .donations {
 
 body.accessibility-mode .donations .container p {
     color: #ffff00;
+}
+
+body.accessibility-mode * {
+    color: #ffff00;
+    background-color: #000000;
+
+    &::before {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+    &::after {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+    &::placeholder {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+    &::selection {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+}
+
+body.accessibility-mode img,
+body.accessibility-mode [style*="background-image"] {
+    filter: invert(1) !important;
 }
