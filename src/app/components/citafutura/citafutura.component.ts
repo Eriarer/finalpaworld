@@ -132,13 +132,39 @@ export class CitafuturaComponent {
   }
 
   async btnEliminarCita(cita: string) {
-    console.log(cita);
-    if (!cita) {
-      return;
-    } else {
-      console.log('Eliminando cita' + cita);
-      await this.CitasFbService.deleteCita(cita);
-      this.cargacitasFuturas();
-    }
+    if (!cita) return;
+    await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esta acción',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        await this.CitasFbService.deleteCita(cita)
+          .then(() => {
+            this.isLoading = false;
+            Swal.fire({
+              title: 'Cita eliminada',
+              text: 'La cita ha sido eliminada correctamente',
+              icon: 'success',
+            });
+          })
+          .catch((error) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error al eliminar la cita',
+            });
+            console.error(error);
+          });
+      }
+    });
+    this.cargacitasFuturas();
   }
 }
