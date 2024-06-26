@@ -11,14 +11,10 @@ import { FooterComponent } from '../../footer/footer.component';
   selector: 'app-nav',
   standalone: true,
   imports: [
-    
     RouterModule,
-   
     NavSerachComponent,
-   
     NavUserStateComponent,
     CommonModule,
-  ,
     FooterComponent,
   ],
   templateUrl: './nav.component.html',
