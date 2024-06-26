@@ -206,6 +206,8 @@ export class CitasFbService {
 
   async getUltimasSieteDias(): Promise<{ fecha: string; cantCitas: number }[]> {
     let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    // agregar un día a la fecha de hoy
     let lastSevenDaysArray: { fecha: string; cantCitas: number }[] = [];
     for (let i = 0; i < 7; i++) {
       let date = new Date(today);
