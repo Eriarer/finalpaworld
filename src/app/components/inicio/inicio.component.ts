@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { DomseguroPipe } from './domseguro.pipe';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [DomseguroPipe],
+  imports: [DomseguroPipe, MatButtonToggleModule],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
@@ -19,10 +20,44 @@ export class InicioComponent implements AfterViewInit {
   currentFontSize: number = 18; // Tamaño de fuente actual
   accessibilityMode: boolean = false; // Modo de accesibilidad (invertir colores)
 
+  @ViewChild('filterBtn', { static: true }) filterBtn: ElementRef | undefined;
+
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {
     // Inicialización de la síntesis de voz
     this.synth = window.speechSynthesis;// 
     this.utterance = new SpeechSynthesisUtterance();
+  }
+  //Funciones para boton accesibilidad
+  ngOnInit() {
+    if(this.filterBtn) {
+      // Add event listener to the toggle button
+      const toggleBtn = this.filterBtn.nativeElement.querySelector('.toggle-btn');
+      this.renderer.listen(toggleBtn, 'click', () => {
+        this.toggleMenu();
+      });
+
+      // Add event listeners to the menu options
+      const menuOptions = this.filterBtn.nativeElement.querySelectorAll('a');
+      menuOptions.forEach((option: HTMLElement) => {
+        this.renderer.listen(option, 'click', () => {
+          this.closeMenu();
+        });
+      });
+    }
+  }
+
+  toggleMenu() {
+    if (!this.filterBtn) return;
+    if (this.filterBtn.nativeElement.classList.contains('open')) {
+      this.renderer.removeClass(this.filterBtn.nativeElement, 'open');
+    } else {
+      this.renderer.addClass(this.filterBtn.nativeElement, 'open');
+    }
+  }
+
+  closeMenu() {
+    if (!this.filterBtn) return;
+    this.renderer.removeClass(this.filterBtn.nativeElement, 'open');
   }
 
   ngAfterViewInit(): void {
@@ -113,24 +148,13 @@ export class InicioComponent implements AfterViewInit {
     }
   }
 
-  // private moveFocus(next: boolean) {
-  //   const focusableElements = this.elementRef.nativeElement.querySelectorAll('[tabindex="0"]');
-  //   const elementsArray = Array.from(focusableElements) as HTMLElement[];
-  //   const currentIndex = elementsArray.indexOf(document.activeElement as HTMLElement);
-  //   let nextIndex = next ? currentIndex + 1 : currentIndex - 1;
-  //   if (nextIndex < 0) nextIndex = elementsArray.length - 1;
-  //   if (nextIndex >= elementsArray.length) nextIndex = 0;
-  //   elementsArray[nextIndex].focus();
-  //   this.updateContent();
-  // }
-
   // Alterna el tamaño del cursor (modo de accesibilidad)
   toggleCursorSize() {
     document.body.classList.toggle('cursorGrande'); // Agrega o quita la clase 'cursorGrande' del cuerpo del documento
   }
 
    // Aumenta el tamaño del texto (modo de accesibilidad)
-   toggleTextSize() {
+   toggleTextSizeA() {
     this.currentFontSize += 2; // Incrementa el tamaño de la fuente en 2px
     const elements = this.elementRef.nativeElement.querySelectorAll('h2, h3, p, .card-title, .card-text');
 
@@ -138,6 +162,18 @@ export class InicioComponent implements AfterViewInit {
       this.renderer.setStyle(element, 'font-size', `${this.currentFontSize}px`); // Establece el nuevo tamaño de fuente en los elementos seleccionados
     });
   }
+
+  // Disminuye el tamaño del texto (modo de accesibilidad)
+   // Aumenta el tamaño del texto (modo de accesibilidad)
+   toggleTextSizeD() {
+    this.currentFontSize -= 2; // decrementa el tamaño de la fuente en 2px
+    const elements = this.elementRef.nativeElement.querySelectorAll('h2, h3, p, .card-title, .card-text');
+
+    elements.forEach((element: HTMLElement) => {
+      this.renderer.setStyle(element, 'font-size', `${this.currentFontSize}px`); // Establece el nuevo tamaño de fuente en los elementos seleccionados
+    });
+  }
+  
 
    // Alterna el modo de inversión de colores (modo de accesibilidad)
    toggleInvertColors() {
@@ -148,4 +184,6 @@ export class InicioComponent implements AfterViewInit {
       this.renderer.removeClass(document.body, 'accessibility-mode'); // Quita la clase 'accessibility-mode' del cuerpo del documento
     }
   }
+
+  
 }

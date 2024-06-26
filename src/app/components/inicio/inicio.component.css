@@ -211,20 +211,15 @@
     border: 3px solid #f1f1f1;
     padding-bottom: 30px;
 }
-  
-.controls button {
-    margin-right: 10px;
-    padding: 10px;
-    font-size: 30px;
-    background: none;
-    border: 2px solid transparent; /* Border initially transparent */
-    cursor: pointer;
-}
+
 .animal-gallery .card-title{
   font-size: 20px;
 }
 
 .img-accesible{
-  width: 70px;
-  margin: 10px;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:2.7rem;
+  margin: 2px;
+} 
