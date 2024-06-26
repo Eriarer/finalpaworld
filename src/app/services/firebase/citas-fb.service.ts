@@ -72,6 +72,11 @@ export class CitasFbService {
 
   async addCita(cita: Cita) {
     this.prubUserLog();
+    for (let i = 0; i < 40; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      if (this.userLogged != null) break;
+    }
+    if (this.userLogged == null) throw new Error('No existe usuario');
     //Verificar que cita no esté vacía
     if (
       cita.mascota.id == 0 ||
@@ -86,34 +91,21 @@ export class CitasFbService {
     await addDoc(collection(this.firestore, 'citas'), cita);
   }
 
-  // async getAllCitas(): Promise<Cita[]> {
-  //   // Obtener los datos de Firestore sin ordenarlos
-  //   const q = query(this.citasRef);
-
-  //   this.citasFB = collectionData(q, {
-  //     idField: 'id',
-  //   }) as Observable<Cita[]>;
-
-  //   const data = await firstValueFrom(this.citasFB);
-  //   console.log('data', data);
-  //   return this.citas;
-  // }
-
   async getAllCitas(): Promise<Cita[]> {
     this.prubUserLog();
-    this.citasFB = collectionData(this.citasRef, {
-      idField: 'id',
-    }) as Observable<Cita[]>;
-
-    const data = await firstValueFrom(this.citasFB);
-    this.citas = data;
-
+    for (let i = 0; i < 40; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      if (this.userLogged != null) break;
+    }
+    if (this.userLogged == null) throw new Error('No existe usuario');
+    const q = query(this.citasRef, orderBy('fechaHora', 'asc'));
+    this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
+    this.citas = await firstValueFrom(this.citasFB);
     return this.citas;
   }
 
   private convertToComparableDate(dateString: string): number {
     const [day, month, year] = dateString.split('/').map(Number);
-    // Convertir la fecha a un formato comparable: aaaammdd
     return new Date(year + 2000, month - 1, day).getTime();
   }
 
@@ -122,12 +114,10 @@ export class CitasFbService {
     this.prubUserLog();
     for (let i = 0; i < 40; i++) {
       await new Promise((resolve) => setTimeout(resolve, 250));
-      console.log('Esperando a que se loguee el usuario');
       if (this.userLogged != null) break;
     }
     if (this.userLogged == null) throw new Error('No existe usuario');
     const loggedUser = this.userLogged.email;
-    console.log('Usuario logueado: ', loggedUser);
 
     const q = query(
       this.citasRef,
@@ -147,7 +137,6 @@ export class CitasFbService {
     this.prubUserLog();
     for (let i = 0; i < 40; i++) {
       await new Promise((resolve) => setTimeout(resolve, 250));
-      console.log('Esperando a que se loguee el usuario');
       if (this.userLogged != null) break;
     }
     const loggedUser = this.userLogged.email;
@@ -168,13 +157,11 @@ export class CitasFbService {
   //return an array full of objects  {horas: String: hh:mm}
   async getAllHoursOcupied(today: Date | null) {
     if (today == null) throw new Error('No se ha proporcionado la fecha');
-    console.log('Fecha de hoy', today);
     // convertir  today  a formato Timestamp
     const now = Timestamp.fromDate(today);
     let tomorrow: any = now.toDate();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
-    console.log('Fecha de mañana', tomorrow);
     tomorrow = Timestamp.fromDate(tomorrow);
     const q = query(
       this.citasRef,
@@ -184,7 +171,6 @@ export class CitasFbService {
     );
     this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
     const data = await firstValueFrom(this.citasFB);
-    console.log('Arreglo de Citas Pasadas', data);
     let hoursOcupied: any[] = [];
     data.forEach((cita: any) => {
       let hour = cita.fechaHora.toDate().getHours();
@@ -200,19 +186,17 @@ export class CitasFbService {
   async deleteCita(id: string): Promise<void> {
     //mandar error si es nulo
     try {
-      if (!id) {
-        throw new Error('No se ha proporcionado el ID de la cita');
-      }
+      if (!id) throw new Error('No se ha proporcionado el ID de la cita');
+
       const citaDocRef = doc(this.firestore, `citas/${id}`);
       await deleteDoc(citaDocRef);
-      console.log(`Cita con ID ${id} ha sido eliminada`);
     } catch (error) {
       console.error(error);
+      throw new Error('Error al eliminar la cita', error);
     }
 
     const citaDocRef = doc(this.firestore, `citas/${id}`);
     await deleteDoc(citaDocRef);
-    console.log(`Cita con ID ${id} ha sido eliminada`);
   }
 
   async getUltimasSieteDias(): Promise<{ fecha: string; cantCitas: number }[]> {
@@ -294,7 +278,6 @@ export class CitasFbService {
           console.error('Error al obtener las citas', error);
         });
     } else {
-      console.log('queries', queries);
       // realizar la consulta
       let q = query(this.citasRef, ...queries, orderBy('fechaHora', 'asc'));
       this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
