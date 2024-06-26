@@ -28,7 +28,6 @@ export class AdminComponent {
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        console.log(event.url);
         if (event.url === '/admin/graficas') {
           this.graficBtn = 'primary';
           this.queryBtn = '';

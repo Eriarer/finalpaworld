@@ -177,7 +177,7 @@ export class AgendaComponent {
     //La fecha mínima es la fecha actual +1
     this.minDate = new Date(
       fechaActual.getFullYear(),
-      fechaActual.getMonth() - 1,
+      fechaActual.getMonth(),
       fechaActual.getDate() + 1
     );
     //La fecha máxima es la fecha actual +2 meses
@@ -310,16 +310,28 @@ export class AgendaComponent {
       );
       this.dataCita.adoptante.telefono = this.userLogged.phoneNumber;
       this.dataCita.adoptante.correo = this.userLogged.email;
-      const response = this.CitasFbService.addCita(this.dataCita); //agregando a firebase
-      // this.dataCita.fechaHora.getDate();
-      this.submit(); //Envio de correo
-      this.isLoading = false;
-      Swal.fire({
-        title: 'Cita agendada',
-        text: 'La cita ha sido agendada correctamente, se ha enviado un correo con la información.',
-        icon: 'success',
-      });
-      this.clearFields();
+      try {
+        this.CitasFbService.addCita(this.dataCita);
+        // this.dataCita.fechaHora.getDate();
+        this.submit(); //Envio de correo
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Cita agendada',
+          text: 'La cita ha sido agendada correctamente, se ha enviado un correo con la información.',
+          icon: 'success',
+        });
+      } catch (e) {
+        this.isLoading = false;
+        console.error(e);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Ocurrió un error al agendar la cita',
+          icon: 'error',
+        });
+      } finally {
+        this.isLoading = false;
+        this.clearFields();
+      }
     }
   }
 
@@ -332,7 +344,7 @@ export class AgendaComponent {
       );
     } catch (e) {
       this.isLoading = false;
-      console.log(e);
+      console.error(e);
       return;
     } finally {
       this.isLoading = false;
@@ -365,10 +377,10 @@ export class AgendaComponent {
       )
       .subscribe(
         (res) => {
-          console.log(res);
+          console.info(res);
         },
         (error) => {
-          console.log(error);
+          console.error(error);
           Swal.fire({
             icon: 'error',
             title: '¡Lo sentimos!',

@@ -33,7 +33,6 @@ export class GraficasComponent implements OnInit {
     this.citasService
       .getUltimasSieteDias()
       .then((data) => {
-        console.log('last seven days', data);
         data.forEach((dia) => {
           this.dias.push(dia.fecha);
           this.citas.push(dia.cantCitas);
@@ -41,7 +40,7 @@ export class GraficasComponent implements OnInit {
         this.initializeChart();
       })
       .catch((error) => {
-        console.log('Ooops No se pudieron obtener los datos', error);
+        console.error('Ooops No se pudieron obtener los datos', error);
       });
   }
 
@@ -60,12 +59,21 @@ export class GraficasComponent implements OnInit {
         },
       ],
     };
-
     const ctx = document.getElementById('chart') as HTMLCanvasElement;
     this.chart = new Chart(ctx, {
       type: 'line' as ChartType,
       data: data,
       options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              autoSkip: true,
+              includeBounds: true,
+              stepSize: this.getStepSize(),
+            },
+          },
+        },
         plugins: {
           legend: {
             display: true,
@@ -78,6 +86,21 @@ export class GraficasComponent implements OnInit {
       },
     });
     this.isLoading = false;
+  }
+
+  private getStepSize(): number {
+    const maxCitas = Math.max(...this.citas);
+    let stepSize = 1;
+    if (maxCitas < 10) {
+      stepSize = 1;
+    } else if (maxCitas % 5 === 0) {
+      stepSize = 5;
+    } else if (maxCitas % 2 === 0) {
+      stepSize = 2;
+    } else {
+      stepSize = Math.ceil(maxCitas / 5);
+    }
+    return stepSize;
   }
 
   private transparentize(color: string, opacity: number): string {
