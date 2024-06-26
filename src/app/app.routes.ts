@@ -21,6 +21,11 @@ export const routes: Routes = [
     title: 'PW mascotas',
   },
   {
+    path: 'mascotas/:id',
+    component: MascotaComponent,
+    title: 'PW mascotas',
+  },
+  {
     path: 'acercade',
     component: AcercaDeComponent,
     title: 'PW Acerca de',

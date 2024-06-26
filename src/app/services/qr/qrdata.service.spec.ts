@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CitasService } from './citas.service';
+import { QrdataService } from './qrdata.service';
 
-describe('CitasService', () => {
-  let service: CitasService;
+describe('QrdataService', () => {
+  let service: QrdataService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CitasService);
+    service = TestBed.inject(QrdataService);
   });
 
   it('should be created', () => {

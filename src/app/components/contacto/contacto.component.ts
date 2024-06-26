@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -9,11 +10,12 @@ import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { LoaderComponent } from '../loader/loader.component';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [RouterOutlet, ReactiveFormsModule, LoaderComponent],
+  imports: [RouterOutlet, ReactiveFormsModule, LoaderComponent, NgClass, NgIf],
   templateUrl: './contacto.component.html',
   styleUrl: './contacto.component.css',
 })
@@ -36,7 +38,15 @@ export class ContactoComponent {
     ]),
   });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    this.formularioContacto.untouched;
+    this.formularioContacto = this.fb.group({
+      nombre: ['', [Validators.required, Validators.maxLength(50)]],
+      asunto: ['', [Validators.required, Validators.maxLength(50)]],
+      correo: ['', [Validators.required, Validators.email]],
+      mensaje: ['', [Validators.required, Validators.maxLength(500)]],
+    });
+  }
 
   submit() {
     if (this.formularioContacto.valid) {
@@ -67,6 +77,12 @@ export class ContactoComponent {
             });
           }
         );
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Lo sentimos!',
+        text: 'Por favor, llena todos los campos.',
+      });
     }
   }
 }

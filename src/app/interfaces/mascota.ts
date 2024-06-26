@@ -4,7 +4,7 @@ export interface Mascota {
   color: string;
   tipo: string; //gato o perro
   raza: string; //pitbull, siames, etc
-  fechaIngreso: string; //la fecha en la que llego
+  fechaIngreso: Date; //la fecha en la que llego, aquí no importa la hora
   descripcion: string;
   imagen: string;
   sexo: string; //macho o hembra

@@ -1,2 +1,20 @@
-<p>admin works!</p>
+<div class="buttons mb-3">
+  <button
+    class="btnRutas"
+    [class.active]="queryBtn"
+    [routerLink]="['/admin/consultas']"
+    routerLinkActive="active"
+  >
+    Consultas
+  </button>
+  <button
+    class="btnRutas"
+    [class.active]="graficBtn"
+    [routerLink]="['/admin/graficas']"
+    routerLinkActive="active"
+  >
+    Gráficas
+  </button>
+</div>
+<hr />
 <router-outlet></router-outlet>

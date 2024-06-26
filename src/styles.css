@@ -2,32 +2,114 @@
 
 html,
 body {
-  height: 100%;
-}
-
-* {
-  margin: 0;
-  padding: 0;
+    height: 100%;
 }
 
 body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.cdk-overlay-container {
-  position: fixed;
-  z-index: 1021;
+
+
+/* cambiar el cursor grande a todos los tipos de cursor */
+.cursorGrande * {
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;
 }
 
-.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
-  opacity: 1;
-  background-color: rgba(0, 0, 0, 0.32);
+/* Invertir colores */
+body.accessibility-mode {
+    background-color: #000000;
+    color: #ffff00;
 }
 
-.cdk-overlay-pane {
-  height: 550px;
-  max-width: 50%;
-  width: 100%;
-  max-width: 800px;
+body.accessibility-mode .navbar-nav a {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode #carouselExampleIndicators {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .carousel-caption {
+    background-color: #000000;
+    font-size: xx-large;
+}
+
+body.accessibility-mode .location-section {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .animal-gallery .card {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials .blockquote {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials .carousel-item {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials #testimonialsCarousel {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials .container {
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .controls {
+    background-color: #ffff00;
+
+}
+
+body.accessibility-mode .donations {
+    color: #ffff00;
+    background-color: #000000;
+
+}
+
+body.accessibility-mode .donations .container p {
+    color: #ffff00;
+}
+
+body.accessibility-mode * {
+    color: #ffff00;
+    background-color: #000000;
+
+    &::before {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+    &::after {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+    &::placeholder {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+    &::selection {
+        color: #ffff00;
+        background-color: #000000;
+    }
+
+}
+
+body.accessibility-mode img,
+body.accessibility-mode [style*="background-image"] {
+    filter: invert(1) !important;
 }

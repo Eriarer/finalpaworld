@@ -1,88 +1,129 @@
-<nav class="navbar sticky-top navbar-expand-lg nav-color mb-3">
-  <div class="container-fluid">
-    <!-- LOGO -->
-    <a class="navbar-brand" href="#">
-      <div class="d-flex align-items-center justify-content-center">
-        <img
-          src="assets/img/favIcon.webp"
-          alt="Logo"
-          width="30"
-          height="30"
-          class="d-inline-block align-text-top"
-        />
-        <p class="m-0 ms-2">
-          {{ appName }}
-        </p>
-      </div>
-    </a>
-    <!-- Toggle -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#offcanvasNavbar"
-      aria-controls="offcanvasNavbar"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <!-- Off canvas: Poner en el contenido los hipervinculos -->
-    <div
-      class="offcanvas offcanvas-start"
-      tabindex="-1"
-      id="offcanvasNavbar"
-      aria-labelledby="offcanvasNavbarLabel"
-    >
-      <!-- HEADER -->
-      <div class="offcanvas-header nav-color">
-        <!-- LOGO -->
-        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
-          <div class="d-flex align-items-center justify-content-center">
-            <img
-              src="assets/img/favIcon.webp"
-              alt="Logo"
-              width="30"
-              height="30"
-              class="d-inline-block align-text-top"
-            />
-            <p class="m-0 ms-2">
-              {{ appName }}
-            </p>
-          </div>
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
-      </div>
-      <!-- Content: agregar etiquetas li para los elementos -->
-      <div class="offcanvas-body">
-        <!-- Links Normales -->
-        <ul class="navbar-nav justify-content-end flex-grow-1 text-nowrap">
-          @for(navLink of navLinks; track navLinks){
-          <li class="nav-item">
-            <!-- eliminar los espaicos -->
-            <a
-              class="nav-link"
-              [routerLink]="['/' + navLink.toLowerCase().replace(' ', '')]"
-              routerLinkActive="active"
-              [innerHTML]="navLink"
-            ></a>
-          </li>
-          }
-        </ul>
-        <!-- Manejar usuario -->
-        <div class="d-flex flex-row justify-content-center align-items-center">
-          <app-nav-serach></app-nav-serach>
+<div class="pantalla">
+  <nav class="navbar sticky-top navbar-expand-lg nav-color mb-3">
+    <div class="container-fluid">
+      <!-- LOGO -->
+      <a class="navbar-brand" href="#">
+        <div class="d-flex align-items-center justify-content-center">
+          <img
+            src="assets/img/favIcon.webp"
+            alt="Logo"
+            width="30"
+            height="30"
+            class="d-inline-block align-text-top"
+          />
+          <p class="m-0 ms-2">
+            {{ appName }}
+          </p>
         </div>
-        <app-nav-user-state></app-nav-user-state>
+      </a>
+      <!-- Toggle -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Off canvas: Poner en el contenido los hipervinculos -->
+      <div
+        class="offcanvas offcanvas-start"
+        tabindex="-1"
+        id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel"
+      >
+        <!-- HEADER -->
+        <div class="offcanvas-header nav-color">
+          <!-- LOGO -->
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+            <div class="d-flex align-items-center justify-content-center">
+              <img
+                src="assets/img/favIcon.webp"
+                alt="Logo"
+                width="30"
+                height="30"
+                class="d-inline-block align-text-top"
+              />
+              <p class="m-0 ms-2">
+                {{ appName }}
+              </p>
+            </div>
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <!-- Content: agregar etiquetas li para los elementos -->
+        <div class="offcanvas-body">
+          <!-- Links Normales -->
+          <ul class="navbar-nav justify-content-end flex-grow-1 text-nowrap">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/inicio']"
+                routerLinkActive="active"
+                >Inicio</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/mascotas']"
+                routerLinkActive="active"
+                >Mascotas</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/acercade']"
+                routerLinkActive="active"
+                >Acerca De</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/contacto']"
+                routerLinkActive="active"
+                >Contacto</a
+              >
+            </li>
+            <li class="nav-item" *ngIf="userLogged">
+              <a
+                class="nav-link"
+                [routerLink]="['/agenda']"
+                routerLinkActive="active"
+                >Agendar</a
+              >
+            </li>
+            <li class="nav-item" *ngIf="userLogged">
+              <a
+                class="nav-link"
+                [routerLink]="['/citas']"
+                routerLinkActive="active"
+                >Citas</a
+              >
+            </li>
+          </ul>
+          <!-- Manejar usuario -->
+          <div
+            class="d-flex flex-row justify-content-center align-items-center"
+          >
+            <app-nav-serach></app-nav-serach>
+          </div>
+          <app-nav-user-state></app-nav-user-state>
+        </div>
       </div>
     </div>
+  </nav>
+  <div class="d-flex flex-column flex-grow-auto my-5">
+    <ng-content></ng-content>
   </div>
-</nav>
-<div class="d-flex flex-column flex-grow-1 container mt-5">
-  <ng-content></ng-content>
-  <br />
+  <app-footer class="footer"></app-footer>
 </div>

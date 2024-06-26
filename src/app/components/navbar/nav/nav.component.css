@@ -1,7 +1,19 @@
+.pantalla {
+  height: 100svh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
 .navbar {
   font-size: large;
   height: 84px;
+  /* sombar debajo */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.349);
 }
+
 .nav-item {
   align-content: center;
 }
@@ -13,7 +25,7 @@
 .offcanvas.show,
 .offcanvas.showing,
 .offcanvas.hiding {
-  & > .offcanvas-body {
+  &>.offcanvas-body {
     background-color: #2a387f;
   }
 }
@@ -59,4 +71,8 @@
 .nav-link.active {
   color: white;
   font-weight: 500;
+}
+
+.footer {
+  margin-top: auto;
 }
