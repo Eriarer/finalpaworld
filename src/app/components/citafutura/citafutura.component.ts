@@ -1,22 +1,15 @@
 import { Component } from '@angular/core';
-import { Cita } from '../../interfaces/cita';
 import { CitasFbService } from '../../services/firebase/citas-fb.service';
-import { Observable } from 'rxjs';
-import { Timestamp } from '@firebase/firestore-types';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  collectionData,
-  query,
-  orderBy,
-} from '@angular/fire/firestore';
+import { Timestamp } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { TimestampToDateStringPipe } from '../../pipes/timestamp-to-date-string.pipe';
 import { TimestampToHourStringPipe } from '../../pipes/timestamp-to-hour-string.pipe';
 
 import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
-
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatButtonModule } from '@angular/material/button';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-citafutura',
   standalone: true,
@@ -24,6 +17,10 @@ import { LoaderComponent } from '../loader/loader.component';
     TimestampToDateStringPipe,
     TimestampToHourStringPipe,
     CommonModule,
+    LoaderComponent,
+    MatIcon,
+    MatButton,
+    MatButtonModule,
     LoaderComponent,
   ],
   templateUrl: './citafutura.component.html',
@@ -33,12 +30,19 @@ export class CitafuturaComponent {
   citas: any = [];
   fechaActual = new Date();
   mostrar = 'block';
+  today: Timestamp;
+  isLoading: boolean = false;
 
-  constructor(
-    private CitasFbService: CitasFbService,
-    private firestore: Firestore
-  ) {
+  constructor(private CitasFbService: CitasFbService) {}
+
+  ngOnInit() {
     this.cargacitasFuturas();
+  }
+
+  private getTodayTimestamp() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    this.today = Timestamp.fromDate(today);
   }
 
   async cargacitasFuturas() {
@@ -46,6 +50,7 @@ export class CitafuturaComponent {
     let style = document.getElementsByClassName('eliminar');
     let btnCitasFuturas = document.getElementById('btnCitasF');
     let btnCitasPasadas = document.getElementById('btnCitasP');
+    this.getTodayTimestamp();
     if (btnCitasFuturas && btnCitasPasadas) {
       btnCitasFuturas.setAttribute(
         'style',
@@ -59,12 +64,29 @@ export class CitafuturaComponent {
     for (let i = 0; i < style.length; i++) {
       style[i].setAttribute('style', 'display: table-cell');
     }
+    this.isLoading = true;
     //Se obtienen las citas futuras
-    this.citas = await this.CitasFbService.getCitasFuturas(this.fechaActual);
+    this.CitasFbService.getCitasFuturas(this.fechaActual)
+      .then((citas) => {
+        this.isLoading = false;
+        this.citas = citas;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al cargar las citas futuras',
+        });
+        console.error(error);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   async cargacitasPrevias() {
     let style = document.getElementsByClassName('eliminar');
+    this.getTodayTimestamp();
     //recorremos los objetos con clase eliminar
     let btnCitasPasadas = document.getElementById('btnCitasP');
     let btnCitasFuturas = document.getElementById('btnCitasF');
@@ -82,7 +104,23 @@ export class CitafuturaComponent {
       //ocultamos los objetos con clase eliminar
       style[i].setAttribute('style', 'display: none');
     }
-    this.citas = await this.CitasFbService.getCitasPasadas(this.fechaActual);
+    this.isLoading = true;
+    this.CitasFbService.getCitasPasadas(this.fechaActual)
+      .then((citas) => {
+        this.citas = citas;
+        this.isLoading = false;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al cargar las citas pasadas',
+        });
+        console.error(error);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   btnCargarPrevias(): void {

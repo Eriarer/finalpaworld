@@ -1,62 +1,76 @@
-<div id="container">
-  <div class="btncitas">
-    <button (click)="btnCargarFuturas()" class="cambiarCitas" id="btnCitasF">
-      Citas futuras
-    </button>
-    <button (click)="btnCargarPrevias()" class="cambiarCitas" id="btnCitasP">
-      Citas pasadas
-    </button>
-  </div>
-  <br />
-  @if (citas.length > 0) {
-  <table>
-    <thead>
-      <tr class="trcont">
-        <th>ID</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Adoptante</th>
-        <th>Imagen</th>
-        <th>Tipo</th>
-        <th>Raza</th>
-        <th class="eliminar" style="display: mostrar">Cancelar cita</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (cita of citas; track $index) {
-      <tr class="trcont">
-        <td><span [innerHTML]="cita.id"></span></td>
-        <td>
-          <span>{{ cita.fechaHora | timestampToDateString }}</span>
-        </td>
-        <td>
-          <span>{{ cita.fechaHora | timestampToHourString }}</span>
-        </td>
-        <td>
-          <span [innerHTML]="cita.adoptante.nombre | uppercase"></span><br />
-          <span>Numero: </span>
-          <span [innerHTML]="cita.adoptante.telefono"></span>
-        </td>
-        <td>
-          <img
-            [src]="cita.mascota.imagen"
-            alt="Imagen de la mascota"
-            class="mascota-imagen"
-          />
-        </td>
-        <td><span [innerHTML]="cita.mascota.tipo | titlecase"></span></td>
-        <td><span [innerHTML]="cita.mascota.raza"></span></td>
-        <!-- visible solo en futuras -->
-        <td class="eliminar" style="display: mostrar">
-          <button (click)="btnEliminarCita(cita.id)" id="btnEliminar">
-            CANCELAR
-          </button>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-  } @else {
-  <h1>No hay citas</h1>
-  }
+<div class="btncitas">
+  <button (click)="btnCargarFuturas()" class="cambiarCitas" id="btnCitasF">
+    Citas futuras
+  </button>
+  <button (click)="btnCargarPrevias()" class="cambiarCitas" id="btnCitasP">
+    Citas pasadas
+  </button>
 </div>
+<br />
+@if (citas.length > 0) {
+<div class="table-responsive">
+  <div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="table table-bordered table-striped mb-0">
+      <thead>
+        <tr class="trcont header-row">
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Adoptante</th>
+          <th>Imagen</th>
+          <th>Tipo</th>
+          <th>Raza</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cita of citas; track $index) {
+        <tr class="trcont">
+          <td><span [innerHTML]="cita.id"></span></td>
+          <td>
+            <span>{{ cita.fechaHora | timestampToDateString }}</span>
+          </td>
+          <td>
+            <span>{{ cita.fechaHora | timestampToHourString }}</span>
+          </td>
+          <td>
+            <span>{{ cita.adoptante.nombre }}</span
+            ><br />
+            <span [innerHTML]="'Numero: ' + cita.adoptante.telefono"></span>
+          </td>
+          <td>
+            <span>
+              <img
+                [src]="cita.mascota.imagen"
+                alt="Imagen de la mascota"
+                class="mascota-imagen img-fluid"
+              />
+            </span>
+          </td>
+          <td><span [innerHTML]="cita.mascota.tipo | titlecase"></span></td>
+          <td>
+            <span [innerHTML]="cita.mascota.raza | titlecase"></span>
+          </td>
+          <td>
+            <span>
+              @if(today < cita.fechaHora) {
+              <button mat-fab color="accent" (click)="btnEliminarCita(cita.id)">
+                <mat-icon> delete_forever </mat-icon>
+              </button>
+              } @else {
+              <span class="text-muted">Sin acciones</span>
+              }
+            </span>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+} @else {
+<div class="d-flex justify-content-center align-items-center">
+  <div class="alert alert-info h1" role="alert">No hay citas que mostrar</div>
+</div>
+}
+<app-loader [visible]="isLoading"></app-loader>
