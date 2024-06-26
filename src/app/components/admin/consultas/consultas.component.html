@@ -37,7 +37,7 @@
     </div>
     <div class="d-flex justify-content-center gap-2">
       <button type="submit" mat-raised-button color="accent">Enviar</button>
-      <button mat-raised-button (click)="resetForm()">Limpiar</button>
+      <a mat-raised-button (click)="resetForm()">Limpiar</a>
     </div>
   </form>
 </div>
@@ -55,6 +55,7 @@
             <th>Imagen</th>
             <th>Tipo</th>
             <th>Raza</th>
+            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -84,6 +85,17 @@
             <td><span [innerHTML]="cita.mascota.tipo | titlecase"></span></td>
             <td>
               <span [innerHTML]="cita.mascota.raza | titlecase"></span>
+            </td>
+            <td>
+              <span>
+                @if(today < cita.fechaHora) {
+                <button mat-fab color="accent" (click)="deleteCita(cita.id)">
+                  <mat-icon> delete_forever </mat-icon>
+                </button>
+                } @else {
+                <span class="text-muted">Sin acciones</span>
+                }
+              </span>
             </td>
           </tr>
           }

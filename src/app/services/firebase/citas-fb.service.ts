@@ -256,6 +256,7 @@ export class CitasFbService {
       queries.push(where('adoptante.nombre', '>=', username));
       queries.push(where('adoptante.nombre', '<', username + '\uf8ff'));
     }
+    // verificar que la fecha no sea invalida
     if (fecha) {
       // si la vecha no es de tipo Date continuar adelante
       if (!(fecha instanceof Date))
@@ -272,7 +273,6 @@ export class CitasFbService {
       queries.push(where('mascota.tipo', 'in', petTypes));
     }
     if (queries.length == 0) {
-      console.log('No se ha proporcionado ningún parámetro de consulta');
       await this.getAllCitas()
         .then((data) => {
           result = data;

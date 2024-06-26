@@ -20,7 +20,7 @@
 
 .my-custom-scrollbar {
   position: relative;
-  height: 55vmax;
+  max-height: 55vmax;
   overflow: auto;
 }
 
@@ -34,8 +34,8 @@
 .table th,
 .table td {
   border-top: 1px solid #dee2e6;
-    vertical-align: middle;
-    &> span{
+  vertical-align: middle;
+  & > span {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,4 +78,3 @@
   top: 0;
   z-index: 1;
 }
-
