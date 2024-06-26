@@ -166,25 +166,19 @@ export class ConsultasComponent {
     this.isLoading = true;
     this.getTodayTimestamp();
     try {
+      this.isLoading = false;
       this.citas = await citasPromise;
-      // Add any additional logic here that you want to run every time citas are loaded
-      console.log('Citas loaded successfully', this.citas);
-      // For example, you might want to do some data processing or update UI elements
     } catch (error) {
+      this.isLoading = false;
       console.error('Error al obtener las citas', error);
-      await Swal.fire('Error', 'Error al obtener las citas', 'error');
+      Swal.fire('Error', 'Error al obtener las citas', 'error');
     } finally {
       this.isLoading = false;
     }
   }
 
   onSubmitQuery(): void {
-    if (this.multiQueryForm.invalid) {
-      console.log('Formulario inválido');
-      return;
-    }
-
-    console.log('Formulario válido');
+    if (this.multiQueryForm.invalid) return;
     const queryParams = this.getQueryParams();
     this.loadAllCitas(this.citasService.getMultiQueryCitas(...queryParams));
   }
@@ -203,9 +197,7 @@ export class ConsultasComponent {
   }
 
   resetForm(): void {
-    console.log('Reset form');
     if (this.multiQueryForm.pristine) return;
-    console.log('Reset form not pristine');
     this.multiQueryForm.reset();
     this.multiQueryForm.markAsPristine();
     this.loadAllCitas();
