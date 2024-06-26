@@ -1,0 +1,32 @@
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+}
+
+/* Clase de botones en flex y sin fondo, con separación de 4 rem, hover y borde inferior azul royal */
+.btnRutas {
+  display: flex;
+  flex-direction: row;
+  gap: 4rem; /* Separación entre los botones */
+}
+
+.btnRutas {
+  background-color: transparent;
+  border: none;
+  color: #3e51b4; /* Azul royal */
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s; /* Efecto de transición para el hover */
+}
+
+.btnRutas:hover {
+  border-bottom: 2px solid #3e51b4; /* Borde inferior azul royal al hacer hover */
+}
+
+.active {
+  font-weight: bold;
+  color: #04125a;
+  border-bottom: 2px solid #ff4081;
+}

@@ -4,8 +4,8 @@ import { Mascota } from './mascota';
 
 export interface Cita {
   id?: number;
-  fecha: string;
-  hora: Time;
+  fechaHora: Date; //engloba fecha y hora
+  // hora: Time;
   adoptante: Adoptante;
   mascota: Mascota;
 }

@@ -99,7 +99,7 @@ export class AuthService {
           size: 'invisible',
           callback: (response: any) => {
             console.log('captcha resolved');
-          },
+          },  
         }
       );
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -116,7 +116,6 @@ export class AuthService {
   ) {
     let user = this.firebaseAuth.currentUser;
     if (!user) throw new Error('User not found');
-    console.log('userState SendCode', user);
     try {
       this.confirmationResult = await linkWithPhoneNumber(
         user,
