@@ -1,33 +1,93 @@
 /* You can add global styles to this file, and also import other style files */
 
-html,
-body {
-  height: 100%;
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Estilos para el cursor grande */
+.cursorGrande {
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+
+/* Estilos para el cursor pequeño */
+.cursorGrande .controls button{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+
+.cursorGrande #carouselExampleIndicators button{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+.cursorGrande .location-section a{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+.cursorGrande .location-section iframe{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+.cursorGrande .animal-gallery a{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+.cursorGrande .testimonials button{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+.cursorGrande .navbar-nav a{
+    cursor: url('/assets/img/home.imgs/Cursor2.png'), auto !important;}
+
+/* Invertir colores */  
+body.accessibility-mode {
+    background-color: #000000;
+    color: #ffff00;
 }
 
-* {
-  margin: 0;
-  padding: 0;
+body.accessibility-mode .navbar-nav a{
+    color: #ffff00;
+    background-color: #000000;
 }
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+body.accessibility-mode #carouselExampleIndicators{
+    color: #ffff00;
+    background-color: #000000;
 }
 
-.cdk-overlay-container {
-  position: fixed;
-  z-index: 1021;
+body.accessibility-mode .carousel-caption{
+    background-color: #000000;
+    font-size: xx-large;
 }
 
-.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
-  opacity: 1;
-  background-color: rgba(0, 0, 0, 0.32);
+body.accessibility-mode .location-section{
+    color: #ffff00;
+    background-color: #000000;
 }
 
-.cdk-overlay-pane {
-  height: 550px;
-  max-width: 50%;
-  width: 100%;
-  max-width: 800px;
+body.accessibility-mode .animal-gallery .card{
+    color: #ffff00;
+    background-color: #000000;
 }
+
+body.accessibility-mode .testimonials .blockquote{
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials .carousel-item{
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials #testimonialsCarousel{
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .testimonials .container{
+    color: #ffff00;
+    background-color: #000000;
+}
+
+body.accessibility-mode .controls{
+    background-color: #ffff00;
+    
+}
+body.accessibility-mode .donations{
+    color: #ffff00;
+    background-color: #000000;
+
+}
+
+body.accessibility-mode .donations .container p{ 
+    color: #ffff00;
+}
+
+
+
