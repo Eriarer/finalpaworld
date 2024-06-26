@@ -9,12 +9,11 @@
   max-width: 1200px;
   display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 2em;
   column-gap: 2em;
-
 }
 
 .petInfoRow {
@@ -22,8 +21,8 @@
   justify-content: space-between;
 }
 
-.descripcion{
-  padding:0px 20%;
+.descripcion {
+  padding: 0px 20%;
   text-align: justify;
 }
 
@@ -33,52 +32,53 @@
   align-items: center;
   margin: 10px;
 }
-.divSex{
+.divSex {
   display: flex;
   justify-content: center;
   align-items: center;
 
   & > p {
-    margin:0px;
+    margin: 0px;
     margin-right: 5px;
   }
 }
 
-#SecAdop, #dataPet{
+#SecAdop,
+#dataPet {
   width: 50%;
   height: 50%;
   box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.116);
   border-radius: 20px;
 }
 
-
 #SecAdop,
-.dataAdop{
+.dataAdop {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  gap: 1em;
 }
 
-#SecAdop{
+#SecAdop {
   border-radius: 20px 20px 20px 20px;
   border: #4054b4 5px double;
   background-color: rgb(207, 207, 207);
 }
 
-.dataAdop{
-    color: gray;
-  &>h2{
+.dataAdop {
+  color: gray;
+  & > h2 {
     color: black;
     font-size: 2em;
   }
 }
 
-.fecha{
+.fecha {
   color: rgb(39, 38, 38);
 }
 
-.botones{
+.botones {
   margin: 1rem;
 }
 
@@ -89,7 +89,7 @@
   flex-direction: column;
   font-size: 1.2em;
   padding: 10px;
-  border-radius:0 0 20px 20px;
+  border-radius: 0 0 20px 20px;
   background-color: rgb(207, 207, 207);
   color: black;
   border-top: #ff4081 5px solid;
@@ -98,7 +98,7 @@
 .slider {
   position: relative;
   width: 100%;
-  min-width: 100%;  
+  min-width: 100%;
 }
 
 .slides {
@@ -113,7 +113,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 20px 20px 0 0 ;
+  border-radius: 20px 20px 0 0;
   overflow: hidden;
   user-select: none;
   padding: 43px;
@@ -182,7 +182,8 @@
     flex-direction: column;
   }
 
-  #SecAdop, #dataPet{
+  #SecAdop,
+  #dataPet {
     width: 100%;
     height: 100%;
     margin-left: 0;
@@ -192,33 +193,33 @@
     padding: 15px;
   }
 
-  #dataPet{
+  #dataPet {
     margin-bottom: 3rem;
   }
 }
 
 @media (max-width: 600px) {
-    .slides {
-        height: 250px;
-    }
+  .slides {
+    height: 250px;
+  }
 }
 
 @media (min-width: 600px) and (max-width: 960px) {
-    .slides {
-        height: 300px;
-    }
+  .slides {
+    height: 300px;
+  }
 }
 
-@media (min-width: 960px) and (max-width: 1290px){
-    .slides {
-        height: 400px;
-    }
+@media (min-width: 960px) and (max-width: 1290px) {
+  .slides {
+    height: 400px;
+  }
 }
 
 @media (min-width: 1290px) {
-    .slides {
-        height: 400px;
-    }
+  .slides {
+    height: 400px;
+  }
 }
 
 /* Estilos para ocultar botones del input type:number */
@@ -232,4 +233,3 @@ textarea {
   resize: none;
   height: 100%;
 }
-
