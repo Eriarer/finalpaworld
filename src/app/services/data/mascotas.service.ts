@@ -125,7 +125,7 @@ export class MascotasService {
         'El gato Bengal es conocido por su pelaje manchado y su apariencia similar a la de un leopardo. Son gatos activos, curiosos y les gusta jugar. También pueden formar vínculos fuertes con sus dueños.',
       imagen: 'assets/img/pets/10.webp',
       sexo: 'Hembra',
-    }
+    },
   ];
 
   constructor() {}
@@ -149,5 +149,13 @@ export class MascotasService {
     return this.mascotas.filter(
       (mascota) => mascota.raza.toLowerCase() === raza.toLowerCase()
     );
+  }
+
+  getMascotasByIds(ids: any[]): Mascota[] {
+    let mascotasfinal: any[] = [];
+    ids.forEach((element) => {
+      mascotasfinal.push(this.mascotas[element - 1]);
+    });
+    return mascotasfinal;
   }
 }
