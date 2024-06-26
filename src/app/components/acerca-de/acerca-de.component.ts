@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-acerca-de',
-  standalone: true,
-  imports: [],
   templateUrl: './acerca-de.component.html',
-  styleUrl: './acerca-de.component.css'
+  styleUrls: ['./acerca-de.component.css']
 })
-export class AcercaDeComponent {
+export class AcercaDeComponent implements AfterViewInit {
 
+  ngAfterViewInit() {
+    let accordions = document.querySelectorAll(".accordion");
+    accordions.forEach((accordion) => {
+      accordion.addEventListener('click', () => {
+        accordion.classList.toggle("active");
+      });
+    });
+  }
 }
