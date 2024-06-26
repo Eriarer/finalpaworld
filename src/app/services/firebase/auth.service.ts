@@ -7,10 +7,9 @@ import {
   User as FirebaseUser,
   ConfirmationResult,
   signInWithEmailAndPassword,
-  setPersistence,
-  browserLocalPersistence,
   signInWithPhoneNumber,
   updateProfile,
+  getIdToken,
 } from '@angular/fire/auth';
 import { User } from '../../interfaces/user';
 import { UsersFbService } from './users-fb.service';
@@ -21,7 +20,8 @@ import { UserState } from '../../interfaces/userState';
 })
 export class AuthService {
   private confirmationResult?: ConfirmationResult;
-
+  private email: string;
+  private password: string;
   constructor(
     private firebaseAuth: Auth,
     private userService: UsersFbService
@@ -53,6 +53,8 @@ export class AuthService {
     password: string,
     htmlElement: HTMLElement
   ): Promise<any> {
+    this.email = email;
+    this.password = password;
     if (!name || !nickname || !email || !phoneNumber || !password)
       throw new Error('Missing fields');
     if (await this.userService.isPhoneAlreadyRegistered(phoneNumber))
@@ -80,7 +82,9 @@ export class AuthService {
         signInWithEmailAndPassword(this.firebaseAuth, email, password);
       })
       .catch((error) => {
-        console.log('error SignUp', error);
+        console.error('error SignUp', error);
+        this.email = '';
+        this.password = '';
         throw new Error(error.message);
       });
     return response;
@@ -90,22 +94,21 @@ export class AuthService {
     phoneNumber: string,
     element: HTMLElement
   ): Promise<void> {
-    console.log('linkPhoneNumber');
     try {
       const captchaVerifier = new RecaptchaVerifier(
         this.firebaseAuth,
         element,
         {
           size: 'invisible',
-          callback: (response: any) => {
-            console.log('captcha resolved');
-          },  
+          callback: (response: any) => {},
         }
       );
       await new Promise((resolve) => setTimeout(resolve, 3000));
       await this.linkPhoneSendCode(phoneNumber, captchaVerifier);
     } catch (error: any) {
-      console.log('errorGenerateCaptcha', error);
+      console.error('errorGenerateCaptcha', error);
+      this.email = '';
+      this.password = '';
       throw new Error('Error al generar el captcha');
     }
   }
@@ -122,34 +125,40 @@ export class AuthService {
         phoneNumber,
         captchaVerifier
       );
-      console.log('confirmationResult', this.confirmationResult);
       // Aumenta el tiempo de espera
       setTimeout(() => {
         this.confirmationResult = undefined;
       }, 300000); // 5 minutos
     } catch (error: any) {
-      console.log('error Sending Code', error);
+      console.error('error Sending Code', error);
+      this.email = '';
+      this.password = '';
       throw new Error('Error al enviar el código');
     }
   }
 
   async linkPhoneVerifyCode(code: string): Promise<any> {
-    console.log('linkPhoneVerifyCode');
     if (!this.confirmationResult) {
-      console.log('No confirmation result available');
-      return false;
+      throw new Error('No hay un código de verificación pendiente');
     }
     try {
-      console.log('confirmationResult VerifyCode', this.confirmationResult);
       await this.confirmationResult.confirm(code);
-      console.log('success');
       this.confirmationResult = undefined;
       this.userService.setPhoneLinkedByUid(this.firebaseAuth.currentUser!.uid);
-      return true;
+      await this.signOut();
+      await signInWithEmailAndPassword(
+        this.firebaseAuth,
+        this.email,
+        this.password
+      );
+      this.email = '';
+      this.password = '';
     } catch (error: any) {
-      console.log('error', error);
       this.confirmationResult = undefined;
+      this.email = '';
+      this.password = '';
       throw new Error('Error al verificar el código');
+      console.error('error', error);
     }
   }
 
