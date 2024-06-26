@@ -133,22 +133,12 @@ export class AgendaComponent {
     '18:30',
   ];
 
-  nombreAdop = new FormControl('', [
-    Validators.required,
-    Validators.pattern('[a-zA-Z ]*'),
-  ]);
   errorMessage = '';
-  telAdop = new FormControl('', [
-    Validators.required,
-    Validators.pattern('[0-9]{10}'),
-    Validators.minLength(10),
-    Validators.maxLength(10),
-  ]);
+
   razonAdop = new FormControl('', [
     Validators.required,
-    Validators.pattern('[a-zA-Z ]*'),
+    Validators.pattern('^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\\s\\-\\.,:;!?]+$'),
   ]);
-  errorMessage2 = '';
   selectedDate: any;
   selectedHour: string | undefined;
   selectedFecha: any;
@@ -190,10 +180,7 @@ export class AgendaComponent {
       fechaActual.getDate()
     );
 
-    //Manejo de errores en el formulario
-    merge(this.nombreAdop.statusChanges, this.razonAdop.valueChanges)
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateErrorMessage());
+    this.updateErrorMessage();
   }
 
   ngOnInit() {
@@ -255,16 +242,6 @@ export class AgendaComponent {
       this.errorMessage = 'Razón invalida';
     } else {
       this.errorMessage = '';
-    }
-  }
-
-  updateErrorMessage2() {
-    if (this.telAdop.hasError('required')) {
-      this.errorMessage2 = 'Debes ingresar un valor';
-    } else if (this.telAdop.hasError('pattern')) {
-      this.errorMessage2 = 'Teléfono invalido';
-    } else {
-      this.errorMessage2 = '';
     }
   }
 
@@ -367,8 +344,6 @@ export class AgendaComponent {
     this.selectedDate = this.selectedFecha = this.selectedHour = '';
     //Eliminar la flag de touched para eliminar el error
     this.razonAdop.markAsUntouched();
-    this.nombreAdop.markAsUntouched();
-    this.telAdop.markAsUntouched();
   }
 
   //////// Envio de correo ////////
