@@ -218,7 +218,7 @@ export class ConsultasComponent {
         try {
           await this.citasService.deleteCita(citaId);
           await Swal.fire('Borrado', 'Cita eliminada', 'success');
-          this.loadAllCitas();
+          this.onSubmitQuery();
         } catch (error) {
           console.error('Error al borrar la cita', error);
           await Swal.fire('Error', 'Error al borrar la cita', 'error');
