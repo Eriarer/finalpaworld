@@ -5,15 +5,20 @@ import { CommonModule } from '@angular/common';
 import { UsersFbService } from '../../../services/firebase/users-fb.service';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
+import { QrdataService } from '../../../services/qr/qrdata.service';
+import { QrComponent } from '../../qr/qr.component';
 
 @Component({
   selector: 'app-nav-user-state',
   standalone: true,
-  imports: [RouterModule, CommonModule, MatIcon],
+  imports: [RouterModule, CommonModule, MatIcon, QrComponent],
   templateUrl: './nav-user-state.component.html',
   styleUrl: './nav-user-state.component.css',
 })
 export class NavUserStateComponent {
+  datosUsuario: any;
+  isQrVisible: boolean = false;
+
   private userStateSubscription?: Subscription;
   userLogged: boolean = true;
   admin: boolean = false;
@@ -30,7 +35,11 @@ export class NavUserStateComponent {
   adminRoute: boolean = false;
   // crear un listener para el tamaño de la pantalla
   // y cambiar el valor de dropstart
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private qrService: QrdataService
+  ) {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
   }
@@ -43,6 +52,16 @@ export class NavUserStateComponent {
           this.userLogged = true;
           this.displayName = user.displayName || '';
           this.admin = isAdmin;
+          console.log('userUid', user.uid);
+          this.qrService
+            .getData(user.uid)
+            .then((data) => {
+              this.datosUsuario = data;
+              console.log('datosUsuario', this.datosUsuario);
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+            });
         } else {
           this.userLogged = false;
           this.admin = false;
@@ -83,5 +102,10 @@ export class NavUserStateComponent {
     setTimeout(() => {
       window.location.reload();
     }, 100);
+  }
+
+  toggleQR() {
+    this.isQrVisible = !this.isQrVisible;
+    console.log(this.datosUsuario);
   }
 }
