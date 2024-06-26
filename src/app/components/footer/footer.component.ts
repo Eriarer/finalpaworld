@@ -1,17 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
-import { LoaderComponent } from '../components/loader/loader.component';
+import { LoaderComponent } from '../loader/loader.component';
 import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterOutlet, ReactiveFormsModule, LoaderComponent, NgClass, NgIf],
+  imports: [RouterModule, ReactiveFormsModule, LoaderComponent, NgClass, NgIf],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrl: './footer.component.css',
 })
 export class FooterComponent {
   isLoading: boolean = false;
