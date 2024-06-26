@@ -1,0 +1,21 @@
+#registerForm,
+#codeVerificationForm {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+#codeVerificationForm {
+  display: none;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 500px;
+}
+
+.card-header {
+  background-color: #4054b4;
+  color: white;
+  font-weight: 500;
+}

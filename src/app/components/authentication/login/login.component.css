@@ -1,0 +1,10 @@
+.contenedor {
+  width: 100%;
+  max-width: 500px;
+}
+
+.card-header {
+  background-color: #4054b4;
+  color: white;
+  font-weight: 500;
+}

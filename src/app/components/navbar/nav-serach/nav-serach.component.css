@@ -1,0 +1,7 @@
+.formInput{
+  border-radius: 10px 0 0 10px;
+}
+
+.formButton{
+  border-radius: 0 10px 10px 0;
+}

@@ -1,0 +1,10 @@
+{
+  "/qrApi": {
+    "target": "https://apiqr-production.up.railway.app",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/qrApi": ""
+    }
+  }
+}

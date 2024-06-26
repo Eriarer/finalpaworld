@@ -1,0 +1,37 @@
+.dropdown-item.active,
+.dropdown-item:active,
+.nav-link.active,
+.nav-link:active {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.nav-link {
+  color: rgb(196, 196, 196);
+  text-decoration: none;
+
+  &:hover {
+    color: rgb(226, 226, 226);
+  }
+
+  &.active {
+    color: white;
+  }
+}
+
+.nav-link.active {
+  color: white;
+  font-weight: bold;
+}
+
+.displayName {
+  font-size: 1rem;
+  color: white;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}

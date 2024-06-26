@@ -1,0 +1,101 @@
+<div class="wrapper">
+  <div class="contenedor">
+    <div id="dataPet">
+      <div class="slider">
+        <div class="slides">
+          <div class="slide-item">
+            <img src="{{ mascota.imagen }}" alt="..." />
+          </div>
+        </div>
+        <pre class="slide-prev" (click)="AnteriorMascota()"></pre>
+        <pre class="slide-next" (click)="SiguienteMascota()"></pre>
+      </div>
+      <div id="petInfo">
+        <h2 style="font-size: 1.2em">{{ mascota.raza }}</h2>
+        <div class="divSex">
+          <p>Sexo: {{ mascota.sexo }}</p>
+          @if(mascota.sexo == 'Macho') {
+          <i class="bi bi-gender-male"></i>
+          }@else{
+          <i class="bi bi-gender-female"></i>
+          }
+        </div>
+
+        <div class="petInfoRow">
+          <p class="dato">Edad: {{ mascota.edad }} año(s)</p>
+          <p class="dato">Color: {{ mascota.color }}</p>
+        </div>
+        <p>
+          Tiempo en el refugio <i class="bi bi-clock"></i>:
+          {{ tiempoRefugio }} días
+        </p>
+        <p class="descripcion">Descripción: {{ mascota.descripcion }}</p>
+      </div>
+    </div>
+    <div id="SecAdop">
+      <div class="dataAdop">
+        <br />
+        <h2 class="text-center">Datos de la Cita</h2>
+        <mat-form-field class="w-100">
+          <mat-label>Razón de adopción</mat-label>
+          <textarea
+            matInput
+            [formControl]="razonAdop"
+            (blur)="updateErrorMessage()"
+            required
+          ></textarea>
+        </mat-form-field>
+        <mat-form-field class="w-100">
+          <mat-label>Fecha de cita</mat-label>
+          <input
+            matInput
+            [min]="minDate"
+            [max]="maxDate"
+            [matDatepicker]="picker"
+            (dateChange)="onDateChange($event)"
+            #selectedDate
+            readonly="true"
+            [(ngModel)]="selectedFecha"
+          />
+          <mat-hint class="fecha">DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="w-100">
+          <mat-label>Horario</mat-label>
+          <mat-select [(ngModel)]="selectedHour">
+            <mat-option
+              *ngFor="let hour of horas"
+              [value]="hour"
+              [disabled]="horasOcupadas.includes(hour)"
+              >{{ hour }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <div class="mt-auto botones">
+          <button
+            id="btnDeleteData"
+            mat-raised-button
+            (click)="clearFields()"
+            class="me-2"
+          >
+            Limpiar
+          </button>
+          <button
+            id="btnAgendar"
+            mat-raised-button
+            color="accent"
+            (click)="GuardarCita()"
+          >
+            Agendar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loader [visible]="isLoading"></app-loader>
