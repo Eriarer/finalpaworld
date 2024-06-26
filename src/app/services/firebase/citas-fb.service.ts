@@ -10,6 +10,8 @@ import {
   where,
   Timestamp,
   getCountFromServer,
+  doc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 
 import { Observable, Subscription, firstValueFrom } from 'rxjs';
@@ -137,15 +139,19 @@ export class CitasFbService {
   async getCitasPasadas(fechaReferencia: Date): Promise<Cita[]> {
     // Consultar citas pasadas hasta la fecha de referencia
     this.prubUserLog();
+    const loggedUser = this.userLogged.email;
+
+    this.prubUserLog();
     const q = query(
       this.citasRef,
       where('fechaHora', '<', fechaReferencia),
       orderBy('fechaHora', 'desc')
     );
     this.citasFB = collectionData(q, { idField: 'id' }) as Observable<Cita[]>;
-    const data = await firstValueFrom(this.citasFB);
-    console.log('Arreglo de Citas Pasadas', data);
-    return data;
+    let data = await firstValueFrom(this.citasFB);
+
+    // Filtrar las citas por el correo del adoptante en el cliente
+    return data.filter((cita) => cita.adoptante?.correo === loggedUser);
   }
 
   //return an array full of objects  {horas: String: hh:mm}
@@ -177,8 +183,25 @@ export class CitasFbService {
       let time = `${hour}:${minute}`;
       hoursOcupied.push(time);
     });
-    console.log('Horas ocupadas', hoursOcupied);
     return hoursOcupied;
+  }
+
+  async deleteCita(id: string): Promise<void> {
+    //mandar error si es nulo
+    try {
+      if (!id) {
+        throw new Error('No se ha proporcionado el ID de la cita');
+      }
+      const citaDocRef = doc(this.firestore, `citas/${id}`);
+      await deleteDoc(citaDocRef);
+      console.log(`Cita con ID ${id} ha sido eliminada`);
+    } catch (error) {
+      console.error(error);
+    }
+
+    const citaDocRef = doc(this.firestore, `citas/${id}`);
+    await deleteDoc(citaDocRef);
+    console.log(`Cita con ID ${id} ha sido eliminada`);
   }
 
   async getUltimasSieteDias(): Promise<{ fecha: string; cantCitas: number }[]> {

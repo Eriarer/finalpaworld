@@ -73,3 +73,20 @@
 .btncitas button:hover {
   border-bottom: 2px solid #3e51b4; /* Borde inferior azul royal al hacer hover */
 }
+
+#btnEliminar{
+  color: #ff4081; /* Rojo y mas estilizado */
+  border-bottom: 2px solid transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: border-color 0.3s; /* Efecto de transición para el hover */
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: border-color 0.3s; /* Efecto de transición para el hover */
+}
+
+#btnEliminar:hover {
+  border-bottom: 2px solid #ff4081; /* Borde inferior azul royal al hacer hover */
+}

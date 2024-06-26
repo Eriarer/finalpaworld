@@ -19,7 +19,6 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  FormGroup,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, merge } from 'rxjs';

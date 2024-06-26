@@ -1,15 +1,14 @@
 <div id="container">
   <div class="btncitas">
-    <button (click)="btnCargarFuturas()" class="cambiarCitas">
+    <button (click)="btnCargarFuturas()" class="cambiarCitas" id="btnCitasF">
       Citas futuras
     </button>
-    <button (click)="btnCargarPrevias()" class="cambiarCitas">
+    <button (click)="btnCargarPrevias()" class="cambiarCitas" id="btnCitasP">
       Citas pasadas
     </button>
   </div>
   <br />
   @if (citas.length > 0) {
-  <h1>Cargando citas</h1>
   <table>
     <thead>
       <tr class="trcont">
@@ -20,6 +19,7 @@
         <th>Imagen</th>
         <th>Tipo</th>
         <th>Raza</th>
+        <th class="eliminar" style="display: mostrar">Cancelar cita</th>
       </tr>
     </thead>
     <tbody>
@@ -33,7 +33,7 @@
           <span>{{ cita.fechaHora | timestampToHourString }}</span>
         </td>
         <td>
-          <span [innerHTML]="cita.adoptante.nombre"></span><br />
+          <span [innerHTML]="cita.adoptante.nombre | uppercase"></span><br />
           <span>Numero: </span>
           <span [innerHTML]="cita.adoptante.telefono"></span>
         </td>
@@ -44,13 +44,19 @@
             class="mascota-imagen"
           />
         </td>
-        <td><span [innerHTML]="cita.mascota.tipo"></span></td>
+        <td><span [innerHTML]="cita.mascota.tipo | titlecase"></span></td>
         <td><span [innerHTML]="cita.mascota.raza"></span></td>
+        <!-- visible solo en futuras -->
+        <td class="eliminar" style="display: mostrar">
+          <button (click)="btnEliminarCita(cita.id)" id="btnEliminar">
+            CANCELAR
+          </button>
+        </td>
       </tr>
       }
     </tbody>
   </table>
   } @else {
-  <h1>No hay citas futuras</h1>
+  <h1>No hay citas</h1>
   }
 </div>
