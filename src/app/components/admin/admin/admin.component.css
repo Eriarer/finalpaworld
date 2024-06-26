@@ -1,5 +1,5 @@
 .buttons{
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 2em;
 }
