@@ -1,0 +1,153 @@
+{
+  "configVersion": 1,
+  "timestamp": 1719451046879,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/chunk-XHZAQS5H.js",
+        "/chunk-YRFKLO5Y.js",
+        "/favicon.ico",
+        "/index.html",
+        "/main-P762JJIG.js",
+        "/manifest.webmanifest",
+        "/polyfills-6EAL64PA.js",
+        "/scripts-EEEIPNC3.js",
+        "/styles-3EOGWOLA.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-384x384.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png",
+        "/assets/img/acercaDe/ake.jpg",
+        "/assets/img/acercaDe/eri.jpg",
+        "/assets/img/acercaDe/fondo.jpg",
+        "/assets/img/acercaDe/gerardo.jpg",
+        "/assets/img/acercaDe/geras.jpg",
+        "/assets/img/acercaDe/leo.jpg",
+        "/assets/img/acercaDe/mary.jpg",
+        "/assets/img/acercaDe/mich.jpg",
+        "/assets/img/acercaDe/pau.jpg",
+        "/assets/img/carousel/1.jpg",
+        "/assets/img/carousel/2.jpg",
+        "/assets/img/carousel/3.jpg",
+        "/assets/img/favIcon.webp",
+        "/assets/img/home.imgs/Cursor2.png",
+        "/assets/img/home.imgs/accesibilidad.png",
+        "/assets/img/home.imgs/donation.webp",
+        "/assets/img/home.imgs/testimonios1.webp",
+        "/assets/img/home.imgs/testimonios2.webp",
+        "/assets/img/home.imgs/testimonios3.webp",
+        "/assets/img/pets/1.webp",
+        "/assets/img/pets/10.webp",
+        "/assets/img/pets/2.webp",
+        "/assets/img/pets/3.webp",
+        "/assets/img/pets/4.webp",
+        "/assets/img/pets/5.webp",
+        "/assets/img/pets/6.webp",
+        "/assets/img/pets/7.webp",
+        "/assets/img/pets/8.webp",
+        "/assets/img/pets/9.webp",
+        "/assets/img/team/1.png",
+        "/assets/img/team/2.png",
+        "/assets/img/team/3.png",
+        "/assets/img/team/4.png",
+        "/media/fondo-35WVVVUP.jpg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/icons/icon-128x128.png": "e19fe66dbc8f547bfe87716409bd6356c6156578",
+    "/assets/icons/icon-144x144.png": "3fba1fa1c2ce1eaad806f7fe87fe14d0c4d8b068",
+    "/assets/icons/icon-152x152.png": "0b943ee190199c5891c943a4cf1b646f64df5a4b",
+    "/assets/icons/icon-192x192.png": "a08b9a6dece126fa99b3e3ef66d40530493cace7",
+    "/assets/icons/icon-384x384.png": "7def4739033e9a83be4b2b8c71d44f12c1a67649",
+    "/assets/icons/icon-512x512.png": "4a3871f61b7d4e9a9b623ffac998c6623fc6bb8c",
+    "/assets/icons/icon-72x72.png": "dbca5d8706516f32df0ea60f83824010dfb72148",
+    "/assets/icons/icon-96x96.png": "3e52058fe504d709420f4044b118a6408cf152e1",
+    "/assets/img/acercaDe/ake.jpg": "de841f919a28d6120e08efde57bbb1315cacfd1e",
+    "/assets/img/acercaDe/eri.jpg": "1ac1ef5fcfdd75bb70fc646a8b68e42b3ca53552",
+    "/assets/img/acercaDe/fondo.jpg": "f8ec7f32b78a6f213ca7ce4b40a9629979bcc0a6",
+    "/assets/img/acercaDe/gerardo.jpg": "6680390d91149718564a8e35ef1d16ae53084305",
+    "/assets/img/acercaDe/geras.jpg": "ebf8808a8bd37f5575aeecd51c96ca12210c4612",
+    "/assets/img/acercaDe/leo.jpg": "bc25e286401cd92c19ec5c19282c49538ade14b5",
+    "/assets/img/acercaDe/mary.jpg": "d2cc39686934c6c838b0027e7b6c576803e78ac7",
+    "/assets/img/acercaDe/mich.jpg": "6e74005faef0b168cd4df22b5f3520dde1577e39",
+    "/assets/img/acercaDe/pau.jpg": "a8c7710482b3288b5aad9a07eb8e530e3d14b475",
+    "/assets/img/carousel/1.jpg": "cfbf3b8aecf34bac285bf443eb67f495e223aa51",
+    "/assets/img/carousel/2.jpg": "84391a530f01da4760a252c7b317322b34a7d6cf",
+    "/assets/img/carousel/3.jpg": "cefb8016473707f6c5e10ec0079c7546d14c5346",
+    "/assets/img/favIcon.webp": "974f5fc998d291c3cfceff7320f1e58085cca347",
+    "/assets/img/home.imgs/Cursor2.png": "f56cb05e6858e67c9ec20c61d544b76d818b67be",
+    "/assets/img/home.imgs/accesibilidad.png": "80444a24a585d3634950a866caab233367fcf17c",
+    "/assets/img/home.imgs/donation.webp": "f893c31c1d6469dbcdc40b2b3c362083b18d6fc1",
+    "/assets/img/home.imgs/testimonios1.webp": "71a34fd8f2c0832d50703fdf671b64e5e2df20f0",
+    "/assets/img/home.imgs/testimonios2.webp": "47376b339ab2f11b52642d7ce962ef1509489a1d",
+    "/assets/img/home.imgs/testimonios3.webp": "142dc5a01d2cfd11aae060677aed5985c0512831",
+    "/assets/img/pets/1.webp": "d95ac5ea6b1b20c33a53a8f3803dea7b6281c68a",
+    "/assets/img/pets/10.webp": "0ebd0014bb70693cb75000bb81c2854846d6bf32",
+    "/assets/img/pets/2.webp": "85b71b4fe264a98e8eb5afa0b7661002298383e7",
+    "/assets/img/pets/3.webp": "7638363dcb88088d73f37aa2c411377f40d8bc0e",
+    "/assets/img/pets/4.webp": "eeed150518cc82287a14a8c9b0d696547c948ef4",
+    "/assets/img/pets/5.webp": "3ed3f013694bddc222a646a1fa0b410e58b98313",
+    "/assets/img/pets/6.webp": "1a55c188305a48a2b49747ddc809aaf7386b24c5",
+    "/assets/img/pets/7.webp": "1c62575100b74f5aaa21a09b4d8a6dca55dd73b4",
+    "/assets/img/pets/8.webp": "af4e3a6ea91b70533466e96c274ac825b49d14bf",
+    "/assets/img/pets/9.webp": "b1c039891ed42d89d701da9dd45f7511e1b21975",
+    "/assets/img/team/1.png": "3ad410b416ee7e3fef22ff23a4b003cdcb07216f",
+    "/assets/img/team/2.png": "a797f5b3d0de1fb425de011798ed1517b2dbfb66",
+    "/assets/img/team/3.png": "2eb3e70d3fa786f3295e16ac1a6cbc7b3aeb0465",
+    "/assets/img/team/4.png": "a8a54d630b9a38cabdf827c0e68db3cf9d23ed28",
+    "/chunk-XHZAQS5H.js": "e4bd34ba019b25bda039034c9dcb75f8370ad5ce",
+    "/chunk-YRFKLO5Y.js": "c11fbdfa85b738b1633157e778af6366875848f2",
+    "/favicon.ico": "cca949e854622a888bbc20c2367b3afd4f5da24c",
+    "/index.html": "8b2dcb18acf6c052523c0d5a6d38624eca06552c",
+    "/main-P762JJIG.js": "162c6c6aac62433a64e7b8af479614dee4b58a59",
+    "/manifest.webmanifest": "639596367715ef873951f44a032cff74b2982c8c",
+    "/media/fondo-35WVVVUP.jpg": "f8ec7f32b78a6f213ca7ce4b40a9629979bcc0a6",
+    "/polyfills-6EAL64PA.js": "d874147a12a6570d9b44e99935e9de8b7f3cabbc",
+    "/scripts-EEEIPNC3.js": "2318ded8c885787a1645385a82c1ca883c359034",
+    "/styles-3EOGWOLA.css": "3c3522bf0a1cfd02da31579a121fcf7ca15fd339"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
